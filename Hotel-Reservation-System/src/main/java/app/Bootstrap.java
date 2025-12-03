@@ -9,10 +9,10 @@ import repository.ReservationRepository;
 import repository.impl.GuestRepositoryImpl;
 import repository.impl.ReservationRepositoryImpl;
 import service.BillingContext;
+import service.LoyaltyService;
 import service.ReservationService;
 import service.RoomService;
-import service.LoyaltyService;
-import strategy.StandardBillingStrategy;
+import service.strategy.StandardBillingStrategy;
 import util.LoggingProvider;
 
 import jakarta.persistence.EntityManager;
@@ -47,7 +47,7 @@ public class Bootstrap {
             LoggingProvider.configure();
 
             // Initialize persistence
-            EntityManager entityManager = EntityManagerProvider.getInstance();
+            EntityManager entityManager = EntityManagerProvider.getEntityManager();
             LOGGER.info("EntityManager initialized successfully");
 
             // Initialize configuration objects

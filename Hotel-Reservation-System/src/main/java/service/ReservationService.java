@@ -1,4 +1,4 @@
-package src.main.java.service;
+package service;
 
 import model.Guest;
 import model.Reservation;

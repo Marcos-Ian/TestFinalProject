@@ -1,28 +1,33 @@
 package app.config;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 /**
- * Singleton holder for the JPA EntityManagerFactory.
+ * Singleton holder for the JPA EntityManagerFactory and helper to produce EntityManagers.
  */
 public final class EntityManagerProvider {
-    private static EntityManagerProvider instance;
-    private final EntityManagerFactory emf;
+    private static EntityManagerFactory emf;
 
     private EntityManagerProvider() {
-        // Persistence unit name should match META-INF/persistence.xml when added.
-        this.emf = Persistence.createEntityManagerFactory("hotelPU");
     }
 
-    public static synchronized EntityManagerProvider getInstance() {
-        if (instance == null) {
-            instance = new EntityManagerProvider();
+    /**
+     * Lazily initialize and return the shared EntityManagerFactory.
+     */
+    private static synchronized EntityManagerFactory getEntityManagerFactory() {
+        if (emf == null) {
+            // Persistence unit name should match META-INF/persistence.xml when added.
+            emf = Persistence.createEntityManagerFactory("hotelPU");
         }
-        return instance;
+        return emf;
     }
 
-    public EntityManagerFactory getEntityManagerFactory() {
-        return emf;
+    /**
+     * Obtain a new EntityManager instance from the shared factory.
+     */
+    public static EntityManager getEntityManager() {
+        return getEntityManagerFactory().createEntityManager();
     }
 }
