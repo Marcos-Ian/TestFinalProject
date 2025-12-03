@@ -17,4 +17,6 @@ module hotel.reservation.system {
     exports security;
     exports util;
     exports events;
+
+    opens model to jakarta.persistence;
 }
