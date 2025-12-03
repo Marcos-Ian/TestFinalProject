@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.AdminController"
+            prefHeight="800.0" prefWidth="1200.0" styleClass="dashboard-container">
+
+    <!-- Top Menu Bar -->
+    <top>
+        <VBox styleClass="top-bar">
+            <MenuBar styleClass="menu-bar">
+                <Menu text="File">
+                    <MenuItem text="Logout" fx:id="logoutMenuItem"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Exit" fx:id="exitMenuItem"/>
+                </Menu>
+                <Menu text="Reservations">
+                    <MenuItem text="New Reservation" fx:id="newReservationMenuItem"/>
+                    <MenuItem text="Search Reservations" fx:id="searchReservationsMenuItem"/>
+                    <MenuItem text="Group Booking" fx:id="groupBookingMenuItem"/>
+                </Menu>
+                <Menu text="Guests">
+                    <MenuItem text="Search Guests" fx:id="searchGuestsMenuItem"/>
+                    <MenuItem text="Loyalty Program" fx:id="loyaltyMenuItem"/>
+                    <MenuItem text="Waitlist" fx:id="waitlistMenuItem"/>
+                </Menu>
+                <Menu text="Reports">
+                    <MenuItem text="Revenue Report" fx:id="revenueReportMenuItem"/>
+                    <MenuItem text="Occupancy Report" fx:id="occupancyReportMenuItem"/>
+                    <MenuItem text="Activity Logs" fx:id="activityLogsMenuItem"/>
+                    <MenuItem text="Feedback Summary" fx:id="feedbackMenuItem"/>
+                </Menu>
+                <Menu text="Help">
+                    <MenuItem text="About" fx:id="aboutMenuItem"/>
+                </Menu>
+            </MenuBar>
+
+            <!-- Header Info Bar -->
+            <HBox styleClass="info-bar" spacing="20" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10" right="20" bottom="10" left="20"/>
+                </padding>
+                <Label text="Grand Plaza Hotel - Admin Portal" styleClass="app-title">
+                    <font>
+                        <Font name="System Bold" size="16"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="userLabel" text="User: Admin" styleClass="user-info"/>
+                <Label fx:id="roleLabel" text="Role: Admin" styleClass="role-info"/>
+                <Label fx:id="dateTimeLabel" text="Date/Time" styleClass="datetime-info"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Main Content Area -->
+    <center>
+        <SplitPane dividerPositions="0.25" styleClass="main-split">
+            <!-- Left Navigation Panel -->
+            <VBox spacing="5" styleClass="nav-panel">
+                <padding>
+                    <Insets top="15" right="10" bottom="15" left="10"/>
+                </padding>
+
+                <Label text="Quick Actions" styleClass="nav-header">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+
+                <Button fx:id="dashboardBtn" text="📊 Dashboard"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="newBookingBtn" text="➕ New Reservation"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="searchBtn" text="🔍 Search"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="checkoutBtn" text="✓ Checkout"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="paymentsBtn" text="💳 Payments"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+
+                <Separator/>
+
+                <Label text="Management" styleClass="nav-header">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+
+                <Button fx:id="waitlistBtn" text="📋 Waitlist"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="loyaltyBtn" text="⭐ Loyalty"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="feedbackBtn" text="💬 Feedback"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+                <Button fx:id="reportsBtn" text="📈 Reports"
+                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
+            </VBox>
+
+            <!-- Right Content Panel -->
+            <StackPane fx:id="contentPane" styleClass="content-pane">
+                <!-- Dashboard Overview (Default View) -->
+                <VBox fx:id="dashboardView" spacing="20" styleClass="dashboard-view">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <Label text="Dashboard Overview" styleClass="content-title">
+                        <font>
+                            <Font name="System Bold" size="24"/>
+                        </font>
+                    </Label>
+
+                    <!-- Quick Stats Cards -->
+                    <GridPane hgap="20" vgap="20">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                        </columnConstraints>
+
+                        <!-- Today's Reservations Card -->
+                        <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Today's Reservations" styleClass="stat-label"/>
+                            <Label fx:id="todayReservationsLabel" text="0" styleClass="stat-value">
+                                <font>
+                                    <Font name="System Bold" size="32"/>
+                                </font>
+                            </Label>
+                        </VBox>
+
+                        <!-- Available Rooms Card -->
+                        <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Available Rooms" styleClass="stat-label"/>
+                            <Label fx:id="availableRoomsLabel" text="0" styleClass="stat-value">
+                                <font>
+                                    <Font name="System Bold" size="32"/>
+                                </font>
+                            </Label>
+                        </VBox>
+
+                        <!-- Check-ins Today Card -->
+                        <VBox styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Check-ins Today" styleClass="stat-label"/>
+                            <Label fx:id="checkinsLabel" text="0" styleClass="stat-value">
+                                <font>
+                                    <Font name="System Bold" size="32"/>
+                                </font>
+                            </Label>
+                        </VBox>
+
+                        <!-- Check-outs Today Card -->
+                        <VBox styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Check-outs Today" styleClass="stat-label"/>
+                            <Label fx:id="checkoutsLabel" text="0" styleClass="stat-value">
+                                <font>
+                                    <Font name="System Bold" size="32"/>
+                                </font>
+                            </Label>
+                        </VBox>
+                    </GridPane>
+
+                    <!-- Search Section -->
+                    <VBox spacing="15" styleClass="search-section">
+                        <Label text="Search Guests & Reservations" styleClass="section-title">
+                            <font>
+                                <Font name="System Bold" size="18"/>
+                            </font>
+                        </Label>
+
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <TextField fx:id="searchField" promptText="Search by name, phone, or reservation ID"
+                                       prefWidth="400" styleClass="search-input"/>
+                            <ComboBox fx:id="searchTypeCombo" promptText="Search Type" prefWidth="150">
+                                <items>
+                                    <String fx:value="All"/>
+                                    <String fx:value="Guest Name"/>
+                                    <String fx:value="Phone"/>
+                                    <String fx:value="Reservation ID"/>
+                                    <String fx:value="Status"/>
+                                </items>
+                            </ComboBox>
+                            <DatePicker fx:id="searchFromDate" promptText="From Date" prefWidth="140"/>
+                            <DatePicker fx:id="searchToDate" promptText="To Date" prefWidth="140"/>
+                            <Button fx:id="searchButton" text="Search" styleClass="primary-button" prefWidth="100"/>
+                            <Button fx:id="clearSearchButton" text="Clear" styleClass="secondary-button" prefWidth="80"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Results Table -->
+                    <VBox spacing="10" VBox.vgrow="ALWAYS">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Search Results" styleClass="section-title">
+                                <font>
+                                    <Font name="System Bold" size="16"/>
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="exportButton" text="Export CSV" styleClass="export-button"/>
+                        </HBox>
+
+                        <TableView fx:id="resultsTable" styleClass="results-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
+                                <TableColumn fx:id="guestNameColumn" text="Guest Name" prefWidth="150"/>
+                                <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="120"/>
+                                <TableColumn fx:id="checkInColumn" text="Check-In" prefWidth="100"/>
+                                <TableColumn fx:id="checkOutColumn" text="Check-Out" prefWidth="100"/>
+                                <TableColumn fx:id="roomTypeColumn" text="Room Type" prefWidth="120"/>
+                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="totalColumn" text="Total" prefWidth="100"/>
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                            </columns>
+                        </TableView>
+
+                        <!-- Pagination Controls -->
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button fx:id="firstPageButton" text="⏮ First" styleClass="page-button"/>
+                            <Button fx:id="prevPageButton" text="◀ Prev" styleClass="page-button"/>
+                            <Label fx:id="pageLabel" text="Page 1 of 1" styleClass="page-label"/>
+                            <Button fx:id="nextPageButton" text="Next ▶" styleClass="page-button"/>
+                            <Button fx:id="lastPageButton" text="Last ⏭" styleClass="page-button"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="Rows per page:" styleClass="page-label"/>
+                            <ComboBox fx:id="rowsPerPageCombo" value="25" prefWidth="80">
+                                <items>
+                                    <String fx:value="10"/>
+                                    <String fx:value="25"/>
+                                    <String fx:value="50"/>
+                                    <String fx:value="100"/>
+                                </items>
+                            </ComboBox>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </StackPane>
+        </SplitPane>
+    </center>
+
+    <!-- Status Bar -->
+    <bottom>
+        <HBox styleClass="status-bar" spacing="20" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="8" right="15" bottom="8" left="15"/>
+            </padding>
+            <Label fx:id="statusLabel" text="Ready" styleClass="status-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="connectionLabel" text="🟢 Connected" styleClass="connection-status"/>
+        </HBox>
+    </bottom>
+
+    <stylesheets>
+        <String fx:value="@../styles/admin.css"/>
+    </stylesheets>
+</BorderPane>

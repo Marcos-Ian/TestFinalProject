@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="src.main.java.controller.ReportsController"
+            prefHeight="800.0" prefWidth="1100.0" styleClass="reports-container">
+
+    <top>
+        <VBox styleClass="header-section">
+            <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                <Label text="Reports & Analytics" styleClass="page-title">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" styleClass="reports-nav">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+
+            <Label text="Report Types" styleClass="nav-header">
+                <font>
+                    <Font name="System Bold" size="14"/>
+                </font>
+            </Label>
+
+            <Button fx:id="revenueReportBtn" text="💰 Revenue Report"
+                    styleClass="report-nav-button" prefWidth="180" prefHeight="40"/>
+            <Button fx:id="occupancyReportBtn" text="🏨 Occupancy Report"
+                    styleClass="report-nav-button" prefWidth="180" prefHeight="40"/>
+            <Button fx:id="feedbackReportBtn" text="💬 Feedback Summary"
+                    styleClass="report-nav-button" prefWidth="180" prefHeight="40"/>
+            <Button fx:id="activityLogsBtn" text="📋 Activity Logs"
+                    styleClass="report-nav-button" prefWidth="180" prefHeight="40"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="reportContentPane" styleClass="report-content">
+            <!-- Revenue Report View -->
+            <VBox fx:id="revenueReportView" spacing="20" styleClass="report-view">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <Label text="Revenue Report" styleClass="report-title">
+                    <font>
+                        <Font name="System Bold" size="22"/>
+                    </font>
+                </Label>
+
+                <!-- Report Filters -->
+                <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-section">
+                    <Label text="Period:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="revenuePeriodCombo" value="Daily" prefWidth="120">
+                        <items>
+                            <String fx:value="Daily"/>
+                            <String fx:value="Weekly"/>
+                            <String fx:value="Monthly"/>
+                        </items>
+                    </ComboBox>
+
+                    <Label text="Date Range:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <DatePicker fx:id="revenueFromDate" promptText="From" prefWidth="140"/>
+                    <DatePicker fx:id="revenueToDate" promptText="To" prefWidth="140"/>
+
+                    <Label text="Room Type:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="revenueRoomTypeCombo" value="All" prefWidth="120">
+                        <items>
+                            <String fx:value="All"/>
+                            <String fx:value="Single"/>
+                            <String fx:value="Double"/>
+                            <String fx:value="Deluxe"/>
+                            <String fx:value="Penthouse"/>
+                        </items>
+                    </ComboBox>
+
+                    <Button fx:id="generateRevenueButton" text="Generate"
+                            styleClass="generate-button" prefWidth="100"/>
+                </HBox>
+
+                <!-- Summary Cards -->
+                <HBox spacing="20">
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Total Revenue" styleClass="card-label"/>
+                        <Label fx:id="totalRevenueLabel" text="$0.00" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Total Reservations" styleClass="card-label"/>
+                        <Label fx:id="totalReservationsLabel" text="0" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Average Per Booking" styleClass="card-label"/>
+                        <Label fx:id="avgRevenueLabel" text="$0.00" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+
+                <!-- Revenue Table -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Revenue Details" styleClass="section-subtitle">
+                            <font>
+                                <Font name="System Bold" size="16"/>
+                            </font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="exportRevenueCSVButton" text="Export CSV" styleClass="export-button"/>
+                        <Button fx:id="exportRevenuePDFButton" text="Export PDF" styleClass="export-button"/>
+                    </HBox>
+
+                    <TableView fx:id="revenueTable" styleClass="report-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="revPeriodColumn" text="Period" prefWidth="150"/>
+                            <TableColumn fx:id="revCountColumn" text="Reservations" prefWidth="120"/>
+                            <TableColumn fx:id="revSubtotalColumn" text="Subtotal" prefWidth="120"/>
+                            <TableColumn fx:id="revTaxColumn" text="Tax" prefWidth="100"/>
+                            <TableColumn fx:id="revDiscountsColumn" text="Discounts" prefWidth="100"/>
+                            <TableColumn fx:id="revTotalColumn" text="Total Revenue" prefWidth="130"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+
+            <!-- Occupancy Report View -->
+            <VBox fx:id="occupancyReportView" spacing="20" styleClass="report-view" visible="false" managed="false">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <Label text="Occupancy Report" styleClass="report-title">
+                    <font>
+                        <Font name="System Bold" size="22"/>
+                    </font>
+                </Label>
+
+                <!-- Report Filters -->
+                <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-section">
+                    <Label text="Period:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="occupancyPeriodCombo" value="Daily" prefWidth="120">
+                        <items>
+                            <String fx:value="Daily"/>
+                            <String fx:value="Weekly"/>
+                            <String fx:value="Monthly"/>
+                        </items>
+                    </ComboBox>
+
+                    <Label text="Date Range:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <DatePicker fx:id="occupancyFromDate" promptText="From" prefWidth="140"/>
+                    <DatePicker fx:id="occupancyToDate" promptText="To" prefWidth="140"/>
+
+                    <Label text="Room Type:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="occupancyRoomTypeCombo" value="All" prefWidth="120">
+                        <items>
+                            <String fx:value="All"/>
+                            <String fx:value="Single"/>
+                            <String fx:value="Double"/>
+                            <String fx:value="Deluxe"/>
+                            <String fx:value="Penthouse"/>
+                        </items>
+                    </ComboBox>
+
+                    <Button fx:id="generateOccupancyButton" text="Generate"
+                            styleClass="generate-button" prefWidth="100"/>
+                </HBox>
+
+                <!-- Summary Cards -->
+                <HBox spacing="20">
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Average Occupancy" styleClass="card-label"/>
+                        <Label fx:id="avgOccupancyLabel" text="0%" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Total Rooms" styleClass="card-label"/>
+                        <Label fx:id="totalRoomsLabel" text="0" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Peak Occupancy" styleClass="card-label"/>
+                        <Label fx:id="peakOccupancyLabel" text="0%" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+
+                <!-- Occupancy Table -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Occupancy Details" styleClass="section-subtitle">
+                            <font>
+                                <Font name="System Bold" size="16"/>
+                            </font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="exportOccupancyCSVButton" text="Export CSV" styleClass="export-button"/>
+                        <Button fx:id="exportOccupancyPDFButton" text="Export PDF" styleClass="export-button"/>
+                    </HBox>
+
+                    <TableView fx:id="occupancyTable" styleClass="report-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="occDateColumn" text="Date" prefWidth="150"/>
+                            <TableColumn fx:id="occAvailableColumn" text="Rooms Available" prefWidth="150"/>
+                            <TableColumn fx:id="occOccupiedColumn" text="Rooms Occupied" prefWidth="150"/>
+                            <TableColumn fx:id="occPercentageColumn" text="Occupancy %" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+
+            <!-- Feedback Summary View -->
+            <VBox fx:id="feedbackReportView" spacing="20" styleClass="report-view" visible="false" managed="false">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <Label text="Feedback Summary" styleClass="report-title">
+                    <font>
+                        <Font name="System Bold" size="22"/>
+                    </font>
+                </Label>
+
+                <!-- Filters -->
+                <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-section">
+                    <Label text="Date Range:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <DatePicker fx:id="feedbackFromDate" promptText="From" prefWidth="140"/>
+                    <DatePicker fx:id="feedbackToDate" promptText="To" prefWidth="140"/>
+
+                    <Label text="Rating:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="feedbackRatingFilter" value="All" prefWidth="100">
+                        <items>
+                            <String fx:value="All"/>
+                            <String fx:value="5 Stars"/>
+                            <String fx:value="4 Stars"/>
+                            <String fx:value="3 Stars"/>
+                            <String fx:value="2 Stars"/>
+                            <String fx:value="1 Star"/>
+                        </items>
+                    </ComboBox>
+
+                    <Button fx:id="generateFeedbackButton" text="Generate"
+                            styleClass="generate-button" prefWidth="100"/>
+                </HBox>
+
+                <!-- Summary Cards -->
+                <HBox spacing="20">
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Average Rating" styleClass="card-label"/>
+                        <Label fx:id="avgRatingLabel" text="0.0 ⭐" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Total Feedback" styleClass="card-label"/>
+                        <Label fx:id="totalFeedbackLabel" text="0" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Response Rate" styleClass="card-label"/>
+                        <Label fx:id="responseRateLabel" text="0%" styleClass="card-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+
+                <!-- Feedback Table -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Feedback Entries" styleClass="section-subtitle">
+                            <font>
+                                <Font name="System Bold" size="16"/>
+                            </font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="exportFeedbackButton" text="Export CSV" styleClass="export-button"/>
+                    </HBox>
+
+                    <TableView fx:id="feedbackTable" styleClass="report-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="fbReservationColumn" text="Reservation ID" prefWidth="120"/>
+                            <TableColumn fx:id="fbGuestColumn" text="Guest" prefWidth="150"/>
+                            <TableColumn fx:id="fbRatingColumn" text="Rating" prefWidth="80"/>
+                            <TableColumn fx:id="fbCommentColumn" text="Comment" prefWidth="300"/>
+                            <TableColumn fx:id="fbDateColumn" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="fbTagsColumn" text="Tags" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+
+            <!-- Activity Logs View -->
+            <VBox fx:id="activityLogsView" spacing="20" styleClass="report-view" visible="false" managed="false">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <Label text="Activity Logs" styleClass="report-title">
+                    <font>
+                        <Font name="System Bold" size="22"/>
+                    </font>
+                </Label>
+
+                <!-- Filters -->
+                <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-section">
+                    <Label text="Date Range:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <DatePicker fx:id="logsFromDate" promptText="From" prefWidth="140"/>
+                    <DatePicker fx:id="logsToDate" promptText="To" prefWidth="140"/>
+
+                    <Label text="Actor:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="actorFilter" promptText="All Users" prefWidth="130"/>
+
+                    <Label text="Action:">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="actionFilter" value="All" prefWidth="130">
+                        <items>
+                            <String fx:value="All"/>
+                            <String fx:value="Login"/>
+                            <String fx:value="Logout"/>
+                            <String fx:value="Create"/>
+                            <String fx:value="Modify"/>
+                            <String fx:value="Delete"/>
+                            <String fx:value="Payment"/>
+                            <String fx:value="Checkout"/>
+                        </items>
+                    </ComboBox>
+
+                    <Button fx:id="generateLogsButton" text="Generate"
+                            styleClass="generate-button" prefWidth="100"/>
+                </HBox>
+
+                <!-- Logs Table -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Log Entries" styleClass="section-subtitle">
+                            <font>
+                                <Font name="System Bold" size="16"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="logCountLabel" text="(0 entries)" styleClass="count-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="exportLogsCSVButton" text="Export CSV" styleClass="export-button"/>
+                        <Button fx:id="exportLogsTXTButton" text="Export TXT" styleClass="export-button"/>
+                    </HBox>
+
+                    <TableView fx:id="logsTable" styleClass="report-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="logTimestampColumn" text="Timestamp" prefWidth="150"/>
+                            <TableColumn fx:id="logActorColumn" text="Actor" prefWidth="120"/>
+                            <TableColumn fx:id="logActionColumn" text="Action" prefWidth="100"/>
+                            <TableColumn fx:id="logEntityTypeColumn" text="Entity Type" prefWidth="120"/>
+                            <TableColumn fx:id="logEntityIdColumn" text="Entity ID" prefWidth="100"/>
+                            <TableColumn fx:id="logMessageColumn" text="Message" prefWidth="350"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <stylesheets>
+        <String fx:value="@../styles/reports.css"/>
+    </stylesheets>
+</BorderPane>

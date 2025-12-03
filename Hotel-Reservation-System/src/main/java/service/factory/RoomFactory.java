@@ -1,4 +1,4 @@
-package service.factory;
+package factory;
 
 import model.RoomType;
 
