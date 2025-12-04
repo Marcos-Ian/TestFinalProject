@@ -6,7 +6,10 @@
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.AdminDashboardController" prefWidth="960" prefHeight="640">
     <top>
-        <HBox spacing="12" padding="12" alignment="CENTER_LEFT">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
             <Label fx:id="welcomeLabel" styleClass="header-label"/>
             <Label fx:id="billingLabel"/>
             <Pane HBox.hgrow="ALWAYS"/>
@@ -14,12 +17,19 @@
         </HBox>
     </top>
     <left>
-        <VBox spacing="8" padding="12">
+        <VBox spacing="8">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
             <Button fx:id="searchButton" text="Search" onAction="#loadSearchView" styleClass="primary-button"/>
             <Button fx:id="createButton" text="Create/Modify" onAction="#loadEditView"/>
         </VBox>
     </left>
     <center>
-        <BorderPane fx:id="contentPane" prefWidth="700" prefHeight="500" padding="12"/>
+        <BorderPane fx:id="contentPane" prefWidth="700" prefHeight="500">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+        </BorderPane>
     </center>
 </BorderPane>

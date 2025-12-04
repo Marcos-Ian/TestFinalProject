@@ -4,7 +4,10 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.KioskBookingController" padding="20" prefWidth="900" prefHeight="600">
+            fx:controller="controller.KioskBookingController" prefWidth="900" prefHeight="600">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Step 1: Dates & Guests" styleClass="header-label"/>
