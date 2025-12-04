@@ -120,6 +120,23 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public List<Reservation> searchReservations(String guestName, LocalDate start, LocalDate end, String status)
+    {
+        List<Reservation> all = reservationRepository.findAll();
+        return all.stream()
+            .filter(r -> {
+                if (guestName != null && !guestName.isBlank()) {
+                    String fullName = (r.getGuest().getFirstName() + " " + r.getGuest().getLastName()).toLowerCase();
+                    if (!fullName.contains(guestName.toLowerCase())) return false;
+                }
+                if (start != null && r.getCheckIn().isBefore(start)) return false;
+                if (end != null && r.getCheckOut().isAfter(end)) return false;
+                if (status != null && (r.getStatus() == null || !r.getStatus().equalsIgnoreCase(status))) return false;
+                return true;
+            })
+            .toList();
+    }
+
     /**
      * Search reservations using optional filters that mirror the admin UI fields.
      *
