@@ -31,11 +31,11 @@
                     <ColumnConstraints percentWidth="60"/>
                 </columnConstraints>
 
-                <Label text="Adults" GridPane.rowIndex="0"/>
-                <Spinner fx:id="adultsSpinner" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="true"/>
+                <Label text="Adults" GridPane.rowIndex="0" visible="false" managed="false"/>
+                <Spinner fx:id="adultsSpinner" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="true" visible="false" managed="false"/>
 
-                <Label text="Children" GridPane.rowIndex="1"/>
-                <Spinner fx:id="childrenSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="true"/>
+                <Label text="Children" GridPane.rowIndex="1" visible="false" managed="false"/>
+                <Spinner fx:id="childrenSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="true" visible="false" managed="false"/>
 
                 <Label text="Check-in date*" GridPane.rowIndex="2"/>
                 <DatePicker fx:id="checkInPicker" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.rowSpan="1"/>

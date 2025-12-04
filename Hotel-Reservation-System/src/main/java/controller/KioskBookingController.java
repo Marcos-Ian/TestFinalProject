@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.Stage;
 import model.RoomType;
 import service.BillingContext;
@@ -33,10 +32,6 @@ public class KioskBookingController {
     private final BillingContext billingContext;
     private final PricingConfig pricingConfig;
 
-    @FXML
-    private Spinner<Integer> adultsSpinner;
-    @FXML
-    private Spinner<Integer> childrenSpinner;
     @FXML
     private DatePicker checkInPicker;
     @FXML
@@ -79,24 +74,38 @@ public class KioskBookingController {
 
     @FXML
     public void initialize() {
-        adultsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 6, 1));
-        childrenSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 4, 0));
-        checkInPicker.setValue(LocalDate.now().plusDays(1));
-        checkOutPicker.setValue(LocalDate.now().plusDays(2));
+        int adults = context.getAdults();
+        int children = context.getChildren();
+
+        LocalDate checkIn = context.getCheckIn();
+        LocalDate checkOut = context.getCheckOut();
+
+        if (checkIn == null) {
+            checkIn = LocalDate.now().plusDays(1);
+        }
+        if (checkOut == null || !checkOut.isAfter(checkIn)) {
+            checkOut = checkIn.plusDays(1);
+        }
+
+        checkInPicker.setValue(checkIn);
+        checkOutPicker.setValue(checkOut);
 
         loadAvailableRooms();
         refreshSuggestions();
 
-        adultsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> refreshSuggestions());
-        childrenSpinner.valueProperty().addListener((obs, oldVal, newVal) -> refreshSuggestions());
-        checkInPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+        checkInPicker.valueProperty().addListener((obs, oldV, newV) -> {
+            context.setCheckIn(newV);
             loadAvailableRooms();
             refreshSuggestions();
         });
-        checkOutPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+
+        checkOutPicker.valueProperty().addListener((obs, oldV, newV) -> {
+            context.setCheckOut(newV);
             loadAvailableRooms();
             refreshSuggestions();
         });
+
+        occupancyLabel.setText("Guests: " + (adults + children));
     }
 
     private void loadAvailableRooms() {
@@ -139,30 +148,19 @@ public class KioskBookingController {
         }
     }
 
-    @FXML
     private void refreshSuggestions() {
         LocalDate checkIn = checkInPicker.getValue();
         LocalDate checkOut = checkOutPicker.getValue();
-        int adults = adultsSpinner.getValue();
-        int children = childrenSpinner.getValue();
+        int adults = context.getAdults();
+        int children = context.getChildren();
 
-        // Store current state in the existing KioskFlowContext
-        context.setAdults(adults);
-        context.setChildren(children);
-        context.setCheckIn(checkIn);
-        context.setCheckOut(checkOut);
-
-        // Use RoomService.suggestRooms to generate group booking suggestions
-        var suggestionText = roomService.suggestRooms(adults, children, checkIn, checkOut)
+        var items = roomService.suggestRooms(adults, children, checkIn, checkOut)
                 .stream()
                 .map(s -> s.getDescription() + " – " + String.join(", ", s.getRoomTypes()))
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
 
-        suggestionsList.setItems(FXCollections.observableArrayList(suggestionText));
+        suggestionsList.setItems(javafx.collections.FXCollections.observableArrayList(items));
         occupancyLabel.setText("Guests: " + (adults + children));
-
-        // Keep the existing pricing preview behaviour
-        updatePricingPreview();
     }
 
     private void onInputsChanged() {
