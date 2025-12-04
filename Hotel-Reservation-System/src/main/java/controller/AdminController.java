@@ -12,7 +12,6 @@ import javafx.scene.layout.VBox;
 import model.Guest;
 import model.Reservation;
 import model.RoomType;
-import security.AdminRole;
 import security.AdminUser;
 import security.AuthenticationService;
 import service.BillingContext;
@@ -1276,7 +1275,7 @@ public class AdminController {
         }
 
         // Check role-based caps
-        double maxDiscount = currentAdmin.getRole() == AdminRole.MANAGER ? 30.0 : 15.0;
+        double maxDiscount = currentAdmin.getRole() == AdminUser.Role.MANAGER ? 30.0 : 15.0;
 
         if (discountPercent > maxDiscount) {
             showWarning("Discount Limit",

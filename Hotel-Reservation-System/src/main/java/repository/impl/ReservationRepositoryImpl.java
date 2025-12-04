@@ -35,12 +35,20 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return List.of();
+        TypedQuery<Reservation> query = entityManager.createQuery(
+                "SELECT r FROM Reservation r",
+                Reservation.class);
+        return query.getResultList();
     }
 
     @Override
     public void delete(Long id) {
-
+        entityManager.getTransaction().begin();
+        Reservation reservation = entityManager.find(Reservation.class, id);
+        if (reservation != null) {
+            entityManager.remove(reservation);
+        }
+        entityManager.getTransaction().commit();
     }
 
     @Override
@@ -70,11 +78,19 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findByStatus(String status) {
-        return List.of();
+        TypedQuery<Reservation> query = entityManager.createQuery(
+                "SELECT r FROM Reservation r WHERE r.status = :status",
+                Reservation.class);
+        query.setParameter("status", status);
+        return query.getResultList();
     }
 
     @Override
     public List<Reservation> findByGuestPhone(String phone) {
-        return List.of();
+        TypedQuery<Reservation> query = entityManager.createQuery(
+                "SELECT r FROM Reservation r WHERE r.guest.phone = :phone",
+                Reservation.class);
+        query.setParameter("phone", phone);
+        return query.getResultList();
     }
 }

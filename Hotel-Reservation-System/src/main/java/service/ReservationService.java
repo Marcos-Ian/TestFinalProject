@@ -9,9 +9,6 @@ import model.RoomType;
 import repository.GuestRepository;
 import repository.ReservationRepository;
 import util.ValidationUtils;
-import java.util.Collections;
-import model.Guest;
-import java.util.UUID;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +111,41 @@ public class ReservationService {
         validateReservation(reservation);
 
         return reservationRepository.save(reservation);
+    }
+
+    /**
+     * Retrieve every reservation in the system.
+     */
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll();
+    }
+
+    /**
+     * Search reservations using optional filters that mirror the admin UI fields.
+     *
+     * @param name      guest name (optional, partial match)
+     * @param phone     guest phone (optional, exact match)
+     * @param startDate check-in on/after (optional)
+     * @param endDate   check-out on/before (optional)
+     * @param status    reservation status (optional, "All" to ignore)
+     * @return matching reservations
+     */
+    public List<Reservation> searchReservations(String name, String phone,
+                                                LocalDate startDate, LocalDate endDate,
+                                                String status) {
+        List<Reservation> all = reservationRepository.findAll();
+
+        return all.stream()
+                .filter(res -> name == null || name.isBlank() ||
+                        (res.getGuest() != null && matchesIgnoreCase(res.getGuest().getFirstName(), name)) ||
+                        (res.getGuest() != null && matchesIgnoreCase(res.getGuest().getLastName(), name)))
+                .filter(res -> phone == null || phone.isBlank() ||
+                        (res.getGuest() != null && phone.equals(res.getGuest().getPhone())))
+                .filter(res -> startDate == null || (res.getCheckIn() != null && !res.getCheckIn().isBefore(startDate)))
+                .filter(res -> endDate == null || (res.getCheckOut() != null && !res.getCheckOut().isAfter(endDate)))
+                .filter(res -> status == null || status.equalsIgnoreCase("All") ||
+                        (res.getStatus() != null && res.getStatus().equalsIgnoreCase(status)))
+                .toList();
     }
 
     /**
@@ -221,5 +253,9 @@ public class ReservationService {
         // TODO: Check if guest exists by email and update instead of creating new
         // For now, just save
         return guestRepository.save(guest);
+    }
+
+    private boolean matchesIgnoreCase(String value, String query) {
+        return value != null && value.toLowerCase().contains(query.toLowerCase());
     }
 }
