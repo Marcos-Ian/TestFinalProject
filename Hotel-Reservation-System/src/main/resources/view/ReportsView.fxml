@@ -112,7 +112,7 @@
                             <Insets top="15" right="15" bottom="15" left="15"/>
                         </padding>
                         <Label text="Total Revenue" styleClass="card-label"/>
-                        <Label fx:id="totalRevenueLabel" text="$0.00" styleClass="card-value">
+                        <Label fx:id="totalRevenueLabel" text="\$0.00" styleClass="card-value">
                             <font>
                                 <Font name="System Bold" size="28"/>
                             </font>
@@ -136,7 +136,7 @@
                             <Insets top="15" right="15" bottom="15" left="15"/>
                         </padding>
                         <Label text="Average Per Booking" styleClass="card-label"/>
-                        <Label fx:id="avgRevenueLabel" text="$0.00" styleClass="card-value">
+                        <Label fx:id="avgRevenueLabel" text="\$0.00" styleClass="card-value">
                             <font>
                                 <Font name="System Bold" size="28"/>
                             </font>

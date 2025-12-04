@@ -1,5 +1,6 @@
 package app;
 
+import security.AuthenticationService;
 import app.config.EntityManagerProvider;
 import config.LoyaltyConfig;
 import config.PricingConfig;
@@ -31,6 +32,7 @@ public class Bootstrap {
     private static RoomService roomService;
     private static LoyaltyService loyaltyService;
     private static BillingContext billingContext;
+    private static AuthenticationService authenticationService;
 
     // Configuration instances
     private static PricingConfig pricingConfig;
@@ -66,6 +68,8 @@ public class Bootstrap {
             roomService = new RoomService(roomAvailabilitySubject);
             loyaltyService = new LoyaltyService(loyaltyConfig);
             LOGGER.info("Services initialized");
+            authenticationService = new AuthenticationService();
+            LOGGER.info("Authentication service initialized");
 
             // Initialize billing context with default strategy
             billingContext = new BillingContext();
@@ -131,6 +135,12 @@ public class Bootstrap {
             throw new IllegalStateException("Application not initialized. Call main() first.");
         }
         return billingContext;
+    }
+    public static AuthenticationService getAuthenticationService() {
+        if (authenticationService == null) {
+            authenticationService = new AuthenticationService();
+        }
+        return authenticationService;
     }
 
     public static PricingConfig getPricingConfig() {

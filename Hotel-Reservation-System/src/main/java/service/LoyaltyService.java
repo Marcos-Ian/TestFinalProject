@@ -1,7 +1,8 @@
 package service;
 
 import config.LoyaltyConfig;
-
+import model.Guest;
+import java.util.UUID;
 /**
  * Provides loyalty point earning and redemption calculations.
  */
