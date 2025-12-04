@@ -33,6 +33,8 @@ public class ReservationSearchController {
     @FXML
     private TextField guestField;
     @FXML
+    private TextField phoneField;
+    @FXML
     private DatePicker startDatePicker;
     @FXML
     private DatePicker endDatePicker;
@@ -72,13 +74,14 @@ public class ReservationSearchController {
             statusCombo.getSelectionModel().selectFirst();
         }
         configureTable();
-        List<Reservation> all = reservationService.searchReservations(null, null, null, null);
+        List<Reservation> all = reservationService.searchReservations(null, null, null, null, null);
         reservationTable.setItems(FXCollections.observableArrayList(all));
     }
 
     @FXML
     private void onSearchClicked() {
         String guest = guestField.getText();
+        String phone = phoneField.getText() == null ? "" : phoneField.getText().trim();
         LocalDate start = startDatePicker.getValue();
         LocalDate end = endDatePicker.getValue();
 
@@ -90,6 +93,7 @@ public class ReservationSearchController {
         List<Reservation> results =
                 reservationService.searchReservations(
                         (guest == null || guest.isBlank()) ? null : guest.trim(),
+                        phone,
                         start,
                         end,
                         status
@@ -110,8 +114,9 @@ public class ReservationSearchController {
                 "SEARCH",
                 "Reservation",
                 "-",
-                String.format("Reservation search executed with filters: guest='%s', start=%s, end=%s, status=%s, results=%d",
+                String.format("Reservation search executed with filters: guest='%s', phone='%s', start=%s, end=%s, status=%s, results=%d",
                         guest,
+                        phone,
                         start,
                         end,
                         status,
