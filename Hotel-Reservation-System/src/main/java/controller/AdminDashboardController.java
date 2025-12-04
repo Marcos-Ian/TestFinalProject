@@ -56,7 +56,7 @@ public class AdminDashboardController {
     @FXML
     public void initialize() throws IOException {
         welcomeLabel.setText("Welcome, " + adminUser.getUsername());
-        billingLabel.setText("Billing strategy configured");
+        billingLabel.setText("Billing Strategy: " + billingContext.getStrategy().getClass().getSimpleName());
         loadSearchView();
     }
 

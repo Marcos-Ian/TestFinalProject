@@ -16,7 +16,6 @@ import service.RoomService;
 import service.factory.RoomFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -92,28 +91,11 @@ public class KioskBookingController {
 
         List<String> suggestionText = roomService.suggestRooms(adults, children, checkIn, checkOut)
                 .stream()
-                .map(this::formatSuggestion)
+                .map(s -> s.getDescription() + " – " + String.join(", ", s.getRoomTypes()))
                 .toList();
         suggestionsList.setItems(FXCollections.observableArrayList(suggestionText));
         occupancyLabel.setText("Guests: " + (adults + children));
         updatePricingPreview();
-    }
-
-    private String formatSuggestion(Object suggestion) {
-        try {
-            Method desc = suggestion.getClass().getDeclaredMethod("getDescription");
-            Method types = suggestion.getClass().getDeclaredMethod("getRoomTypes");
-            desc.setAccessible(true);
-            types.setAccessible(true);
-            Object description = desc.invoke(suggestion);
-            Object roomTypes = types.invoke(suggestion);
-            if (roomTypes instanceof List<?> list) {
-                return description + " – " + String.join(", ", list.stream().map(Object::toString).toList());
-            }
-            return Objects.toString(description);
-        } catch (Exception e) {
-            return suggestion.toString();
-        }
     }
 
     @FXML

@@ -77,7 +77,7 @@ public class AdminReservationSearchController {
                 statusCombo.getSelectionModel().getSelectedItem());
         ObservableList<Reservation> data = FXCollections.observableArrayList(results);
         reservationTable.setItems(data);
-        resultLabel.setText(results.size() + " matching reservations | Billing configured");
+        resultLabel.setText(results.size() + " matching reservations | Billing: " + billingContext.getStrategy().getClass().getSimpleName());
     }
 
     @FXML
