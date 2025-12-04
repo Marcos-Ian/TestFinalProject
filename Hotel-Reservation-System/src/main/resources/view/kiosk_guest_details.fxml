@@ -3,28 +3,71 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="12"
-      fx:controller="controller.KioskGuestDetailsController">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-    <Label text="Step 2: Guest Details" styleClass="header-label"/>
-    <GridPane hgap="10" vgap="10" styleClass="form-grid">
-        <columnConstraints>
-            <ColumnConstraints percentWidth="30"/>
-            <ColumnConstraints percentWidth="70"/>
-        </columnConstraints>
-        <Label text="First Name" GridPane.rowIndex="0"/>
-        <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Label text="Last Name" GridPane.rowIndex="1"/>
-        <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        <Label text="Phone" GridPane.rowIndex="2"/>
-        <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-        <Label text="Email" GridPane.rowIndex="3"/>
-        <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-    </GridPane>
-    <Label fx:id="errorLabel" textFill="red"/>
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button fx:id="nextButton" text="Next" onAction="#goToAddons" styleClass="primary-button"/>
-    </HBox>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.KioskGuestDetailsController">
+    <left>
+        <VBox spacing="10" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="20"/>
+            </padding>
+            <Label text="Booking Steps" styleClass="header-label"/>
+            <Label text="1) Guests"/>
+            <Label text="2) Dates &amp; plan"/>
+            <Label text="3) Details &amp; add-ons" style="-fx-font-weight: bold;"/>
+            <Label text="4) Review"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="16">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Step 3 – Guest details &amp; add-ons" styleClass="header-label"/>
+            <GridPane hgap="12" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="35"/>
+                    <ColumnConstraints percentWidth="65"/>
+                </columnConstraints>
+
+                <Label text="First name*" GridPane.rowIndex="0"/>
+                <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label fx:id="firstNameError" textFill="red" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Last name*" GridPane.rowIndex="2"/>
+                <TextField fx:id="lastNameField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lastNameError" textFill="red" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Email*" GridPane.rowIndex="4"/>
+                <TextField fx:id="emailField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label fx:id="emailError" textFill="red" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Phone*" GridPane.rowIndex="6"/>
+                <TextField fx:id="phoneField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                <Label fx:id="phoneError" textFill="red" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <TitledPane text="Add-ons" expanded="true">
+                <content>
+                    <GridPane hgap="12" vgap="8" padding="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                        <CheckBox fx:id="wifiCheck" text="Wi-Fi (+$10.00/night)" GridPane.rowIndex="0"/>
+                        <CheckBox fx:id="breakfastCheck" text="Breakfast (+$25.00/night)" GridPane.rowIndex="1"/>
+                        <CheckBox fx:id="parkingCheck" text="Parking (+$15.00/night)" GridPane.rowIndex="2"/>
+                        <CheckBox fx:id="spaCheck" text="Spa (+$100.00)" GridPane.rowIndex="3"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
+            <Label fx:id="addOnSummaryLabel" text="Add-ons subtotal: $0.00"/>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Back" onAction="#backToDates"/>
+                <Button fx:id="nextButton" text="Next: Review" onAction="#goToSummary" styleClass="primary-button"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
