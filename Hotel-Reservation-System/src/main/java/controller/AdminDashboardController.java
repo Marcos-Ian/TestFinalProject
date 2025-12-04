@@ -64,11 +64,25 @@ public class AdminDashboardController {
     private void loadSearchView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_reservation_search.fxml"));
         loader.setControllerFactory(type -> type == AdminReservationSearchController.class
-                ? new AdminReservationSearchController(reservationService, loyaltyService, billingContext, waitlistService, this::loadEditView)
+                ? new AdminReservationSearchController(
+                reservationService,
+                loyaltyService,
+                billingContext,
+                waitlistService,
+                (Void ignored) -> {
+                    try {
+                        loadEditView();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+        )
                 : createController(type));
         Parent view = loader.load();
         contentPane.setCenter(view);
     }
+
+
 
     @FXML
     private void loadEditView() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.KioskBookingController" padding="20" prefWidth="900" prefHeight="600">
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Step 1: Dates & Guests" styleClass="header-label"/>
+            <Label fx:id="errorLabel" textFill="red"/>
+        </HBox>
+    </top>
+    <center>
+        <GridPane hgap="12" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <RowConstraints percentHeight="33"/>
+            <RowConstraints percentHeight="33"/>
+            <RowConstraints percentHeight="33"/>
+
+            <Label text="Check-In" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="checkInPicker" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#refreshSuggestions"/>
+
+            <Label text="Check-Out" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#refreshSuggestions"/>
+
+            <Label text="Adults" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Spinner fx:id="adultsSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" onMouseClicked="#refreshSuggestions" editable="true"/>
+
+            <Label text="Children" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Spinner fx:id="childrenSpinner" GridPane.rowIndex="3" GridPane.columnIndex="1" onMouseClicked="#refreshSuggestions" editable="true"/>
+
+            <Label text="Available room type" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="roomTypeCombo" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="240"/>
+
+            <Label text="Suggestions" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <ListView fx:id="suggestionsList" GridPane.rowIndex="5" GridPane.columnIndex="1" prefHeight="150"/>
+
+            <Label fx:id="occupancyLabel" text="Guests:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <Label fx:id="pricingLabel" text="Pricing" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Next" onAction="#goToGuestDetails" styleClass="primary-button"/>
+        </HBox>
+    </bottom>
+</BorderPane>

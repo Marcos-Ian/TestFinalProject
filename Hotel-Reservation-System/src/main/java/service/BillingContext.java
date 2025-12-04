@@ -54,7 +54,9 @@ public class BillingContext {
     public void setStrategy(BillingStrategy strategy) {
         this.strategy = strategy;
     }
-
+    public BillingStrategy getStrategy() {
+        return strategy;
+    }
     public void setPricingConfig(PricingConfig pricingConfig) {
         this.pricingConfig = pricingConfig;
     }
