@@ -5,15 +5,11 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TableRow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Reservation;
@@ -27,8 +23,6 @@ import util.ActivityLogger;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -39,7 +33,6 @@ import java.util.logging.Logger;
  */
 public class ReservationSearchController {
     private static final Logger logger = Logger.getLogger(ReservationSearchController.class.getName());
-    private static final int ROWS_PER_PAGE = 10;
 
     private final ReservationService reservationService;
     private final LoyaltyService loyaltyService;
@@ -47,7 +40,6 @@ public class ReservationSearchController {
     private final WaitlistService waitlistService;
     private final Consumer<Void> editLoader;
     private final AuthenticationService authService;
-    private List<Reservation> allResults = new ArrayList<>();
 
     @FXML
     private TextField guestField;
@@ -80,8 +72,6 @@ public class ReservationSearchController {
     private Label resultsLabel;
     @FXML
     private Button addWaitlistButton;
-    @FXML
-    private Pagination reservationPagination;
 
     public ReservationSearchController() {
         this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyService(),
@@ -110,7 +100,6 @@ public class ReservationSearchController {
             statusCombo.getSelectionModel().selectFirst();
         }
         configureTable();
-        reservationTable.getSortOrder().addListener((ListChangeListener<TableColumn<Reservation, ?>>) c -> applySortingAndRefreshPage());
         reservationTable.setRowFactory(tv -> {
             TableRow<Reservation> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -154,10 +143,9 @@ public class ReservationSearchController {
                 statusFilter
         );
 
-        allResults = results;
-        applySortingAndRefreshPage();
+        reservationTable.setItems(FXCollections.observableArrayList(results));
         if (resultsLabel != null) {
-            resultsLabel.setText(allResults.size() + " matching reservations | Billing: StandardBillingStrategy");
+            resultsLabel.setText(results.size() + " matching reservations | Billing: StandardBillingStrategy");
         }
 
         String actor = "UNKNOWN";
@@ -177,7 +165,7 @@ public class ReservationSearchController {
                         start,
                         end,
                         status,
-                        allResults.size())
+                        results.size())
         );
     }
 
@@ -208,41 +196,6 @@ public class ReservationSearchController {
                 selected.getGuest().getFirstName() + " " + selected.getGuest().getLastName() : "Walk-in";
         waitlistService.addToWaitlist(guestName, "DOUBLE", selected.getCheckIn());
         resultsLabel.setText("Added to waitlist and loyalty checked (points accrue on stay).");
-    }
-
-    private Node createPage(int pageIndex) {
-        if (allResults == null || allResults.isEmpty()) {
-            reservationTable.setItems(FXCollections.observableArrayList());
-            return reservationTable;
-        }
-
-        int fromIndex = pageIndex * ROWS_PER_PAGE;
-        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, allResults.size());
-
-        if (fromIndex >= allResults.size()) {
-            reservationTable.setItems(FXCollections.observableArrayList());
-            return reservationTable;
-        }
-
-        ObservableList<Reservation> pageData =
-                FXCollections.observableArrayList(allResults.subList(fromIndex, toIndex));
-
-        reservationTable.setItems(pageData);
-        return reservationTable;
-    }
-
-    private void applySortingAndRefreshPage() {
-        if (allResults == null || reservationTable == null || reservationPagination == null) return;
-        Comparator<? super Reservation> comparator = reservationTable.getComparator();
-        if (comparator != null) {
-            allResults.sort(comparator);
-        }
-        int pageCount = (int) Math.ceil((double) allResults.size() / ROWS_PER_PAGE);
-        if (pageCount == 0) pageCount = 1;
-        reservationPagination.setPageCount(pageCount);
-        int currentPage = Math.min(reservationPagination.getCurrentPageIndex(), pageCount - 1);
-        reservationPagination.setPageFactory(this::createPage);
-        reservationPagination.setCurrentPageIndex(currentPage);
     }
 
     private void openReservationEditor(Reservation reservation) throws IOException {
