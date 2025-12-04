@@ -47,7 +47,7 @@ public class KioskBookingController {
     @FXML
     private RadioButton suggestedRadio;
     @FXML
-    private RadioButton customRadio;
+    private RadioButton chooseMyOwnRoomsRadio;
     @FXML
     private ComboBox<RoomType> roomTypeCombo;
     @FXML
@@ -104,17 +104,17 @@ public class KioskBookingController {
         );
         roomCountSpinner.setEditable(true);
 
-        if (suggestedRadio.getToggleGroup() == null && customRadio.getToggleGroup() == null) {
+        if (suggestedRadio.getToggleGroup() == null && chooseMyOwnRoomsRadio.getToggleGroup() == null) {
             ToggleGroup group = new ToggleGroup();
             suggestedRadio.setToggleGroup(group);
-            customRadio.setToggleGroup(group);
+            chooseMyOwnRoomsRadio.setToggleGroup(group);
         }
 
         suggestedRadio.setSelected(true);
         updatePlanMode();
 
         suggestedRadio.setOnAction(e -> updatePlanMode());
-        customRadio.setOnAction(e -> updatePlanMode());
+        chooseMyOwnRoomsRadio.setOnAction(e -> updatePlanMode());
 
         checkInPicker.valueProperty().addListener((obs, oldV, newV) -> {
             context.setCheckIn(newV);
@@ -193,14 +193,11 @@ public class KioskBookingController {
             }
 
         } else {
-            RoomType type = roomTypeCombo.getValue();
-            Integer qty = roomCountSpinner.getValue();
-            if (type == null || qty == null || qty <= 0) {
+            List<RoomType> rooms = explicitRoomsFromUserSelection();
+            if (rooms == null || rooms.isEmpty()) {
                 return;
             }
-            for (int i = 0; i < qty; i++) {
-                selectedRooms.add(type);
-            }
+            selectedRooms.addAll(rooms);
         }
 
         if (!roomService.validateOccupancy(selectedRooms, adults, children)) {
@@ -211,7 +208,32 @@ public class KioskBookingController {
         context.setCheckIn(checkIn);
         context.setCheckOut(checkOut);
 
+        if (chooseMyOwnRoomsRadio.isSelected()) {
+            List<RoomType> rooms = explicitRoomsFromUserSelection();
+
+            if (!isCustomSelectionValid(rooms, context.getAdults(), context.getChildren())) {
+                showInvalidRoomsAlert();
+                return; // STOP navigation if invalid
+            }
+
+            context.setSelectedRooms(rooms);
+        }
+
         loadScene("/view/kiosk_guest_details.fxml");
+    }
+
+    @FXML
+    private void showBookingRules() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Rules and Regulations");
+        alert.setHeaderText("Hotel Booking Rules");
+        alert.setContentText(
+                "1. Single room: Max 2 adults.\n" +
+                        "2. Double room: Max 4 adults.\n" +
+                        "3. Deluxe and Penthouse rooms: Max 2 adults.\n" +
+                        "4. More than 2 adults up to 5: Double room or two singles offered."
+        );
+        alert.showAndWait();
     }
 
     private void refreshSuggestions() {
@@ -234,6 +256,53 @@ public class KioskBookingController {
         occupancyLabel.setText("Guests: " + (adults + children));
     }
 
+    private List<RoomType> explicitRoomsFromUserSelection() {
+        RoomType type = roomTypeCombo.getValue();
+        Integer qty = roomCountSpinner.getValue();
+        if (type == null || qty == null || qty <= 0) {
+            return java.util.Collections.emptyList();
+        }
+
+        List<RoomType> rooms = new ArrayList<>();
+        for (int i = 0; i < qty; i++) {
+            rooms.add(type);
+        }
+        return rooms;
+    }
+
+    private boolean isCustomSelectionValid(List<RoomType> rooms, int adults, int children) {
+        int capacityAdults = 0;
+
+        for (RoomType type : rooms) {
+            int perRoom = switch (type) {
+                case SINGLE -> 2;
+                case DOUBLE -> 4;
+                case DELUXE, PENTHOUSE -> 2;
+            };
+            capacityAdults += perRoom;
+        }
+
+        if (adults == 1 && (adults + children) == 1) {
+            return true;
+        }
+
+        return adults <= capacityAdults;
+    }
+
+    private void showInvalidRoomsAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Rules and Regulations");
+        alert.setHeaderText("Invalid room selection");
+        alert.setContentText(
+                "Your selection does not satisfy the occupancy rules.\n\n" +
+                        "1. Single room: Max 2 adults.\n" +
+                        "2. Double room: Max 4 adults.\n" +
+                        "3. Deluxe and Penthouse rooms: Max 2 adults.\n" +
+                        "4. More than 2 adults up to 5: Double room or two singles offered."
+        );
+        alert.showAndWait();
+    }
+
     private void onInputsChanged() {
         updateCustomControls();
         validateDates();
@@ -245,7 +314,7 @@ public class KioskBookingController {
     }
 
     private void updateCustomControls() {
-        boolean custom = customRadio.isSelected();
+        boolean custom = chooseMyOwnRoomsRadio.isSelected();
         roomTypeCombo.setDisable(!custom);
         roomCountSpinner.setDisable(!custom);
         customNoticeLabel.setDisable(!custom);

@@ -16,6 +16,9 @@
             <Label text="2) Dates &amp; plan" style="-fx-font-weight: bold;"/>
             <Label text="3) Details &amp; add-ons"/>
             <Label text="4) Review"/>
+            <Button text="Hotel booking rules"
+                    maxWidth="Infinity"
+                    onAction="#showBookingRules"/>
         </VBox>
     </left>
 
@@ -52,7 +55,7 @@
                     <ListView fx:id="suggestionsList" prefHeight="100"/>
                     <HBox spacing="10">
                         <RadioButton fx:id="suggestedRadio" text="Use suggested plan"/>
-                        <RadioButton fx:id="customRadio" text="Choose my own rooms"/>
+                        <RadioButton fx:id="chooseMyOwnRoomsRadio" text="Choose my own rooms"/>
                     </HBox>
                 </VBox>
 
