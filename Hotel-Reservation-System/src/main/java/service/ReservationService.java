@@ -9,8 +9,10 @@ import model.ReservationStatus;
 import model.RoomType;
 import repository.GuestRepository;
 import repository.ReservationRepository;
+import repository.RoomRepository;
 import util.ValidationUtils;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -24,11 +26,14 @@ public class ReservationService {
 
     private final GuestRepository guestRepository;
     private final ReservationRepository reservationRepository;
+    private final RoomRepository roomRepository;
 
     public ReservationService(GuestRepository guestRepository,
-                              ReservationRepository reservationRepository) {
+                              ReservationRepository reservationRepository,
+                              RoomRepository roomRepository) {
         this.guestRepository = guestRepository;
         this.reservationRepository = reservationRepository;
+        this.roomRepository = roomRepository;
     }
 
     /**
@@ -76,8 +81,10 @@ public class ReservationService {
         ValidationUtils.require(rooms != null && !rooms.isEmpty(),
                 "At least one room must be selected");
 
+        List<RoomType> managedRooms = attachManagedRooms(rooms);
+
         // Save reservation
-        Reservation saved = reservationRepository.saveOrUpdate(reservation, rooms);
+        Reservation saved = reservationRepository.saveOrUpdate(reservation, managedRooms);
 
         // TODO: Save room bookings and add-ons in separate tables
         // This would require ReservationRoom and ReservationAddOn entities
@@ -176,7 +183,8 @@ public class ReservationService {
         if (rooms == null) {
             rooms = new java.util.ArrayList<>();
         }
-        for (RoomType room : rooms) {
+        List<RoomType> managedRooms = attachManagedRooms(rooms);
+        for (RoomType room : managedRooms) {
             boolean conflict = reservationRepository.hasConflict(
                     room,
                     reservation.getCheckIn(),
@@ -190,7 +198,7 @@ public class ReservationService {
             }
         }
         reservation.setStatus(ReservationStatus.BOOKED);
-        reservationRepository.saveOrUpdate(reservation, rooms);
+        reservationRepository.saveOrUpdate(reservation, managedRooms);
     }
 
     public void cancelReservation(Reservation reservation) {
@@ -259,6 +267,34 @@ public class ReservationService {
         ValidationUtils.require(guest.getEmail() != null &&
                         guest.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$"),
                 "Valid email address is required");
+    }
+
+    private List<RoomType> attachManagedRooms(List<RoomType> rooms) {
+        if (rooms == null || rooms.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<RoomType> managed = new ArrayList<>();
+        for (RoomType room : rooms) {
+            if (room == null) continue;
+
+            RoomType managedRoom = null;
+            if (room.getId() != null) {
+                managedRoom = roomRepository.findById(room.getId()).orElse(null);
+            }
+
+            if (managedRoom == null && room.getType() != null) {
+                managedRoom = roomRepository.findByType(room.getType()).orElse(null);
+            }
+
+            if (managedRoom == null) {
+                throw new IllegalArgumentException("Unknown room type: " + room.getType());
+            }
+
+            managed.add(managedRoom);
+        }
+
+        return managed;
     }
 
     /**

@@ -272,14 +272,20 @@ public class ReservationSearchController {
 
     private void configureTable() {
         if (idColumn != null) {
-            idColumn.setCellValueFactory(c ->
-                    new SimpleLongProperty(c.getValue().getId()).asObject());
+            idColumn.setCellValueFactory(c -> {
+                Long id = c.getValue().getId();
+                return new SimpleLongProperty(id == null ? 0L : id).asObject();
+            });
         }
         if (guestColumn != null) {
             guestColumn.setCellValueFactory(c -> {
                 var g = c.getValue().getGuest();
-                String name = (g == null) ? "Walk-in"
-                        : (g.getFirstName() + " " + g.getLastName()).trim();
+                if (g == null) {
+                    return new SimpleStringProperty("Walk-in");
+                }
+                String first = g.getFirstName() == null ? "" : g.getFirstName();
+                String last = g.getLastName() == null ? "" : g.getLastName();
+                String name = (first + " " + last).trim();
                 return new SimpleStringProperty(name);
             });
         }
