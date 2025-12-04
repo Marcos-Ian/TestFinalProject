@@ -48,22 +48,20 @@
                 <Label fx:id="phoneError" textFill="red" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
             </GridPane>
 
-            <VBox spacing="8">
-                <Label text="Add-ons" style="-fx-font-weight: bold;"/>
-                <GridPane hgap="12" vgap="8">
-                    <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
-                    </padding>
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="50"/>
-                        <ColumnConstraints percentWidth="50"/>
-                    </columnConstraints>
-                    <CheckBox fx:id="wifiCheck" text="Wi-Fi (+$10.00/night)" GridPane.rowIndex="0"/>
-                    <CheckBox fx:id="breakfastCheck" text="Breakfast (+$25.00/night)" GridPane.rowIndex="1"/>
-                    <CheckBox fx:id="parkingCheck" text="Parking (+$15.00/night)" GridPane.rowIndex="2"/>
-                    <CheckBox fx:id="spaCheck" text="Spa (+$100.00)" GridPane.rowIndex="3"/>
-                </GridPane>
-            </VBox>
+            <TitledPane text="Add-ons" expanded="true">
+                <content>
+                    <GridPane hgap="12" vgap="8" padding="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                        <CheckBox fx:id="wifiCheck" text="Wi-Fi (+$10.00/night)" GridPane.rowIndex="0"/>
+                        <CheckBox fx:id="breakfastCheck" text="Breakfast (+$25.00/night)" GridPane.rowIndex="1"/>
+                        <CheckBox fx:id="parkingCheck" text="Parking (+$15.00/night)" GridPane.rowIndex="2"/>
+                        <CheckBox fx:id="spaCheck" text="Spa (+$100.00)" GridPane.rowIndex="3"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
             <Label fx:id="addOnSummaryLabel" text="Add-ons subtotal: $0.00"/>
 
             <HBox spacing="10" alignment="CENTER_RIGHT">
