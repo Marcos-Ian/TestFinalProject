@@ -23,6 +23,15 @@ public class LoyaltyService {
         return Math.max(0, amount - credit);
     }
 
+    /**
+     * Enroll a guest into the loyalty program and return a generated loyalty number.
+     * This basic implementation simply generates and returns an identifier; persistence
+     * can be added later when a loyalty repository exists.
+     */
+    public String enrollGuest(Guest guest) {
+        return "LOY-" + UUID.randomUUID();
+    }
+
     public LoyaltyConfig getLoyaltyConfig() {
         return loyaltyConfig;
     }
