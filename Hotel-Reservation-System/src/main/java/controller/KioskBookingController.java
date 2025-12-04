@@ -34,6 +34,10 @@ public class KioskBookingController {
     private final PricingConfig pricingConfig;
 
     @FXML
+    private Spinner<Integer> adultsSpinner;
+    @FXML
+    private Spinner<Integer> childrenSpinner;
+    @FXML
     private DatePicker checkInPicker;
     @FXML
     private DatePicker checkOutPicker;
@@ -51,6 +55,10 @@ public class KioskBookingController {
     private ComboBox<RoomType> roomTypeCombo;
     @FXML
     private Spinner<Integer> roomCountSpinner;
+    @FXML
+    private ListView<String> suggestionsList;
+    @FXML
+    private Label occupancyLabel;
     @FXML
     private Label customNoticeLabel;
     @FXML
@@ -70,26 +78,52 @@ public class KioskBookingController {
     }
 
     @FXML
-    private void initialize() {
-        ToggleGroup planToggle = new ToggleGroup();
-        suggestedRadio.setToggleGroup(planToggle);
-        customRadio.setToggleGroup(planToggle);
+    public void initialize() {
+        adultsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 6, 1));
+        childrenSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 4, 0));
+        checkInPicker.setValue(LocalDate.now().plusDays(1));
+        checkOutPicker.setValue(LocalDate.now().plusDays(2));
 
-        roomCountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1));
+        loadAvailableRooms();
+        refreshSuggestions();
 
-        LocalDate today = LocalDate.now();
-        checkInPicker.setValue(context.getCheckIn() != null ? context.getCheckIn() : today.plusDays(1));
-        checkOutPicker.setValue(context.getCheckOut() != null ? context.getCheckOut() : today.plusDays(2));
+        adultsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> refreshSuggestions());
+        childrenSpinner.valueProperty().addListener((obs, oldVal, newVal) -> refreshSuggestions());
+        checkInPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            loadAvailableRooms();
+            refreshSuggestions();
+        });
+        checkOutPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            loadAvailableRooms();
+            refreshSuggestions();
+        });
+    }
 
-        planToggle.selectedToggleProperty().addListener((obs, oldVal, newVal) -> updateCustomControls());
-        checkInPicker.valueProperty().addListener((obs, o, n) -> onInputsChanged());
-        checkOutPicker.valueProperty().addListener((obs, o, n) -> onInputsChanged());
-        roomTypeCombo.valueProperty().addListener((obs, o, n) -> onInputsChanged());
-        roomCountSpinner.valueProperty().addListener((obs, o, n) -> onInputsChanged());
+    private void loadAvailableRooms() {
+        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkOut = checkOutPicker.getValue();
 
-        suggestedRadio.setSelected(true);
-        populateRoomTypes();
-        onInputsChanged();
+        if (checkIn == null || checkOut == null) {
+            roomTypeCombo.setItems(FXCollections.observableArrayList());
+            return;
+        }
+
+        List<RoomType> available = roomService.getAvailableRooms(checkIn, checkOut);
+        roomTypeCombo.setItems(FXCollections.observableArrayList(available));
+        roomTypeCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(RoomType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getType().name());
+            }
+        });
+        roomTypeCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(RoomType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getType().name());
+            }
+        });
     }
 
     @FXML
@@ -105,9 +139,39 @@ public class KioskBookingController {
         }
     }
 
+    @FXML
+    private void refreshSuggestions() {
+        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkOut = checkOutPicker.getValue();
+        int adults = adultsSpinner.getValue();
+        int children = childrenSpinner.getValue();
+
+        // Store current state in the existing KioskFlowContext
+        context.setAdults(adults);
+        context.setChildren(children);
+        context.setCheckIn(checkIn);
+        context.setCheckOut(checkOut);
+
+        // Use RoomService.suggestRooms to generate group booking suggestions
+        var suggestionText = roomService.suggestRooms(adults, children, checkIn, checkOut)
+                .stream()
+                .map(s -> s.getDescription() + " – " + String.join(", ", s.getRoomTypes()))
+                .toList();
+
+        suggestionsList.setItems(FXCollections.observableArrayList(suggestionText));
+        occupancyLabel.setText("Guests: " + (adults + children));
+
+        // Keep the existing pricing preview behaviour
+        updatePricingPreview();
+    }
+
     private void onInputsChanged() {
         updateCustomControls();
         validateDates();
+        updateSuggestionsAndEstimate();
+    }
+
+    private void updatePricingPreview() {
         updateSuggestionsAndEstimate();
     }
 

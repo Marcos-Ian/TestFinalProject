@@ -31,30 +31,38 @@
                     <ColumnConstraints percentWidth="60"/>
                 </columnConstraints>
 
-                <Label text="Check-in date*" GridPane.rowIndex="0"/>
-                <DatePicker fx:id="checkInPicker" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                <Label fx:id="checkInErrorLabel" textFill="red" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Adults" GridPane.rowIndex="0"/>
+                <Spinner fx:id="adultsSpinner" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="true"/>
 
-                <Label text="Check-out date*" GridPane.rowIndex="2"/>
-                <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                <Label fx:id="checkOutErrorLabel" textFill="red" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Label text="Children" GridPane.rowIndex="1"/>
+                <Spinner fx:id="childrenSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="true"/>
 
-                <Label text="Room suggestion" GridPane.rowIndex="4" GridPane.valignment="TOP"/>
-                <VBox spacing="6" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                <Label text="Check-in date*" GridPane.rowIndex="2"/>
+                <DatePicker fx:id="checkInPicker" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.rowSpan="1"/>
+                <Label fx:id="checkInErrorLabel" textFill="red" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Check-out date*" GridPane.rowIndex="4"/>
+                <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label fx:id="checkOutErrorLabel" textFill="red" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Room suggestion" GridPane.rowIndex="6" GridPane.valignment="TOP"/>
+                <VBox spacing="6" GridPane.rowIndex="6" GridPane.columnIndex="1">
                     <Label fx:id="suggestionLabel" wrapText="true"/>
+                    <Label fx:id="occupancyLabel"/>
+                    <ListView fx:id="suggestionsList" prefHeight="100"/>
                     <HBox spacing="10">
                         <RadioButton fx:id="suggestedRadio" text="Use suggested plan"/>
                         <RadioButton fx:id="customRadio" text="Choose my own rooms"/>
                     </HBox>
                 </VBox>
 
-                <Label text="Room type" GridPane.rowIndex="5"/>
-                <ComboBox fx:id="roomTypeCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="220"/>
+                <Label text="Room type" GridPane.rowIndex="7"/>
+                <ComboBox fx:id="roomTypeCombo" GridPane.rowIndex="7" GridPane.columnIndex="1" prefWidth="220"/>
 
-                <Label text="Quantity" GridPane.rowIndex="6"/>
-                <Spinner fx:id="roomCountSpinner" GridPane.rowIndex="6" GridPane.columnIndex="1" editable="true"/>
+                <Label text="Quantity" GridPane.rowIndex="8"/>
+                <Spinner fx:id="roomCountSpinner" GridPane.rowIndex="8" GridPane.columnIndex="1" editable="true"/>
 
-                <Label fx:id="customNoticeLabel" wrapText="true" GridPane.rowIndex="7" GridPane.columnIndex="1"
+                <Label fx:id="customNoticeLabel" wrapText="true" GridPane.rowIndex="9" GridPane.columnIndex="1"
                        text="If you choose your own room type and quantity, please review the booking policy carefully."/>
             </GridPane>
             <Label fx:id="estimateLabel" text="Room cost estimate: --"/>
