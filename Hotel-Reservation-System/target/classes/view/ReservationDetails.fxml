@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="src.main.java.controller.ReservationController"
+            fx:controller="controller.ReservationController"
             prefHeight="700.0" prefWidth="900.0" styleClass="details-container">
 
     <top>
@@ -192,16 +192,16 @@
                         </columnConstraints>
 
                         <Label text="Room Subtotal:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="financial-label"/>
-                        <Label fx:id="roomSubtotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="financial-value"/>
+                        <Label fx:id="roomSubtotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="financial-value"/>
 
                         <Label text="Add-ons Total:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="financial-label"/>
-                        <Label fx:id="addonsTotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="financial-value"/>
+                        <Label fx:id="addonsTotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="financial-value"/>
 
                         <Label text="Subtotal (before tax):" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="financial-label"/>
-                        <Label fx:id="subtotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="financial-value"/>
+                        <Label fx:id="subtotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="financial-value"/>
 
                         <Label text="Tax (13%):" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="financial-label"/>
-                        <Label fx:id="taxLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="financial-value"/>
+                        <Label fx:id="taxLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="financial-value"/>
 
                         <Label fx:id="discountRow" text="Discount Applied:" GridPane.columnIndex="0" GridPane.rowIndex="4"
                                styleClass="financial-label" visible="false" managed="false"/>
@@ -220,21 +220,21 @@
                                 <Font name="System Bold" size="18"/>
                             </font>
                         </Label>
-                        <Label fx:id="grandTotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="7" styleClass="total-value">
+                        <Label fx:id="grandTotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="7" styleClass="total-value">
                             <font>
                                 <Font name="System Bold" size="18"/>
                             </font>
                         </Label>
 
                         <Label text="Amount Paid:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="financial-label"/>
-                        <Label fx:id="paidLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="8" styleClass="paid-value"/>
+                        <Label fx:id="paidLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="8" styleClass="paid-value"/>
 
                         <Label text="Outstanding Balance:" GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="balance-label">
                             <font>
                                 <Font name="System Bold" size="16"/>
                             </font>
                         </Label>
-                        <Label fx:id="balanceLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="9" styleClass="balance-value">
+                        <Label fx:id="balanceLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="9" styleClass="balance-value">
                             <font>
                                 <Font name="System Bold" size="16"/>
                             </font>
@@ -278,7 +278,4 @@
         </ScrollPane>
     </center>
 
-    <stylesheets>
-        <String fx:value="@../styles/admin.css"/>
-    </stylesheets>
 </BorderPane>

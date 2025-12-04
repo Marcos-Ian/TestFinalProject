@@ -1,24 +1,27 @@
 module hotel.reservation.system {
-    requires java.logging;
-    requires jakarta.persistence;
-    requires javafx.fxml;
+    // JavaFX
     requires javafx.controls;
-    // JavaFX dependencies can be added to the module path when the UI is implemented
-    // requires javafx.controls;
-    // requires javafx.fxml;
-    // requires javafx.graphics;
-    // requires javafx.base;
-    exports app;
-    exports service;
-    exports service.strategy;
-    exports service.decorator;
-    exports service.factory;
-    exports config;
-    exports model;
-    exports repository;
-    exports security;
-    exports util;
-    exports events;
+    requires javafx.fxml;
+    requires javafx.graphics;
+    requires javafx.media;
 
-    opens model to jakarta.persistence;
+    // JPA / Hibernate / JDBC
+    requires java.sql;
+    requires jakarta.persistence;
+    requires org.hibernate.orm.core;
+    requires org.xerial.sqlitejdbc;
+
+    // 🔑 Open packages for reflection
+    // Hibernate needs these to access private fields on your entities
+    opens model;       // Guest, Reservation, RoomType, etc.
+    opens security;    // AdminUser
+
+    // JavaFX FXML controllers (if any)
+    opens controller to javafx.fxml;
+
+    // Public API exports
+    exports app;
+    exports controller;
+    exports model;
+    exports security;
 }

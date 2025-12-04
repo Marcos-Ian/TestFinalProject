@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import java.lang.String?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -179,7 +180,7 @@
 
                     <!-- Search Section -->
                     <VBox spacing="15" styleClass="search-section">
-                        <Label text="Search Guests & Reservations" styleClass="section-title">
+                        <Label text="Search Guests &amp; Reservations" styleClass="section-title">
                             <font>
                                 <Font name="System Bold" size="18"/>
                             </font>
@@ -266,7 +267,4 @@
         </HBox>
     </bottom>
 
-    <stylesheets>
-        <String fx:value="@../styles/admin.css"/>
-    </stylesheets>
 </BorderPane>
