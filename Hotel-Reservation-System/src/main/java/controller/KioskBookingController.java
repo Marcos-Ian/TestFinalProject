@@ -1,113 +1,286 @@
 package controller;
 
+import app.Bootstrap;
+import config.PricingConfig;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.stage.Stage;
+import model.RoomType;
+import service.BillingContext;
+import service.RoomService;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+/**
+ * Handles Step 2 – selecting dates and a room plan.
+ */
 public class KioskBookingController {
+    private final KioskFlowContext context;
+    private final RoomService roomService;
+    private final BillingContext billingContext;
+    private final PricingConfig pricingConfig;
 
-    @FXML private DatePicker checkInPicker;
-    @FXML private DatePicker checkOutPicker;
-    @FXML private Spinner<Integer> adultsSpinner;
-    @FXML private Spinner<Integer> childrenSpinner;
-    @FXML private ComboBox<String> roomTypeCombo;
-    @FXML private ListView<String> suggestionsList;
-    @FXML private Label occupancyLabel;
-    @FXML private Label pricingLabel;
-    @FXML private Spinner<Integer> roomCountSpinner;
-    @FXML private ListView<String> selectedRoomsList;
+    @FXML
+    private DatePicker checkInPicker;
+    @FXML
+    private DatePicker checkOutPicker;
+    @FXML
+    private Label checkInErrorLabel;
+    @FXML
+    private Label checkOutErrorLabel;
+    @FXML
+    private Label suggestionLabel;
+    @FXML
+    private RadioButton suggestedRadio;
+    @FXML
+    private RadioButton customRadio;
+    @FXML
+    private ComboBox<RoomType> roomTypeCombo;
+    @FXML
+    private Spinner<Integer> roomCountSpinner;
+    @FXML
+    private Label customNoticeLabel;
+    @FXML
+    private Label estimateLabel;
+    @FXML
+    private Button nextButton;
 
+    public KioskBookingController() {
+        this(Bootstrap.getRoomService(), Bootstrap.getBillingContext(), Bootstrap.getPricingConfig(), KioskFlowContext.getInstance());
+    }
 
+    public KioskBookingController(RoomService roomService, BillingContext billingContext, PricingConfig pricingConfig, KioskFlowContext context) {
+        this.roomService = roomService;
+        this.billingContext = billingContext;
+        this.pricingConfig = pricingConfig;
+        this.context = context;
+    }
 
     @FXML
     private void initialize() {
-        // Existing spinner setup
-        if (adultsSpinner != null && adultsSpinner.getValueFactory() == null) {
-            adultsSpinner.setValueFactory(
-                    new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1)
-            );
-        }
-        if (childrenSpinner != null && childrenSpinner.getValueFactory() == null) {
-            childrenSpinner.setValueFactory(
-                    new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 0)
-            );
-        }
+        ToggleGroup planToggle = new ToggleGroup();
+        suggestedRadio.setToggleGroup(planToggle);
+        customRadio.setToggleGroup(planToggle);
 
-        // Room count spinner (1–5 rooms of each type, adjust as needed)
-        if (roomCountSpinner != null && roomCountSpinner.getValueFactory() == null) {
-            roomCountSpinner.setValueFactory(
-                    new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1)
-            );
-        }
+        roomCountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1));
 
-        // Basic demo room types if you aren't pulling from RoomService yet
-        if (roomTypeCombo != null && roomTypeCombo.getItems().isEmpty()) {
-            roomTypeCombo.getItems().setAll(
-                    "Standard Room",
-                    "Deluxe Room",
-                    "Suite",
-                    "Family Room"
-            );
-            roomTypeCombo.setPromptText("Select a room type");
-        }
-    }
+        LocalDate today = LocalDate.now();
+        checkInPicker.setValue(context.getCheckIn() != null ? context.getCheckIn() : today.plusDays(1));
+        checkOutPicker.setValue(context.getCheckOut() != null ? context.getCheckOut() : today.plusDays(2));
 
+        planToggle.selectedToggleProperty().addListener((obs, oldVal, newVal) -> updateCustomControls());
+        checkInPicker.valueProperty().addListener((obs, o, n) -> onInputsChanged());
+        checkOutPicker.valueProperty().addListener((obs, o, n) -> onInputsChanged());
+        roomTypeCombo.valueProperty().addListener((obs, o, n) -> onInputsChanged());
+        roomCountSpinner.valueProperty().addListener((obs, o, n) -> onInputsChanged());
 
-    @FXML
-    private void refreshSuggestions() {
-        // just to prove it works, later you plug real service logic
-        suggestionsList.getItems().setAll("Suggestion 1", "Suggestion 2");
-        occupancyLabel.setText("Guests: " +
-                adultsSpinner.getValue() + " adults, " +
-                childrenSpinner.getValue() + " children");
-        pricingLabel.setText("Pricing: (sample)");
+        suggestedRadio.setSelected(true);
+        populateRoomTypes();
+        onInputsChanged();
     }
 
     @FXML
-    private void goBackToWelcome() {
-        loadScene("/view/kiosk_welcome.fxml");
+    private void backToGuests() throws IOException {
+        loadScene("/view/kiosk_step1_guests.fxml");
     }
 
     @FXML
-    private void goToGuestDetails() {
-        loadScene("/view/kiosk_guest_details.fxml");
-    }
-
-    private void loadScene(String fxmlPath) {
-        try {
-            Stage stage = (Stage) checkInPicker.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void goToGuestDetails() throws IOException {
+        if (validateDates()) {
+            saveSelectionToContext();
+            loadScene("/view/kiosk_guest_details.fxml");
         }
     }
-    @FXML
-    private void addRoomToSelection() {
-        String type = roomTypeCombo.getValue();
-        if (type == null || type.isBlank()) {
-            // You can also show an alert instead
-            System.out.println("No room type selected");
+
+    private void onInputsChanged() {
+        updateCustomControls();
+        validateDates();
+        updateSuggestionsAndEstimate();
+    }
+
+    private void updateCustomControls() {
+        boolean custom = customRadio.isSelected();
+        roomTypeCombo.setDisable(!custom);
+        roomCountSpinner.setDisable(!custom);
+        customNoticeLabel.setDisable(!custom);
+    }
+
+    private boolean validateDates() {
+        checkInErrorLabel.setText("");
+        checkOutErrorLabel.setText("");
+
+        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkOut = checkOutPicker.getValue();
+        boolean valid = true;
+
+        if (checkIn == null) {
+            checkInErrorLabel.setText("Check-in date is required.");
+            valid = false;
+        }
+
+        if (checkOut == null) {
+            checkOutErrorLabel.setText("Check-out date is required.");
+            valid = false;
+        }
+
+        if (valid && !checkOut.isAfter(checkIn)) {
+            checkOutErrorLabel.setText("Check-out must be after check-in.");
+            valid = false;
+        }
+
+        nextButton.setDisable(!valid);
+        return valid;
+    }
+
+    private void updateSuggestionsAndEstimate() {
+        if (!validateDates()) {
+            suggestionLabel.setText("Please choose valid dates to see suggestions.");
+            estimateLabel.setText("Room cost estimate: --");
             return;
         }
 
-        int rooms = roomCountSpinner.getValue();
-        int adults = adultsSpinner.getValue();
-        int children = childrenSpinner.getValue();
+        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkOut = checkOutPicker.getValue();
+        List<RoomType> availableRooms = roomService.getAvailableRooms(checkIn, checkOut);
 
-        String item = String.format(
-                "%d x %s  (%d adults, %d children)",
-                rooms, type, adults, children
-        );
+        if (availableRooms.isEmpty()) {
+            suggestionLabel.setText("No rooms available for these dates.");
+            nextButton.setDisable(true);
+            return;
+        }
 
-        selectedRoomsList.getItems().add(item);
+        List<RoomType> suggested = buildSuggestedPlan(availableRooms);
+        context.setSuggestedRooms(suggested);
 
-        // Optional: update summary labels
-        occupancyLabel.setText("Guests: " + adults + " adults, " + children + " children");
-        pricingLabel.setText("Pricing: multiple rooms (placeholder)");
+        String summary = suggested.isEmpty()
+                ? "No suggestion available."
+                : String.format("Suggested: %d × %s based on your group size and availability.",
+                suggested.size(), suggested.get(0).getType().name());
+        suggestionLabel.setText(summary);
+
+        List<RoomType> planRooms = suggestedRadio.isSelected() ? suggested : buildCustomPlan(availableRooms);
+        if (planRooms == null || planRooms.isEmpty()) {
+            estimateLabel.setText("Room cost estimate: --");
+            nextButton.setDisable(true);
+            return;
+        }
+
+        context.setUsingSuggestedPlan(suggestedRadio.isSelected());
+        updateEstimate(planRooms, checkIn, checkOut);
     }
 
+    private List<RoomType> buildSuggestedPlan(List<RoomType> availableRooms) {
+        int totalGuests = context.getAdults() + context.getChildren();
+        if (totalGuests <= 0) {
+            return new ArrayList<>();
+        }
+
+        List<RoomType> sorted = availableRooms.stream()
+                .sorted(Comparator.comparingInt(RoomType::getCapacity))
+                .collect(Collectors.toList());
+
+        List<RoomType> selection = new ArrayList<>();
+        int remaining = totalGuests;
+        for (RoomType room : sorted) {
+            if (remaining <= 0) {
+                break;
+            }
+            selection.add(room);
+            remaining -= room.getCapacity();
+        }
+
+        if (remaining > 0 && !sorted.isEmpty()) {
+            selection.add(sorted.get(sorted.size() - 1));
+        }
+
+        return selection;
+    }
+
+    private List<RoomType> buildCustomPlan(List<RoomType> availableRooms) {
+        RoomType selectedType = roomTypeCombo.getValue();
+        if (selectedType == null) {
+            return null;
+        }
+
+        Map<RoomType.Type, RoomType> availableByType = availableRooms.stream()
+                .collect(Collectors.toMap(RoomType::getType, r -> r, (a, b) -> a));
+
+        RoomType match = availableByType.get(selectedType.getType());
+        if (match == null) {
+            return null;
+        }
+
+        int count = roomCountSpinner.getValue();
+        List<RoomType> rooms = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            rooms.add(match);
+        }
+        customNoticeLabel.setText("If you choose your own room type and quantity, please review the booking policy carefully.");
+        return rooms;
+    }
+
+    private void updateEstimate(List<RoomType> rooms, LocalDate checkIn, LocalDate checkOut) {
+        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        KioskPricingHelper.BookingBreakdown breakdown = KioskPricingHelper.calculate(rooms, context.getAddOns(), checkIn, checkOut, billingContext, pricingConfig);
+        context.setSelectedRooms(rooms);
+        context.setCheckIn(checkIn);
+        context.setCheckOut(checkOut);
+        context.setEstimatedTotal(breakdown.total());
+        context.setRoomSubtotal(breakdown.roomSubtotal());
+        context.setAddOnSubtotal(breakdown.addOnSubtotal());
+        context.setTax(breakdown.tax());
+
+        estimateLabel.setText(String.format("Room cost estimate: $%.2f for %d night(s), current plan.", breakdown.total(), nights));
+        nextButton.setDisable(false);
+    }
+
+    private void populateRoomTypes() {
+        List<RoomType> available = roomService.getAvailableRooms(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
+        roomTypeCombo.setItems(FXCollections.observableArrayList(available));
+        roomTypeCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(RoomType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getType().name());
+            }
+        });
+        roomTypeCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(RoomType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getType().name());
+            }
+        });
+    }
+
+    private void saveSelectionToContext() {
+        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkOut = checkOutPicker.getValue();
+        List<RoomType> plan = context.isUsingSuggestedPlan() ? context.getSuggestedRooms() : buildCustomPlan(roomService.getAvailableRooms(checkIn, checkOut));
+        if (plan != null) {
+            context.setSelectedRooms(plan);
+        }
+    }
+
+    private void loadScene(String resource) throws IOException {
+        Stage stage = (Stage) nextButton.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
+        Parent root = loader.load();
+        Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+        stage.setScene(scene);
+    }
 }
