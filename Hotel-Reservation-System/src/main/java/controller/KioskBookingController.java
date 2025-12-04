@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.RoomType;
 import service.BillingContext;
 import service.RoomService;
+import service.RoomSuggestion;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ public class KioskBookingController {
     private final RoomService roomService;
     private final BillingContext billingContext;
     private final PricingConfig pricingConfig;
+    private List<RoomSuggestion> currentSuggestions = java.util.Collections.emptyList();
 
     @FXML
     private DatePicker checkInPicker;
@@ -93,6 +95,23 @@ public class KioskBookingController {
         loadAvailableRooms();
         refreshSuggestions();
 
+        roomCountSpinner.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1)
+        );
+        roomCountSpinner.setEditable(true);
+
+        if (suggestedRadio.getToggleGroup() == null && customRadio.getToggleGroup() == null) {
+            ToggleGroup group = new ToggleGroup();
+            suggestedRadio.setToggleGroup(group);
+            customRadio.setToggleGroup(group);
+        }
+
+        suggestedRadio.setSelected(true);
+        updatePlanMode();
+
+        suggestedRadio.setOnAction(e -> updatePlanMode());
+        customRadio.setOnAction(e -> updatePlanMode());
+
         checkInPicker.valueProperty().addListener((obs, oldV, newV) -> {
             context.setCheckIn(newV);
             loadAvailableRooms();
@@ -106,6 +125,12 @@ public class KioskBookingController {
         });
 
         occupancyLabel.setText("Guests: " + (adults + children));
+    }
+
+    private void updatePlanMode() {
+        boolean useSuggested = suggestedRadio.isSelected();
+        roomTypeCombo.setDisable(useSuggested);
+        roomCountSpinner.setDisable(useSuggested);
     }
 
     private void loadAvailableRooms() {
@@ -142,10 +167,42 @@ public class KioskBookingController {
 
     @FXML
     private void goToGuestDetails() throws IOException {
-        if (validateDates()) {
-            saveSelectionToContext();
-            loadScene("/view/kiosk_guest_details.fxml");
+        int adults = context.getAdults();
+        int children = context.getChildren();
+        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkOut = checkOutPicker.getValue();
+
+        java.util.List<RoomType> selectedRooms = new java.util.ArrayList<>();
+
+        if (suggestedRadio.isSelected()) {
+            int index = suggestionsList.getSelectionModel().getSelectedIndex();
+            if (index < 0 || index >= currentSuggestions.size()) {
+                return;
+            }
+            RoomSuggestion suggestion = currentSuggestions.get(index);
+            for (String typeName : suggestion.getRoomTypes()) {
+                selectedRooms.add(RoomType.valueOf(typeName));
+            }
+        } else {
+            RoomType type = roomTypeCombo.getValue();
+            Integer qty = roomCountSpinner.getValue();
+            if (type == null || qty == null || qty <= 0) {
+                return;
+            }
+            for (int i = 0; i < qty; i++) {
+                selectedRooms.add(type);
+            }
         }
+
+        if (!roomService.validateOccupancy(selectedRooms, adults, children)) {
+            return;
+        }
+
+        context.setSelectedRooms(selectedRooms);
+        context.setCheckIn(checkIn);
+        context.setCheckOut(checkOut);
+
+        loadScene("/view/kiosk_guest_details.fxml");
     }
 
     private void refreshSuggestions() {
@@ -154,12 +211,17 @@ public class KioskBookingController {
         int adults = context.getAdults();
         int children = context.getChildren();
 
-        var items = roomService.suggestRooms(adults, children, checkIn, checkOut)
-                .stream()
+        currentSuggestions = roomService.suggestRooms(adults, children, checkIn, checkOut);
+
+        java.util.List<String> items = currentSuggestions.stream()
                 .map(s -> s.getDescription() + " – " + String.join(", ", s.getRoomTypes()))
                 .collect(java.util.stream.Collectors.toList());
 
         suggestionsList.setItems(javafx.collections.FXCollections.observableArrayList(items));
+        if (!items.isEmpty()) {
+            suggestionsList.getSelectionModel().selectFirst();
+        }
+
         occupancyLabel.setText("Guests: " + (adults + children));
     }
 
