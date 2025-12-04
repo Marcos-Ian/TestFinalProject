@@ -64,7 +64,11 @@ public class KioskBookingController {
     private Button nextButton;
 
     public KioskBookingController() {
-        this(Bootstrap.getRoomService(), Bootstrap.getBillingContext(), Bootstrap.getPricingConfig(), KioskFlowContext.getInstance());
+        this(KioskFlowContext.getInstance());
+    }
+
+    public KioskBookingController(KioskFlowContext context) {
+        this(Bootstrap.getRoomService(), Bootstrap.getBillingContext(), Bootstrap.getPricingConfig(), context);
     }
 
     public KioskBookingController(RoomService roomService, BillingContext billingContext, PricingConfig pricingConfig, KioskFlowContext context) {

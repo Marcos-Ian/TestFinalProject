@@ -62,7 +62,11 @@ public class KioskSummaryController {
     private Button confirmButton;
 
     public KioskSummaryController() {
-        this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyConfig(), Bootstrap.getPricingConfig(), Bootstrap.getBillingContext(), KioskFlowContext.getInstance());
+        this(KioskFlowContext.getInstance());
+    }
+
+    public KioskSummaryController(KioskFlowContext context) {
+        this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyConfig(), Bootstrap.getPricingConfig(), Bootstrap.getBillingContext(), context);
     }
 
     public KioskSummaryController(ReservationService reservationService, LoyaltyConfig loyaltyConfig, PricingConfig pricingConfig, BillingContext billingContext, KioskFlowContext context) {
