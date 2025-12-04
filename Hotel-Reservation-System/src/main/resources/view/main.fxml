@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.MainController" prefWidth="900" prefHeight="600">
+    <top>
+        <VBox spacing="8" padding="20">
+            <Label text="Hotel Reservation System" styleClass="header-label"/>
+            <Label text="Choose a module"/>
+        </VBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" spacing="16">
+            <Button fx:id="kioskButton" text="Self-Service Kiosk" prefWidth="220" onAction="#openKiosk" styleClass="primary-button"/>
+            <Button fx:id="adminButton" text="Administrator" prefWidth="220" onAction="#openAdmin"/>
+            <Button fx:id="feedbackButton" text="Guest Feedback" prefWidth="220" onAction="#openFeedback"/>
+        </VBox>
+    </center>
+    <padding><Insets top="40"/></padding>
+</BorderPane>

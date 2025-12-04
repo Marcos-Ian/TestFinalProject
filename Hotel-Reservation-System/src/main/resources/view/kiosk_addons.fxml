@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="14" padding="20"
+      fx:controller="controller.KioskAddonsController">
+    <Label text="Step 3: Add-ons" styleClass="header-label"/>
+    <Label text="Pick optional services; payment will be completed with the front desk."/>
+    <HBox spacing="18">
+        <VBox spacing="8">
+            <CheckBox fx:id="breakfastCheck" text="Breakfast"/>
+            <CheckBox fx:id="parkingCheck" text="Parking"/>
+        </VBox>
+        <VBox spacing="8">
+            <CheckBox fx:id="spaCheck" text="Spa Access"/>
+            <CheckBox fx:id="lateCheckoutCheck" text="Late Checkout"/>
+        </VBox>
+    </HBox>
+    <HBox alignment="CENTER_RIGHT">
+        <Button fx:id="nextButton" text="Review" onAction="#goToSummary" styleClass="primary-button"/>
+    </HBox>
+</VBox>
