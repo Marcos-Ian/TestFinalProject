@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import model.Guest;
 import model.Reservation;
 import model.RoomType;
+import model.ReservationStatus;
 import security.AdminUser;
 import security.AuthenticationService;
 import service.BillingContext;
@@ -417,9 +418,13 @@ public class AdminController {
         LocalDate startDate = searchStartDatePicker.getValue();
         LocalDate endDate = searchEndDatePicker.getValue();
         String status = searchStatusCombo.getValue();
+        ReservationStatus statusFilter = null;
+        if (status != null && !status.equalsIgnoreCase("All")) {
+            statusFilter = ReservationStatus.valueOf(status);
+        }
 
         List<Reservation> results = reservationService.searchReservations(
-                name, phone, "", startDate, endDate, status);
+                name, phone, "", startDate, endDate, statusFilter);
 
         reservations.setAll(results);
         LOGGER.info("Search returned " + results.size() + " results");
@@ -486,7 +491,7 @@ public class AdminController {
                 reservation.setGuest(guest);
                 reservation.setCheckIn(data.getCheckIn());
                 reservation.setCheckOut(data.getCheckOut());
-                reservation.setStatus("BOOKED");
+                reservation.setStatus(ReservationStatus.BOOKED);
 
                 // Save reservation
                 Reservation saved = reservationService.createReservation(

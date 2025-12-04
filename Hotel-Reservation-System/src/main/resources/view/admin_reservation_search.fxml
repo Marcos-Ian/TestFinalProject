@@ -35,5 +35,6 @@
             <TableColumn fx:id="statusColumn" text="Status" prefWidth="120.0"/>
         </columns>
     </TableView>
+    <Pagination fx:id="reservationPagination" prefHeight="40.0" maxPageIndicatorCount="10"/>
     <Label fx:id="resultsLabel"/>
 </VBox>

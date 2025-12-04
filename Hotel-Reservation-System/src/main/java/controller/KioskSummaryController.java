@@ -13,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import model.Reservation;
 import model.RoomType;
+import model.ReservationStatus;
 import service.BillingContext;
 import service.ReservationService;
 import javafx.scene.paint.Color;   // ⬅️ add this import at the top
@@ -130,7 +131,7 @@ public class KioskSummaryController {
             reservation.setGuest(context.getGuest());
             reservation.setCheckIn(context.getCheckIn());
             reservation.setCheckOut(context.getCheckOut());
-            reservation.setStatus("BOOKED");
+            reservation.setStatus(ReservationStatus.BOOKED);
 
             // This will run validateGuest(...) and can throw IllegalArgumentException
             reservationService.createReservation(

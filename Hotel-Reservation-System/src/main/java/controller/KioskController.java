@@ -17,6 +17,7 @@ import service.BillingContext;
 import service.LoyaltyService;
 import service.ReservationService;
 import service.RoomService;
+import model.ReservationStatus;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -297,7 +298,7 @@ public class KioskController {
             reservation.setGuest(currentGuest);
             reservation.setCheckIn(checkInDate);
             reservation.setCheckOut(checkOutDate);
-            reservation.setStatus("CONFIRMED");
+            reservation.setStatus(ReservationStatus.CONFIRMED);
 
             // Save through service
             Reservation saved = reservationService.createReservation(reservation, selectedRooms, selectedAddOns);

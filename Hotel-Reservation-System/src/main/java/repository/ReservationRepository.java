@@ -4,6 +4,8 @@
 package repository;
 
 import model.Reservation;
+import model.ReservationStatus;
+import model.RoomType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,11 @@ public interface ReservationRepository {
      * Save or update a reservation
      */
     Reservation save(Reservation reservation);
+
+    /**
+     * Save or update a reservation and its room associations.
+     */
+    Reservation saveOrUpdate(Reservation reservation, List<RoomType> rooms);
 
     /**
      * Find reservation by ID
@@ -38,6 +45,11 @@ public interface ReservationRepository {
      * Used for availability checking
      */
     int countBookedRooms(String roomType, LocalDate checkIn, LocalDate checkOut);
+
+    /**
+     * Check for overlapping reservations for a room type.
+     */
+    boolean hasConflict(RoomType room, LocalDate checkIn, LocalDate checkOut, Long excludeReservationId);
 
     /**
      * Find reservations by guest name (first or last)
@@ -62,5 +74,5 @@ public interface ReservationRepository {
     /**
      * Search reservations with optional filters.
      */
-    List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, String status);
+    List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, ReservationStatus status);
 }

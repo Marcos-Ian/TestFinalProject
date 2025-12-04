@@ -5,6 +5,7 @@ package service;
 
 import model.Guest;
 import model.Reservation;
+import model.ReservationStatus;
 import model.RoomType;
 import repository.GuestRepository;
 import repository.ReservationRepository;
@@ -42,7 +43,7 @@ public class ReservationService {
         reservation.setGuest(persisted);
         reservation.setCheckIn(checkIn);
         reservation.setCheckOut(checkOut);
-        reservation.setStatus("BOOKED");
+        reservation.setStatus(ReservationStatus.BOOKED);
 
         return reservationRepository.save(reservation);
     }
@@ -76,7 +77,7 @@ public class ReservationService {
                 "At least one room must be selected");
 
         // Save reservation
-        Reservation saved = reservationRepository.save(reservation);
+        Reservation saved = reservationRepository.saveOrUpdate(reservation, rooms);
 
         // TODO: Save room bookings and add-ons in separate tables
         // This would require ReservationRoom and ReservationAddOn entities
@@ -110,7 +111,7 @@ public class ReservationService {
 
         validateReservation(reservation);
 
-        return reservationRepository.save(reservation);
+        return reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
     }
 
     /**
@@ -133,7 +134,7 @@ public class ReservationService {
      */
     public List<Reservation> searchReservations(String name, String phone, String email,
                                                 LocalDate startDate, LocalDate endDate,
-                                                String status) {
+                                                ReservationStatus status) {
         return reservationRepository.searchReservations(name, phone, email, startDate, endDate, status);
     }
 
@@ -146,8 +147,8 @@ public class ReservationService {
         Optional<Reservation> existing = reservationRepository.findById(reservationId);
         if (existing.isPresent()) {
             Reservation reservation = existing.get();
-            reservation.setStatus("CANCELLED");
-            reservationRepository.save(reservation);
+            reservation.setStatus(ReservationStatus.CANCELLED);
+            reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
             LOGGER.info("Reservation cancelled successfully");
         } else {
             throw new IllegalArgumentException("Reservation not found: " + reservationId);
@@ -163,12 +164,38 @@ public class ReservationService {
         Optional<Reservation> existing = reservationRepository.findById(reservationId);
         if (existing.isPresent()) {
             Reservation reservation = existing.get();
-            reservation.setStatus("CHECKED_OUT");
-            reservationRepository.save(reservation);
+            reservation.setStatus(ReservationStatus.CHECKED_OUT);
+            reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
             LOGGER.info("Reservation checked out successfully");
         } else {
             throw new IllegalArgumentException("Reservation not found: " + reservationId);
         }
+    }
+
+    public void saveWithConflictCheck(Reservation reservation, List<RoomType> rooms) {
+        if (rooms == null) {
+            rooms = new java.util.ArrayList<>();
+        }
+        for (RoomType room : rooms) {
+            boolean conflict = reservationRepository.hasConflict(
+                    room,
+                    reservation.getCheckIn(),
+                    reservation.getCheckOut(),
+                    reservation.getId()
+            );
+            if (conflict) {
+                throw new ReservationConflictException(
+                        "Room " + room.getType().name() + " is not available for the selected dates."
+                );
+            }
+        }
+        reservation.setStatus(ReservationStatus.BOOKED);
+        reservationRepository.saveOrUpdate(reservation, rooms);
+    }
+
+    public void cancelReservation(Reservation reservation) {
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
     }
 
     /**
