@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.KioskGuestsController">
+    <left>
+        <VBox spacing="10" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="20"/>
+            </padding>
+            <Label text="Booking Steps" styleClass="header-label"/>
+            <Label text="1) Guests" style="-fx-font-weight: bold;"/>
+            <Label text="2) Dates &amp; plan"/>
+            <Label text="3) Details &amp; add-ons"/>
+            <Label text="4) Review"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="16">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Step 1 – Guests (adults &amp; children)" styleClass="header-label"/>
+            <GridPane hgap="12" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="40"/>
+                    <ColumnConstraints percentWidth="60"/>
+                </columnConstraints>
+                <Label text="Adults*" GridPane.rowIndex="0"/>
+                <Spinner fx:id="adultsSpinner" editable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label fx:id="adultsErrorLabel" textFill="red" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Children*" GridPane.rowIndex="2"/>
+                <Spinner fx:id="childrenSpinner" editable="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="childrenErrorLabel" textFill="red" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            </GridPane>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Back" onAction="#backToWelcome"/>
+                <Button fx:id="nextButton" text="Next: Dates &amp; plan" onAction="#goToDatesAndPlan" styleClass="primary-button"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

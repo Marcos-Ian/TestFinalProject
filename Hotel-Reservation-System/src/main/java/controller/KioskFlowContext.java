@@ -20,8 +20,13 @@ public class KioskFlowContext {
     private int children;
     private Guest guest = new Guest();
     private final List<RoomType> selectedRooms = new ArrayList<>();
+    private final List<RoomType> suggestedRooms = new ArrayList<>();
+    private boolean usingSuggestedPlan = true;
     private final List<String> addOns = new ArrayList<>();
     private double estimatedTotal;
+    private double roomSubtotal;
+    private double addOnSubtotal;
+    private double tax;
 
     private KioskFlowContext() {
     }
@@ -37,8 +42,13 @@ public class KioskFlowContext {
         children = 0;
         guest = new Guest();
         selectedRooms.clear();
+        suggestedRooms.clear();
+        usingSuggestedPlan = true;
         addOns.clear();
         estimatedTotal = 0.0;
+        roomSubtotal = 0.0;
+        addOnSubtotal = 0.0;
+        tax = 0.0;
     }
 
     public LocalDate getCheckIn() {
@@ -81,12 +91,39 @@ public class KioskFlowContext {
         this.guest = guest;
     }
 
+    public void setSelectedRooms(List<RoomType> rooms) {
+        selectedRooms.clear();
+        selectedRooms.addAll(rooms);
+    }
+
     public List<RoomType> getSelectedRooms() {
         return selectedRooms;
     }
 
+    public List<RoomType> getSuggestedRooms() {
+        return suggestedRooms;
+    }
+
+    public void setSuggestedRooms(List<RoomType> rooms) {
+        suggestedRooms.clear();
+        suggestedRooms.addAll(rooms);
+    }
+
+    public boolean isUsingSuggestedPlan() {
+        return usingSuggestedPlan;
+    }
+
+    public void setUsingSuggestedPlan(boolean usingSuggestedPlan) {
+        this.usingSuggestedPlan = usingSuggestedPlan;
+    }
+
     public List<String> getAddOns() {
         return addOns;
+    }
+
+    public void setAddOns(List<String> addOns) {
+        this.addOns.clear();
+        this.addOns.addAll(addOns);
     }
 
     public double getEstimatedTotal() {
@@ -95,5 +132,29 @@ public class KioskFlowContext {
 
     public void setEstimatedTotal(double estimatedTotal) {
         this.estimatedTotal = estimatedTotal;
+    }
+
+    public double getRoomSubtotal() {
+        return roomSubtotal;
+    }
+
+    public void setRoomSubtotal(double roomSubtotal) {
+        this.roomSubtotal = roomSubtotal;
+    }
+
+    public double getAddOnSubtotal() {
+        return addOnSubtotal;
+    }
+
+    public void setAddOnSubtotal(double addOnSubtotal) {
+        this.addOnSubtotal = addOnSubtotal;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
     }
 }
