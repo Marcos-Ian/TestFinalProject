@@ -95,7 +95,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> searchReservations(String guestName, String phone, LocalDate start, LocalDate end, String status) {
+    public List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, String status) {
         StringBuilder jpql = new StringBuilder("SELECT r FROM Reservation r WHERE 1=1");
 
         if (guestName != null && !guestName.isBlank()) {
@@ -104,6 +104,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         }
         if (phone != null && !phone.isBlank()) {
             jpql.append(" AND r.guest.phone LIKE CONCAT('%', :phone, '%')");
+        }
+        if (email != null && !email.isBlank()) {
+            jpql.append(" AND LOWER(r.guest.email) LIKE LOWER(CONCAT('%', :email, '%'))");
         }
         if (start != null) {
             jpql.append(" AND r.checkIn >= :start");
@@ -122,6 +125,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         }
         if (phone != null && !phone.isBlank()) {
             query.setParameter("phone", phone);
+        }
+        if (email != null && !email.isBlank()) {
+            query.setParameter("email", email);
         }
         if (start != null) {
             query.setParameter("start", start);
