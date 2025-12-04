@@ -171,12 +171,12 @@ public class KioskBookingController {
 
     @FXML
     private void goToGuestDetails() throws IOException {
-        int adults = context.getAdults();
+        int adults   = context.getAdults();
         int children = context.getChildren();
-        LocalDate checkIn = checkInPicker.getValue();
+        LocalDate checkIn  = checkInPicker.getValue();
         LocalDate checkOut = checkOutPicker.getValue();
 
-        java.util.List<RoomType> selectedRooms = new java.util.ArrayList<>();
+        List<RoomType> selectedRooms = new ArrayList<>();
 
         if (suggestedRadio.isSelected()) {
             int index = suggestionsList.getSelectionModel().getSelectedIndex();
@@ -191,7 +191,6 @@ public class KioskBookingController {
                         .orElseThrow(() -> new IllegalStateException("No RoomType loaded for " + typeName));
                 selectedRooms.add(room);
             }
-
         } else {
             List<RoomType> rooms = explicitRoomsFromUserSelection();
             if (rooms == null || rooms.isEmpty()) {
@@ -200,27 +199,19 @@ public class KioskBookingController {
             selectedRooms.addAll(rooms);
         }
 
+        // 🔴 here is the important part
         if (!roomService.validateOccupancy(selectedRooms, adults, children)) {
-            return;
+            showInvalidRoomsAlert();   // show dialog with rules
+            return;                    // stay on this step
         }
 
         context.setSelectedRooms(selectedRooms);
         context.setCheckIn(checkIn);
         context.setCheckOut(checkOut);
 
-        if (chooseMyOwnRoomsRadio.isSelected()) {
-            List<RoomType> rooms = explicitRoomsFromUserSelection();
-
-            if (!isCustomSelectionValid(rooms, context.getAdults(), context.getChildren())) {
-                showInvalidRoomsAlert();
-                return; // STOP navigation if invalid
-            }
-
-            context.setSelectedRooms(rooms);
-        }
-
         loadScene("/view/kiosk_guest_details.fxml");
     }
+
 
     @FXML
     private void showBookingRules() {
@@ -273,16 +264,21 @@ public class KioskBookingController {
     private boolean isCustomSelectionValid(List<RoomType> rooms, int adults, int children) {
         int capacityAdults = 0;
 
-        for (RoomType type : rooms) {
-            int perRoom = switch (type) {
+        for (RoomType room : rooms) {
+            // NOTE: we switch on the inner enum RoomType.Type
+            RoomType.Type t = room.getType();
+
+            int perRoom = switch (t) {
                 case SINGLE -> 2;
                 case DOUBLE -> 4;
                 case DELUXE, PENTHOUSE -> 2;
             };
+
             capacityAdults += perRoom;
         }
 
-        if (adults == 1 && (adults + children) == 1) {
+        // single-person booking is always allowed
+        if (adults == 1 && adults + children == 1) {
             return true;
         }
 
