@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="src.main.java.controller.ReportsController"
+            fx:controller="controller.ReportsController"
+
             prefHeight="800.0" prefWidth="1100.0" styleClass="reports-container">
 
     <top>
@@ -15,7 +17,7 @@
                 <padding>
                     <Insets top="15" right="20" bottom="15" left="20"/>
                 </padding>
-                <Label text="Reports & Analytics" styleClass="page-title">
+                <Label text="Reports &amp; Analytics" styleClass="page-title">
                     <font>
                         <Font name="System Bold" size="24"/>
                     </font>
@@ -471,7 +473,4 @@
         </StackPane>
     </center>
 
-    <stylesheets>
-        <String fx:value="@../styles/reports.css"/>
-    </stylesheets>
 </BorderPane>

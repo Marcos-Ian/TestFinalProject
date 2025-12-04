@@ -34,6 +34,21 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public List<Reservation> findAll() {
+        return List.of();
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
+    public int countBookedRooms(String roomType, LocalDate checkIn, LocalDate checkOut) {
+        return 0;
+    }
+
+    @Override
     public List<Reservation> findByGuestName(String name) {
         String pattern = "%" + name.toLowerCase() + "%";
         TypedQuery<Reservation> query = entityManager.createQuery(
@@ -51,5 +66,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         query.setParameter("from", from);
         query.setParameter("to", to);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Reservation> findByStatus(String status) {
+        return List.of();
+    }
+
+    @Override
+    public List<Reservation> findByGuestPhone(String phone) {
+        return List.of();
     }
 }

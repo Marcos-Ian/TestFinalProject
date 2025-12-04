@@ -1,18 +1,57 @@
+// ============================================================================
+// LoyaltyConfig.java - Configuration for loyalty program
+// ============================================================================
 package config;
 
+import java.util.logging.Logger;
+
 /**
- * Configuration for loyalty point earning and redemption caps.
+ * Configuration class for loyalty program rules.
+ * Manages point earning rates and redemption caps.
  */
 public class LoyaltyConfig {
-    private int earnRate = 10; // points per dollar
-    private int redeemCap = 5000; // per reservation cap
+    private static final Logger LOGGER = Logger.getLogger(LoyaltyConfig.class.getName());
 
-    public int getEarnRate() {
+    // Points earning rate (points per dollar spent)
+    private double earnRate = 10.0; // 10 points per $1
+
+    // Points redemption rate (dollars per point)
+    private double redeemRate = 0.01; // $0.01 per point (100 points = $1)
+
+    // Maximum points that can be redeemed per reservation
+    private int redeemCap = 5000; // Max 5000 points = $50 discount
+
+    // Minimum points required to start redeeming
+    private int minimumRedeemPoints = 100;
+
+    public LoyaltyConfig() {
+        LOGGER.info("LoyaltyConfig initialized with default values");
+    }
+
+    // Getters and Setters
+
+    public double getEarnRate() {
         return earnRate;
     }
 
-    public void setEarnRate(int earnRate) {
+    public void setEarnRate(double earnRate) {
+        if (earnRate <= 0) {
+            throw new IllegalArgumentException("Earn rate must be positive");
+        }
         this.earnRate = earnRate;
+        LOGGER.info("Loyalty earn rate set to: " + earnRate + " points per $1");
+    }
+
+    public double getRedeemRate() {
+        return redeemRate;
+    }
+
+    public void setRedeemRate(double redeemRate) {
+        if (redeemRate <= 0) {
+            throw new IllegalArgumentException("Redeem rate must be positive");
+        }
+        this.redeemRate = redeemRate;
+        LOGGER.info("Loyalty redeem rate set to: $" + redeemRate + " per point");
     }
 
     public int getRedeemCap() {
@@ -20,6 +59,47 @@ public class LoyaltyConfig {
     }
 
     public void setRedeemCap(int redeemCap) {
+        if (redeemCap < 0) {
+            throw new IllegalArgumentException("Redeem cap cannot be negative");
+        }
         this.redeemCap = redeemCap;
+        LOGGER.info("Loyalty redeem cap set to: " + redeemCap + " points");
+    }
+
+    public int getMinimumRedeemPoints() {
+        return minimumRedeemPoints;
+    }
+
+    public void setMinimumRedeemPoints(int minimumRedeemPoints) {
+        if (minimumRedeemPoints < 0) {
+            throw new IllegalArgumentException("Minimum redeem points cannot be negative");
+        }
+        this.minimumRedeemPoints = minimumRedeemPoints;
+        LOGGER.info("Minimum redeem points set to: " + minimumRedeemPoints);
+    }
+
+    /**
+     * Calculate points earned from an amount
+     */
+    public int calculatePointsEarned(double amount) {
+        return (int) (amount * earnRate);
+    }
+
+    /**
+     * Calculate discount from points redeemed
+     */
+    public double calculateDiscount(int points) {
+        if (points < minimumRedeemPoints) {
+            return 0.0;
+        }
+        int pointsToRedeem = Math.min(points, redeemCap);
+        return pointsToRedeem * redeemRate;
+    }
+
+    /**
+     * Check if points can be redeemed
+     */
+    public boolean canRedeem(int points) {
+        return points >= minimumRedeemPoints;
     }
 }

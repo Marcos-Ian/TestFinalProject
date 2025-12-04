@@ -83,7 +83,4 @@
         </VBox>
     </center>
 
-    <stylesheets>
-        <String fx:value="@../styles/kiosk.css"/>
-    </stylesheets>
 </BorderPane>

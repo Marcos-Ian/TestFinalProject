@@ -1,6 +1,8 @@
 module hotel.reservation.system {
     requires java.logging;
     requires jakarta.persistence;
+    requires javafx.fxml;
+    requires javafx.controls;
     // JavaFX dependencies can be added to the module path when the UI is implemented
     // requires javafx.controls;
     // requires javafx.fxml;
