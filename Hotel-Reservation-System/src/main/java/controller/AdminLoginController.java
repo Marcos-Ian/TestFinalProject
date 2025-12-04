@@ -61,6 +61,7 @@ public class AdminLoginController {
         }
 
         if (user.isPresent()) {
+            authenticationService.setCurrentUser(user.get());
             loadDashboard(user.get());
         } else {
             errorLabel.setText("Invalid credentials");

@@ -75,7 +75,8 @@ public class AdminDashboardController {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
+                },
+                Bootstrap.getAuthenticationService()
         )
                 : createController(type));
         Parent view = loader.load();

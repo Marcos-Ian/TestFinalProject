@@ -8,10 +8,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.Reservation;
+import security.AuthenticationService;
 import service.BillingContext;
 import service.LoyaltyService;
 import service.ReservationService;
 import service.WaitlistService;
+import util.ActivityLogger;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +28,7 @@ public class ReservationSearchController {
     private final BillingContext billingContext;
     private final WaitlistService waitlistService;
     private final Consumer<Void> editLoader;
+    private final AuthenticationService authService;
 
     @FXML
     private TextField guestField;
@@ -44,19 +47,22 @@ public class ReservationSearchController {
 
     public ReservationSearchController() {
         this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyService(),
-                Bootstrap.getBillingContext(), new WaitlistService(), null);
+                Bootstrap.getBillingContext(), new WaitlistService(), null,
+                Bootstrap.getAuthenticationService());
     }
 
     public ReservationSearchController(ReservationService reservationService,
                                        LoyaltyService loyaltyService,
                                        BillingContext billingContext,
                                        WaitlistService waitlistService,
-                                       Consumer<Void> editLoader) {
+                                       Consumer<Void> editLoader,
+                                       AuthenticationService authService) {
         this.reservationService = reservationService;
         this.loyaltyService = loyaltyService;
         this.billingContext = billingContext;
         this.waitlistService = waitlistService;
         this.editLoader = editLoader;
+        this.authService = authService;
     }
 
     @FXML
@@ -93,6 +99,24 @@ public class ReservationSearchController {
         if (resultsLabel != null) {
             resultsLabel.setText(results.size() + " matching reservations | Billing: StandardBillingStrategy");
         }
+
+        String actor = "UNKNOWN";
+        if (authService != null && authService.getCurrentUser() != null) {
+            actor = authService.getCurrentUser().getUsername();
+        }
+
+        ActivityLogger.log(
+                actor,
+                "SEARCH",
+                "Reservation",
+                "-",
+                String.format("Reservation search executed with filters: guest='%s', start=%s, end=%s, status=%s, results=%d",
+                        guest,
+                        start,
+                        end,
+                        status,
+                        results.size())
+        );
     }
 
     @FXML
