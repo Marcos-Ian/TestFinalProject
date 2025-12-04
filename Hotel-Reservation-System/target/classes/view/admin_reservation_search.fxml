@@ -9,18 +9,32 @@
     <GridPane hgap="8" vgap="8">
         <Label text="Guest" GridPane.rowIndex="0"/>
         <TextField fx:id="guestField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Label text="Start" GridPane.rowIndex="1"/>
-        <DatePicker fx:id="startDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        <Label text="End" GridPane.rowIndex="2"/>
-        <DatePicker fx:id="endDatePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-        <Label text="Status" GridPane.rowIndex="3"/>
-        <ComboBox fx:id="statusCombo" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Email" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="emailField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Phone" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Start" GridPane.rowIndex="3"/>
+        <DatePicker fx:id="startDatePicker" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="End" GridPane.rowIndex="4"/>
+        <DatePicker fx:id="endDatePicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Status" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="statusCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
     </GridPane>
     <HBox spacing="8">
         <Button fx:id="searchButton" text="Search" onAction="#onSearchClicked" styleClass="primary-button"/>
         <Button text="Edit" onAction="#openEdit"/>
         <Button fx:id="addWaitlistButton" text="Add to Waitlist" onAction="#addToWaitlist"/>
     </HBox>
-    <TableView fx:id="reservationTable" prefHeight="300"/>
+    <TableView fx:id="reservationTable" prefHeight="300">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="60.0"/>
+            <TableColumn fx:id="guestColumn" text="Guest" prefWidth="160.0"/>
+            <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="140.0"/>
+            <TableColumn fx:id="checkInColumn" text="Check-In" prefWidth="120.0"/>
+            <TableColumn fx:id="checkOutColumn" text="Check-Out" prefWidth="120.0"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120.0"/>
+        </columns>
+    </TableView>
+    <Pagination fx:id="reservationPagination" prefHeight="40.0" maxPageIndicatorCount="10"/>
     <Label fx:id="resultsLabel"/>
 </VBox>

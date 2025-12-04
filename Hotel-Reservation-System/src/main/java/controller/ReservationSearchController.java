@@ -6,7 +6,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import java.util.Comparator;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,6 +30,7 @@ import service.LoyaltyService;
 import service.ReservationService;
 import service.WaitlistService;
 import util.ActivityLogger;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -67,7 +70,7 @@ public class ReservationSearchController {
     @FXML
     private TableView<Reservation> reservationTable;
     @FXML
-    private TableColumn<Reservation, Long> idColumn;
+    private TableColumn<Reservation, Number> idColumn;
     @FXML
     private TableColumn<Reservation, String> guestColumn;
     @FXML
@@ -78,6 +81,7 @@ public class ReservationSearchController {
     private TableColumn<Reservation, LocalDate> checkOutColumn;
     @FXML
     private TableColumn<Reservation, ReservationStatus> statusColumn;
+
     @FXML
     private Label resultsLabel;
     @FXML
@@ -239,31 +243,24 @@ public class ReservationSearchController {
     }
 
     private void applySortingAndRefreshPage() {
-        if (allResults == null || reservationTable == null || reservationPagination == null) return;
-
-        Comparator<Reservation> comparator = Comparator.comparing(Reservation::getId);
-        if (!reservationTable.getSortOrder().isEmpty()) {
-            TableColumn<Reservation, ?> sortColumn = reservationTable.getSortOrder().get(0);
-            Comparator comparatorFromColumn = sortColumn.getComparator();
-
-            @SuppressWarnings("unchecked")
-            Callback<CellDataFeatures<Reservation, Object>, ObservableValue<Object>> valueFactory =
-                    (Callback<CellDataFeatures<Reservation, Object>, ObservableValue<Object>>) sortColumn.getCellValueFactory();
-
-            comparator = (r1, r2) -> {
-                Object v1 = valueFactory.call(new CellDataFeatures<>(reservationTable, sortColumn, r1)).getValue();
-                Object v2 = valueFactory.call(new CellDataFeatures<>(reservationTable, sortColumn, r2)).getValue();
-                int result = comparatorFromColumn.compare(v1, v2);
-                return sortColumn.getSortType() == TableColumn.SortType.ASCENDING ? result : -result;
-            };
+        if (allResults == null || reservationTable == null || reservationPagination == null) {
+            return;
         }
 
-        allResults.sort(comparator);
+        // Use the TableView's comparator (built from the sorted column + sort type)
+        Comparator<? super Reservation> comparator = reservationTable.getComparator();
+        if (comparator != null) {
+            allResults.sort(comparator);   // ✅ sort the backing List
+        }
 
+        // Rebuild current page after sorting
         int currentPage = reservationPagination.getCurrentPageIndex();
         reservationPagination.setPageFactory(this::createPage);
         reservationPagination.setCurrentPageIndex(currentPage);
     }
+
+
+
 
     private void openReservationEditor(Reservation reservation) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_reservation_edit.fxml"));
