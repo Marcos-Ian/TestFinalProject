@@ -101,29 +101,71 @@ public class KioskGuestDetailsController {
 
     @FXML
     private void goToSummary() throws IOException {
-        if (!validate()) {
+        // Clear previous errors
+        firstNameError.setText("");
+        lastNameError.setText("");
+        emailError.setText("");
+        phoneError.setText("");
+
+        String firstName = firstNameField.getText().trim();
+        String lastName  = lastNameField.getText().trim();
+        String email     = emailField.getText().trim();
+        String phone     = phoneField.getText().trim();
+
+        boolean valid = true;
+
+        // Basic first/last name checks
+        if (firstName.isEmpty()) {
+            firstNameError.setText("First name is required");
+            valid = false;
+        }
+        if (lastName.isEmpty()) {
+            lastNameError.setText("Last name is required");
+            valid = false;
+        }
+
+        // Very simple email check – adjust if you already have something else
+        if (email.isEmpty()) {
+            emailError.setText("Email is required");
+            valid = false;
+        } else if (!email.contains("@")) {
+            emailError.setText("Enter a valid email");
+            valid = false;
+        }
+
+        // **Phone rule to match ReservationService**:
+        // must be exactly 10 digits, no spaces or symbols
+        if (phone.isEmpty()) {
+            phoneError.setText("Phone is required");
+            valid = false;
+        } else if (!phone.matches("\\d{10}")) {
+            phoneError.setText("Enter a 10-digit phone number");
+            valid = false;
+        }
+
+        // If any field is invalid, stay on this screen
+        if (!valid) {
+            // optional: if you have a status label, give a general message
+            // statusLabel.setText("Please fix the errors above before continuing.");
             return;
         }
 
-        Guest guest = context.getGuest();
-        guest.setFirstName(firstNameField.getText().trim());
-        guest.setLastName(lastNameField.getText().trim());
-        guest.setPhone(phoneField.getText().trim());
-        guest.setEmail(emailField.getText().trim());
+        // If we reach here, everything is valid. Save to the flow context.
+        model.Guest guest = context.getGuest();
+        if (guest == null) {
+            guest = new model.Guest();
+        }
+        guest.setFirstName(firstName);
+        guest.setLastName(lastName);
+        guest.setEmail(email);
+        guest.setPhoneNumber(phone);
+
         context.setGuest(guest);
 
-        context.setAddOns(collectAddOns());
-        if (context.getCheckIn() != null && context.getCheckOut() != null && !context.getSelectedRooms().isEmpty()) {
-            KioskPricingHelper.BookingBreakdown breakdown = KioskPricingHelper.calculate(
-                    context.getSelectedRooms(), context.getAddOns(), context.getCheckIn(), context.getCheckOut(), billingContext, pricingConfig);
-            context.setEstimatedTotal(breakdown.total());
-            context.setRoomSubtotal(breakdown.roomSubtotal());
-            context.setAddOnSubtotal(breakdown.addOnSubtotal());
-            context.setTax(breakdown.tax());
-        }
-
+        // Now move to the Review screen
         loadScene("/view/kiosk_summary.fxml");
     }
+
 
     private List<String> collectAddOns() {
         List<String> addOns = new ArrayList<>();

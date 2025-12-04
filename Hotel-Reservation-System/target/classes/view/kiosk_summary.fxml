@@ -3,28 +3,73 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="12"
-      fx:controller="controller.KioskSummaryController">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-    <Label text="Step 4: Summary" styleClass="header-label"/>
-    <GridPane hgap="10" vgap="8">
-        <Label text="Guest" GridPane.rowIndex="0"/>
-        <Label fx:id="guestLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Label text="Dates" GridPane.rowIndex="1"/>
-        <Label fx:id="datesLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        <Label text="Room" GridPane.rowIndex="2"/>
-        <Label fx:id="roomLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-        <Label text="Add-ons" GridPane.rowIndex="3"/>
-        <ListView fx:id="addOnList" GridPane.rowIndex="3" GridPane.columnIndex="1" prefHeight="80"/>
-        <Label text="Total" GridPane.rowIndex="4"/>
-        <Label fx:id="totalLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-        <Label text="Loyalty" GridPane.rowIndex="5"/>
-        <Label fx:id="loyaltyLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-    </GridPane>
-    <Label fx:id="statusLabel" textFill="green"/>
-    <HBox alignment="CENTER_RIGHT">
-        <Button fx:id="confirmButton" text="Confirm" onAction="#confirmReservation" styleClass="primary-button"/>
-    </HBox>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.KioskSummaryController">
+    <left>
+        <VBox spacing="10" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="20"/>
+            </padding>
+            <Label text="Booking Steps" styleClass="header-label"/>
+            <Label text="1) Guests"/>
+            <Label text="2) Dates &amp; plan"/>
+            <Label text="3) Details &amp; add-ons"/>
+            <Label text="4) Review" style="-fx-font-weight: bold;"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="16">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Step 4 – Review &amp; confirm" styleClass="header-label"/>
+            <GridPane hgap="12" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="35"/>
+                    <ColumnConstraints percentWidth="65"/>
+                </columnConstraints>
+                <Label text="Guests" GridPane.rowIndex="0"/>
+                <Label fx:id="guestsLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Dates" GridPane.rowIndex="1"/>
+                <Label fx:id="datesLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Nights" GridPane.rowIndex="2"/>
+                <Label fx:id="nightsLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label text="Room plan" GridPane.rowIndex="3"/>
+                <Label fx:id="roomsLabel" wrapText="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Label text="Add-ons" GridPane.rowIndex="4"/>
+                <ListView fx:id="addOnList" GridPane.rowIndex="4" GridPane.columnIndex="1" prefHeight="80"/>
+                <Label text="Add-ons summary" GridPane.rowIndex="5"/>
+                <Label fx:id="addOnsLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <TitledPane text="Cost breakdown" expanded="true">
+                <content>
+                    <GridPane hgap="10" vgap="6">
+                        <padding>
+                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                        </padding>
+                        <Label text="Room subtotal" GridPane.rowIndex="0"/>
+                        <Label fx:id="roomSubtotalLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Label text="Add-ons subtotal" GridPane.rowIndex="1"/>
+                        <Label fx:id="addOnSubtotalLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <Label text="Tax" GridPane.rowIndex="2"/>
+                        <Label fx:id="taxLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <Label text="Loyalty" GridPane.rowIndex="3"/>
+                        <Label fx:id="loyaltyLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                        <Label text="Total" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="totalLabel" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-font-weight: bold;"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
+
+            <Label fx:id="statusLabel" textFill="green"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Back" onAction="#backToGuestDetails"/>
+                <Button fx:id="confirmButton" text="Confirm Booking" onAction="#confirmReservation" styleClass="primary-button"/>
+                <Button text="Finish" onAction="#finishAndRestart"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

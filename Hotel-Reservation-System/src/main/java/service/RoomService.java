@@ -191,44 +191,57 @@ public class RoomService {
         LOGGER.info(String.format("Suggesting rooms for %d guests (%d adults, %d children)",
                 totalGuests, adults, children));
 
-        // Single guest - suggest single room
+        if (totalGuests <= 0) {
+            return suggestions;
+        }
+
+        // 1 guest – single room
         if (totalGuests == 1) {
             suggestions.add(new RoomSuggestion("Single room", List.of("SINGLE")));
         }
-        // 2 guests - single or double
+        // 2 guests – single or double
         else if (totalGuests == 2) {
             suggestions.add(new RoomSuggestion("One single room", List.of("SINGLE")));
             suggestions.add(new RoomSuggestion("One double room", List.of("DOUBLE")));
         }
-        // 3-4 guests - double or two singles
+        // 3–4 guests – one double OR two singles (group booking rule)
         else if (totalGuests >= 3 && totalGuests <= 4) {
             suggestions.add(new RoomSuggestion("One double room", List.of("DOUBLE")));
             suggestions.add(new RoomSuggestion("Two single rooms", List.of("SINGLE", "SINGLE")));
         }
-        // More than 4 guests - multiple rooms
+        // > 4 guests – multiple doubles, possibly one single, until capacity is satisfied
         else {
-            int remainingGuests = totalGuests;
-            List<String> rooms = new ArrayList<>();
+            List<String> roomTypes = new ArrayList<>();
 
-            // Fill with double rooms first (4 guests each)
-            while (remainingGuests > 4) {
-                rooms.add("DOUBLE");
-                remainingGuests -= 4;
+            // Use as many double rooms (capacity 2) as possible
+            int doubles = totalGuests / 2;
+            int remainder = totalGuests % 2;
+
+            for (int i = 0; i < doubles; i++) {
+                roomTypes.add("DOUBLE");
+            }
+            if (remainder == 1) {
+                roomTypes.add("SINGLE");
             }
 
-            // Handle remaining guests
-            if (remainingGuests > 2) {
-                rooms.add("DOUBLE");
-            } else if (remainingGuests > 0) {
-                rooms.add("SINGLE");
+            // Build a clear description
+            String description;
+            if (remainder == 0) {
+                description = String.format("%d double room%s",
+                        doubles,
+                        doubles > 1 ? "s" : "");
+            } else {
+                description = String.format("%d double room%s and 1 single room",
+                        doubles,
+                        doubles > 1 ? "s" : "");
             }
 
-            suggestions.add(new RoomSuggestion(
-                    String.format("%d double rooms", rooms.size()), rooms));
+            suggestions.add(new RoomSuggestion("Suggested combination: " + description, roomTypes));
         }
 
         return suggestions;
     }
+
 
     /**
      * Validate room selection against occupancy rules

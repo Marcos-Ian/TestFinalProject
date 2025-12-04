@@ -50,7 +50,10 @@
 
             <TitledPane text="Add-ons" expanded="true">
                 <content>
-                    <GridPane hgap="12" vgap="8" padding="10">
+                    <GridPane hgap="12" vgap="8">
+                        <padding>
+                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                        </padding>
                         <columnConstraints>
                             <ColumnConstraints percentWidth="50"/>
                             <ColumnConstraints percentWidth="50"/>
@@ -62,6 +65,7 @@
                     </GridPane>
                 </content>
             </TitledPane>
+
             <Label fx:id="addOnSummaryLabel" text="Add-ons subtotal: $0.00"/>
 
             <HBox spacing="10" alignment="CENTER_RIGHT">

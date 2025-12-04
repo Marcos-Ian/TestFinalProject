@@ -15,6 +15,7 @@ import model.Reservation;
 import model.RoomType;
 import service.BillingContext;
 import service.ReservationService;
+import javafx.scene.paint.Color;   // ⬅️ add this import at the top
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -119,16 +120,35 @@ public class KioskSummaryController {
     }
 
     @FXML
-    private void confirmReservation() throws IOException {
-        Reservation reservation = new Reservation();
-        reservation.setGuest(context.getGuest());
-        reservation.setCheckIn(context.getCheckIn());
-        reservation.setCheckOut(context.getCheckOut());
-        reservation.setStatus("BOOKED");
+    private void confirmReservation() {
+        try {
+            Reservation reservation = new Reservation();
+            reservation.setGuest(context.getGuest());
+            reservation.setCheckIn(context.getCheckIn());
+            reservation.setCheckOut(context.getCheckOut());
+            reservation.setStatus("BOOKED");
 
-        reservationService.createReservation(reservation, context.getSelectedRooms(), context.getAddOns());
-        statusLabel.setText("Your reservation has been saved. Billing will be handled at the front desk.");
-        confirmButton.setDisable(true);
+            // This will run validateGuest(...) and can throw IllegalArgumentException
+            reservationService.createReservation(
+                    reservation,
+                    context.getSelectedRooms(),
+                    context.getAddOns()
+            );
+
+            statusLabel.setText("Your reservation has been saved. Billing will be handled at the front desk.");
+            statusLabel.setTextFill(Color.GREEN);
+            confirmButton.setDisable(true);
+        } catch (IllegalArgumentException ex) {
+            // e.g. "Valid 10-digit phone number is required"
+            statusLabel.setText(ex.getMessage());
+            statusLabel.setTextFill(Color.RED);
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            // Any unexpected errors – don't crash the app
+            statusLabel.setText("Unexpected error while confirming reservation.");
+            statusLabel.setTextFill(Color.RED);
+            ex.printStackTrace();
+        }
     }
 
     @FXML
@@ -136,6 +156,7 @@ public class KioskSummaryController {
         context.reset();
         loadScene("/view/kiosk_welcome.fxml");
     }
+
 
     private void loadScene(String resource) throws IOException {
         Stage stage = (Stage) confirmButton.getScene().getWindow();
