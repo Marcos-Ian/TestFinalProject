@@ -1,205 +1,113 @@
 package controller;
 
-import app.Bootstrap;
-import config.LoyaltyConfig;
-import config.PricingConfig;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.RoomType;
-import service.RoomService;
-import service.factory.RoomFactory;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.Parent;
 
-import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-/**
- * Handles the stay details and room selection screen for the kiosk.
- */
 public class KioskBookingController {
-    private final RoomService roomService;
-    private final PricingConfig pricingConfig;
-    private final LoyaltyConfig loyaltyConfig;
 
-    private final KioskFlowContext context;
+    @FXML private DatePicker checkInPicker;
+    @FXML private DatePicker checkOutPicker;
+    @FXML private Spinner<Integer> adultsSpinner;
+    @FXML private Spinner<Integer> childrenSpinner;
+    @FXML private ComboBox<String> roomTypeCombo;
+    @FXML private ListView<String> suggestionsList;
+    @FXML private Label occupancyLabel;
+    @FXML private Label pricingLabel;
+    @FXML private Spinner<Integer> roomCountSpinner;
+    @FXML private ListView<String> selectedRoomsList;
+
+
 
     @FXML
-    private DatePicker checkInPicker;
-    @FXML
-    private DatePicker checkOutPicker;
-    @FXML
-    private Spinner<Integer> adultsSpinner;
-    @FXML
-    private Spinner<Integer> childrenSpinner;
-    @FXML
-    private ComboBox<RoomType> roomTypeCombo;
-    @FXML
-    private ListView<String> suggestionsList;
-    @FXML
-    private Label occupancyLabel;
-    @FXML
-    private Label pricingLabel;
-    @FXML
-    private Label errorLabel;
+    private void initialize() {
+        // Existing spinner setup
+        if (adultsSpinner != null && adultsSpinner.getValueFactory() == null) {
+            adultsSpinner.setValueFactory(
+                    new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1)
+            );
+        }
+        if (childrenSpinner != null && childrenSpinner.getValueFactory() == null) {
+            childrenSpinner.setValueFactory(
+                    new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 0)
+            );
+        }
 
-    public KioskBookingController() {
-        this(Bootstrap.getRoomService(),
-                Bootstrap.getPricingConfig(), Bootstrap.getLoyaltyConfig(),
-                KioskFlowContext.getInstance());
+        // Room count spinner (1–5 rooms of each type, adjust as needed)
+        if (roomCountSpinner != null && roomCountSpinner.getValueFactory() == null) {
+            roomCountSpinner.setValueFactory(
+                    new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1)
+            );
+        }
+
+        // Basic demo room types if you aren't pulling from RoomService yet
+        if (roomTypeCombo != null && roomTypeCombo.getItems().isEmpty()) {
+            roomTypeCombo.getItems().setAll(
+                    "Standard Room",
+                    "Deluxe Room",
+                    "Suite",
+                    "Family Room"
+            );
+            roomTypeCombo.setPromptText("Select a room type");
+        }
     }
 
-    public KioskBookingController(RoomService roomService,
-                                  PricingConfig pricingConfig,
-                                  LoyaltyConfig loyaltyConfig,
-                                  KioskFlowContext context) {
-        this.roomService = roomService;
-        this.pricingConfig = pricingConfig;
-        this.loyaltyConfig = loyaltyConfig;
-        this.context = context;
-    }
-
-    @FXML
-    public void initialize() {
-        adultsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 6, 1));
-        childrenSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 4, 0));
-        checkInPicker.setValue(LocalDate.now().plusDays(1));
-        checkOutPicker.setValue(LocalDate.now().plusDays(2));
-        loadAvailableRooms();
-        refreshSuggestions();
-    }
 
     @FXML
     private void refreshSuggestions() {
-        LocalDate checkIn = checkInPicker.getValue();
-        LocalDate checkOut = checkOutPicker.getValue();
-        int adults = adultsSpinner.getValue();
-        int children = childrenSpinner.getValue();
-
-        context.setAdults(adults);
-        context.setChildren(children);
-        context.setCheckIn(checkIn);
-        context.setCheckOut(checkOut);
-
-        List<String> suggestionText = roomService.suggestRooms(adults, children, checkIn, checkOut)
-                .stream()
-                .map(s -> s.getDescription() + " – " + String.join(", ", s.getRoomTypes()))
-                .toList();
-        suggestionsList.setItems(FXCollections.observableArrayList(suggestionText));
-        occupancyLabel.setText("Guests: " + (adults + children));
-        updatePricingPreview();
+        // just to prove it works, later you plug real service logic
+        suggestionsList.getItems().setAll("Suggestion 1", "Suggestion 2");
+        occupancyLabel.setText("Guests: " +
+                adultsSpinner.getValue() + " adults, " +
+                childrenSpinner.getValue() + " children");
+        pricingLabel.setText("Pricing: (sample)");
     }
 
     @FXML
-    private void loadAvailableRooms() {
-        List<RoomType> available = roomService.getAvailableRooms(checkInPicker.getValue(), checkOutPicker.getValue());
-        ObservableList<RoomType> roomOptions = FXCollections.observableArrayList(available);
-        if (roomOptions.isEmpty()) {
-            roomOptions.add(createFallbackRoom());
-        }
-        roomTypeCombo.setItems(roomOptions);
-        roomTypeCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(RoomType item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getType() + " ($" + item.getBasePrice() + ")");
-            }
-        });
-        roomTypeCombo.setButtonCell(roomTypeCombo.getCellFactory().call(null));
-        if (!roomOptions.isEmpty()) {
-            roomTypeCombo.getSelectionModel().selectFirst();
-        }
+    private void goBackToWelcome() {
+        loadScene("/view/kiosk_welcome.fxml");
     }
 
     @FXML
-    private void goToGuestDetails() throws IOException {
-        errorLabel.setText("");
-        Optional<String> validation = validateSelection();
-        if (validation.isPresent()) {
-            errorLabel.setText(validation.get());
+    private void goToGuestDetails() {
+        loadScene("/view/kiosk_guest_details.fxml");
+    }
+
+    private void loadScene(String fxmlPath) {
+        try {
+            Stage stage = (Stage) checkInPicker.getScene().getWindow();
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void addRoomToSelection() {
+        String type = roomTypeCombo.getValue();
+        if (type == null || type.isBlank()) {
+            // You can also show an alert instead
+            System.out.println("No room type selected");
             return;
         }
 
-        RoomType selected = roomTypeCombo.getSelectionModel().getSelectedItem();
-        context.getSelectedRooms().clear();
-        context.getSelectedRooms().add(selected);
-        context.setEstimatedTotal(updatePricingPreview());
+        int rooms = roomCountSpinner.getValue();
+        int adults = adultsSpinner.getValue();
+        int children = childrenSpinner.getValue();
 
-        loadNext("/view/kiosk_guest_details.fxml");
+        String item = String.format(
+                "%d x %s  (%d adults, %d children)",
+                rooms, type, adults, children
+        );
+
+        selectedRoomsList.getItems().add(item);
+
+        // Optional: update summary labels
+        occupancyLabel.setText("Guests: " + adults + " adults, " + children + " children");
+        pricingLabel.setText("Pricing: multiple rooms (placeholder)");
     }
 
-    private Optional<String> validateSelection() {
-        LocalDate checkIn = checkInPicker.getValue();
-        LocalDate checkOut = checkOutPicker.getValue();
-        if (checkIn == null || checkOut == null) {
-            return Optional.of("Please select check-in and check-out dates.");
-        }
-        if (!checkOut.isAfter(checkIn)) {
-            return Optional.of("Check-out must be after check-in.");
-        }
-        if (checkIn.isBefore(LocalDate.now())) {
-            return Optional.of("Check-in cannot be in the past.");
-        }
-        RoomType selected = roomTypeCombo.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            return Optional.of("Select at least one room type.");
-        }
-        int totalGuests = adultsSpinner.getValue() + childrenSpinner.getValue();
-        if (totalGuests > selected.getCapacity()) {
-            return Optional.of("Selected room cannot host " + totalGuests + " guests (capacity " + selected.getCapacity() + ")");
-        }
-        return Optional.empty();
-    }
-
-    private double updatePricingPreview() {
-        RoomType selected = roomTypeCombo.getSelectionModel().getSelectedItem();
-        LocalDate checkIn = checkInPicker.getValue();
-        LocalDate checkOut = checkOutPicker.getValue();
-        if (selected == null || checkIn == null || checkOut == null) {
-            pricingLabel.setText("Pricing pending selection");
-            return 0.0;
-        }
-
-        double total = 0.0;
-        LocalDate cursor = checkIn;
-        while (cursor.isBefore(checkOut)) {
-            double nightly = selected.getBasePrice();
-            nightly *= isWeekend(cursor) ? pricingConfig.getWeekendMultiplier() : pricingConfig.getWeekdayMultiplier();
-            if (pricingConfig.isPeakSeason(cursor)) {
-                nightly *= pricingConfig.getPeakSeasonMultiplier();
-            }
-            total += nightly;
-            cursor = cursor.plusDays(1);
-        }
-        int nights = (int) (checkOut.toEpochDay() - checkIn.toEpochDay());
-        int earnedPoints = loyaltyConfig.calculatePointsEarned(total);
-        pricingLabel.setText(String.format("%d nights total: $%.2f | Earn %d pts", nights, total, earnedPoints));
-        return total;
-    }
-
-    private boolean isWeekend(LocalDate date) {
-        DayOfWeek dow = date.getDayOfWeek();
-        return dow == DayOfWeek.FRIDAY || dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY;
-    }
-
-    private RoomType createFallbackRoom() {
-        return RoomFactory.create(RoomType.Type.SINGLE, 120.0, 2);
-    }
-
-    private void loadNext(String resource) throws IOException {
-        Stage stage = (Stage) checkInPicker.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
-        Parent root = loader.load();
-        Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
-        stage.setScene(scene);
-    }
 }

@@ -3,52 +3,115 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.KioskBookingController" prefWidth="900" prefHeight="600">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.KioskBookingController"
+            prefWidth="800" prefHeight="500">
+
+    <!-- Header -->
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Step 1: Dates & Guests" styleClass="header-label"/>
-            <Label fx:id="errorLabel" textFill="red"/>
-        </HBox>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="20" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label text="Step 1: Dates &amp; Guests" styleClass="header-label"/>
+            <Label text="Select your stay dates and number of guests to see room suggestions."
+                   wrapText="true"/>
+        </VBox>
     </top>
+
+    <!-- Main form -->
     <center>
         <GridPane hgap="12" vgap="12">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="50"/>
-                <ColumnConstraints percentWidth="50"/>
-            </columnConstraints>
-            <RowConstraints percentHeight="33"/>
-            <RowConstraints percentHeight="33"/>
-            <RowConstraints percentHeight="33"/>
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
+            <columnConstraints>
+                <ColumnConstraints percentWidth="40"/>
+                <ColumnConstraints percentWidth="60"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints minHeight="24"/>
+                <RowConstraints minHeight="24"/>
+                <RowConstraints minHeight="24"/>
+                <RowConstraints minHeight="24"/>
+                <RowConstraints minHeight="24"/>
+                <RowConstraints minHeight="80"/>
+                <RowConstraints minHeight="24"/>
+            </rowConstraints>
+
+            <!-- Dates -->
             <Label text="Check-In" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <DatePicker fx:id="checkInPicker" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#refreshSuggestions"/>
+            <DatePicker fx:id="checkInPicker"
+                        GridPane.rowIndex="0" GridPane.columnIndex="1"
+                        onAction="#refreshSuggestions"/>
 
             <Label text="Check-Out" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#refreshSuggestions"/>
+            <DatePicker fx:id="checkOutPicker"
+                        GridPane.rowIndex="1" GridPane.columnIndex="1"
+                        onAction="#refreshSuggestions"/>
 
+            <!-- Guests -->
             <Label text="Adults" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <Spinner fx:id="adultsSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" onMouseClicked="#refreshSuggestions" editable="true"/>
+            <Spinner fx:id="adultsSpinner"
+                     GridPane.rowIndex="2" GridPane.columnIndex="1"
+                     editable="true"
+                     onMouseClicked="#refreshSuggestions"/>
 
             <Label text="Children" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-            <Spinner fx:id="childrenSpinner" GridPane.rowIndex="3" GridPane.columnIndex="1" onMouseClicked="#refreshSuggestions" editable="true"/>
+            <Spinner fx:id="childrenSpinner"
+                     GridPane.rowIndex="3" GridPane.columnIndex="1"
+                     editable="true"
+                     onMouseClicked="#refreshSuggestions"/>
 
+            <!-- Room type -->
+            <!-- Room type selection -->
             <Label text="Available room type" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="roomTypeCombo" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="240"/>
+            <ComboBox fx:id="roomTypeCombo"
+                      GridPane.rowIndex="4" GridPane.columnIndex="1"
+                      prefWidth="240"/>
 
-            <Label text="Suggestions" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-            <ListView fx:id="suggestionsList" GridPane.rowIndex="5" GridPane.columnIndex="1" prefHeight="150"/>
+            <Label text="Number of rooms" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <Spinner fx:id="roomCountSpinner"
+                     GridPane.rowIndex="5" GridPane.columnIndex="1"
+                     editable="true"/>
 
-            <Label fx:id="occupancyLabel" text="Guests:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-            <Label fx:id="pricingLabel" text="Pricing" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <!-- Selected rooms "cart" -->
+            <Label text="Selected rooms" GridPane.rowIndex="6" GridPane.columnIndex="0"
+                   GridPane.valignment="TOP"/>
+            <ListView fx:id="selectedRoomsList"
+                      GridPane.rowIndex="6" GridPane.columnIndex="1"
+                      prefHeight="150"/>
+
+            <!-- Optional: Suggestions (keep or remove if you don’t use it) -->
+            <!--
+            <Label text="Suggestions" GridPane.rowIndex="7" GridPane.columnIndex="0"
+                   GridPane.valignment="TOP"/>
+            <ListView fx:id="suggestionsList"
+                      GridPane.rowIndex="7" GridPane.columnIndex="1"
+                      prefHeight="150"/>
+            -->
+
+            <Label fx:id="occupancyLabel" text="Guests:"
+                   GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <Label fx:id="pricingLabel" text="Pricing"
+                   GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
         </GridPane>
     </center>
+
+    <!-- Navigation buttons -->
     <bottom>
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Next" onAction="#goToGuestDetails" styleClass="primary-button"/>
+            <padding>
+                <Insets top="10" right="20" bottom="20" left="20"/>
+            </padding>
+            <Button text="Back" onAction="#goBackToWelcome"/>
+            <Button text="Next: Guest Details" onAction="#goToGuestDetails"
+                    styleClass="primary-button"/>
         </HBox>
     </bottom>
+
 </BorderPane>

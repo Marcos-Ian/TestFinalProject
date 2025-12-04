@@ -122,3 +122,185 @@
 [2025-12-04 00:18:20] [INFO] [app.Bootstrap] Authentication service initialized 
 [2025-12-04 00:18:20] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
 [2025-12-04 00:18:20] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:18:30] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:18:30] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:18:30] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:18:30] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:18:32] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:18:32] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:18:32] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:18:32] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:28:13] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:28:13] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:28:13] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:28:13] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:28:15] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:28:15] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:28:15] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:28:15] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:32:14] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:32:14] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:32:14] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:32:14] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:32:16] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:32:16] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:32:16] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:32:16] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:32:18] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 00:32:18] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 00:32:18] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 00:33:08] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:33:08] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:33:08] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:33:08] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:33:10] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:33:10] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:33:10] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:33:10] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:33:12] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 00:33:12] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 00:33:12] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 00:36:12] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:36:12] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:36:12] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:36:12] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:36:14] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:36:14] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:36:14] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:36:14] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:37:24] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 00:37:24] [WARNING] [util.ValidationUtils] Validation failed: Check-in date is required 
+[2025-12-04 00:38:55] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:38:55] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:38:55] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:38:55] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:38:57] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:38:57] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:38:57] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:38:57] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:44:26] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:44:26] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:44:26] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:44:26] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:44:28] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:44:28] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:44:28] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:44:28] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:52:21] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:52:21] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:52:21] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:52:21] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:52:24] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:52:24] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:52:24] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:52:24] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 00:53:27] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 00:53:27] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 00:53:27] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 00:53:27] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 00:53:30] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 00:53:30] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 00:53:30] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 00:53:30] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 01:09:03] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 01:09:03] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 01:09:03] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 01:09:03] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 01:09:06] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 01:09:06] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 01:09:06] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 01:09:06] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 01:10:30] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 01:10:30] [WARNING] [util.ValidationUtils] Validation failed: Check-in date is required 
+[2025-12-04 01:10:31] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 01:10:31] [WARNING] [util.ValidationUtils] Validation failed: Check-in date is required 
+[2025-12-04 10:26:49] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 10:26:49] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 10:26:49] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 10:26:49] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 10:26:51] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 10:26:51] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 10:26:51] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 10:26:51] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 10:31:09] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 10:31:09] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 10:31:09] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 10:31:09] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 10:31:12] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 10:31:12] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 10:31:12] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 10:31:12] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 10:31:37] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 10:31:37] [WARNING] [util.ValidationUtils] Validation failed: Check-in date is required 
