@@ -1,0 +1,40 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.header-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.section-box {
+    -fx-padding: 16;
+    -fx-spacing: 12;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.primary-button {
+    -fx-background-color: #3366cc;
+    -fx-text-fill: white;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 4;
+}
+
+.danger-button {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 4;
+}
+
+.form-grid {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+.table-view {
+    -fx-border-color: #ededed;
+}

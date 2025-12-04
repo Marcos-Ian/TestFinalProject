@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="12" padding="20"
+      fx:controller="controller.KioskSummaryController">
+    <Label text="Step 4: Summary" styleClass="header-label"/>
+    <GridPane hgap="10" vgap="8">
+        <Label text="Guest" GridPane.rowIndex="0"/>
+        <Label fx:id="guestLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Dates" GridPane.rowIndex="1"/>
+        <Label fx:id="datesLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Room" GridPane.rowIndex="2"/>
+        <Label fx:id="roomLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Add-ons" GridPane.rowIndex="3"/>
+        <ListView fx:id="addOnList" GridPane.rowIndex="3" GridPane.columnIndex="1" prefHeight="80"/>
+        <Label text="Total" GridPane.rowIndex="4"/>
+        <Label fx:id="totalLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Loyalty" GridPane.rowIndex="5"/>
+        <Label fx:id="loyaltyLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+    <Label fx:id="statusLabel" textFill="green"/>
+    <HBox alignment="CENTER_RIGHT">
+        <Button fx:id="confirmButton" text="Confirm" onAction="#confirmReservation" styleClass="primary-button"/>
+    </HBox>
+</VBox>

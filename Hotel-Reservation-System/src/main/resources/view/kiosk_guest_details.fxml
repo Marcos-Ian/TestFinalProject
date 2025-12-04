@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="12" padding="20"
+      fx:controller="controller.KioskGuestDetailsController">
+    <Label text="Step 2: Guest Details" styleClass="header-label"/>
+    <GridPane hgap="10" vgap="10" styleClass="form-grid">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+        <Label text="First Name" GridPane.rowIndex="0"/>
+        <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Last Name" GridPane.rowIndex="1"/>
+        <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Phone" GridPane.rowIndex="2"/>
+        <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Email" GridPane.rowIndex="3"/>
+        <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+    <Label fx:id="errorLabel" textFill="red"/>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="nextButton" text="Next" onAction="#goToAddons" styleClass="primary-button"/>
+    </HBox>
+</VBox>

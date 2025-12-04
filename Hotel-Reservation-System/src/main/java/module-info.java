@@ -18,6 +18,7 @@ module hotel.reservation.system {
 
     // JavaFX FXML controllers (if any)
     opens controller to javafx.fxml;
+    opens view to javafx.fxml;
 
     // Public API exports
     exports app;
