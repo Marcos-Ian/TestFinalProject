@@ -68,18 +68,6 @@ public class KioskGuestDetailsController {
 
     @FXML
     private void initialize() {
-        Guest guest = context.getGuest();
-        firstNameField.setText(guest.getFirstName() != null ? guest.getFirstName() : "");
-        lastNameField.setText(guest.getLastName() != null ? guest.getLastName() : "");
-        phoneField.setText(guest.getPhone() != null ? guest.getPhone() : "");
-        emailField.setText(guest.getEmail() != null ? guest.getEmail() : "");
-
-        List<String> existingAddOns = context.getAddOns();
-        wifiCheck.setSelected(existingAddOns.contains("WiFi"));
-        breakfastCheck.setSelected(existingAddOns.contains("Breakfast"));
-        parkingCheck.setSelected(existingAddOns.contains("Parking"));
-        spaCheck.setSelected(existingAddOns.contains("Spa"));
-
         wifiCheck.setOnAction(e -> updateAddOns());
         breakfastCheck.setOnAction(e -> updateAddOns());
         parkingCheck.setOnAction(e -> updateAddOns());
@@ -89,6 +77,24 @@ public class KioskGuestDetailsController {
         lastNameField.textProperty().addListener((obs, o, n) -> validate());
         phoneField.textProperty().addListener((obs, o, n) -> validate());
         emailField.textProperty().addListener((obs, o, n) -> validate());
+
+        // Restore guest info if present
+        Guest existing = context.getGuest();
+        if (existing != null) {
+            firstNameField.setText(existing.getFirstName());
+            lastNameField.setText(existing.getLastName());
+            emailField.setText(existing.getEmail());
+            phoneField.setText(existing.getPhoneNumber());
+        }
+
+        // Restore add-ons from context
+        List<String> savedAddOns = context.getAddOns();
+        if (savedAddOns != null) {
+            wifiCheck.setSelected(savedAddOns.stream().anyMatch("WiFi"::equals));
+            breakfastCheck.setSelected(savedAddOns.stream().anyMatch("Breakfast"::equals));
+            parkingCheck.setSelected(savedAddOns.stream().anyMatch("Parking"::equals));
+            spaCheck.setSelected(savedAddOns.stream().anyMatch("Spa"::equals));
+        }
 
         validate();
         updateAddOns();
@@ -151,9 +157,9 @@ public class KioskGuestDetailsController {
         }
 
         // If we reach here, everything is valid. Save to the flow context.
-        model.Guest guest = context.getGuest();
+        Guest guest = context.getGuest();
         if (guest == null) {
-            guest = new model.Guest();
+            guest = new Guest();
         }
         guest.setFirstName(firstName);
         guest.setLastName(lastName);
@@ -163,16 +169,16 @@ public class KioskGuestDetailsController {
         context.setGuest(guest);
         List<String> addOns = new ArrayList<>();
         if (wifiCheck.isSelected()) {
-            addOns.add("WIFI");
+            addOns.add("WiFi");
         }
         if (breakfastCheck.isSelected()) {
-            addOns.add("BREAKFAST");
+            addOns.add("Breakfast");
         }
         if (parkingCheck.isSelected()) {
-            addOns.add("PARKING");
+            addOns.add("Parking");
         }
         if (spaCheck.isSelected()) {
-            addOns.add("SPA");
+            addOns.add("Spa");
         }
         context.setAddOns(addOns);
         // Now move to the Review screen
