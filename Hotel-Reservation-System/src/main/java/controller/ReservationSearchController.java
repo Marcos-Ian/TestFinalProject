@@ -64,7 +64,7 @@ public class ReservationSearchController {
     @FXML
     private TableView<Reservation> reservationTable;
     @FXML
-    private TableColumn<Reservation, Long> idColumn;                  // <- Long
+    private TableColumn<Reservation, Number> idColumn;
     @FXML
     private TableColumn<Reservation, String> guestColumn;
     @FXML
@@ -74,7 +74,7 @@ public class ReservationSearchController {
     @FXML
     private TableColumn<Reservation, LocalDate> checkOutColumn;
     @FXML
-    private TableColumn<Reservation, ReservationStatus> statusColumn; // <- ReservationStatus
+    private TableColumn<Reservation, String> statusColumn;
 
     @FXML
     private Label resultsLabel;
@@ -155,18 +155,7 @@ public class ReservationSearchController {
         );
 
         allResults = results;
-
-        // NEW: always show current search results in the table
-        reservationTable.setItems(
-                FXCollections.observableArrayList(allResults)
-        );
-
-        int pageCount = (int) Math.ceil((double) allResults.size() / ROWS_PER_PAGE);
-        if (pageCount == 0) pageCount = 1;
-
-        reservationPagination.setPageCount(pageCount);
-        reservationPagination.setCurrentPageIndex(0);
-        reservationPagination.setPageFactory(this::createPage);
+        applySortingAndRefreshPage();
         if (resultsLabel != null) {
             resultsLabel.setText(allResults.size() + " matching reservations | Billing: StandardBillingStrategy");
         }
@@ -243,16 +232,15 @@ public class ReservationSearchController {
     }
 
     private void applySortingAndRefreshPage() {
-        if (allResults == null || reservationTable == null || reservationPagination == null) {
-            return;
-        }
-
+        if (allResults == null || reservationTable == null || reservationPagination == null) return;
         Comparator<? super Reservation> comparator = reservationTable.getComparator();
         if (comparator != null) {
             allResults.sort(comparator);
         }
-
-        int currentPage = reservationPagination.getCurrentPageIndex();
+        int pageCount = (int) Math.ceil((double) allResults.size() / ROWS_PER_PAGE);
+        if (pageCount == 0) pageCount = 1;
+        reservationPagination.setPageCount(pageCount);
+        int currentPage = Math.min(reservationPagination.getCurrentPageIndex(), pageCount - 1);
         reservationPagination.setPageFactory(this::createPage);
         reservationPagination.setCurrentPageIndex(currentPage);
     }
@@ -286,53 +274,42 @@ public class ReservationSearchController {
         if (idColumn != null) {
             idColumn.setCellValueFactory(c ->
                     new SimpleLongProperty(c.getValue().getId()).asObject());
-            idColumn.setSortable(true);
         }
-
         if (guestColumn != null) {
             guestColumn.setCellValueFactory(c -> {
-                if (c.getValue().getGuest() == null) {
-                    return new SimpleStringProperty("Walk-in");
-                }
-                String first = c.getValue().getGuest().getFirstName();
-                String last  = c.getValue().getGuest().getLastName();
-                String full  = ((first == null ? "" : first) + " " + (last == null ? "" : last)).trim();
-                return new SimpleStringProperty(full);
+                var g = c.getValue().getGuest();
+                String name = (g == null) ? "Walk-in"
+                        : (g.getFirstName() + " " + g.getLastName()).trim();
+                return new SimpleStringProperty(name);
             });
-            guestColumn.setSortable(true);
         }
-
         if (phoneColumn != null) {
-            phoneColumn.setCellValueFactory(c ->
-                    new SimpleStringProperty(
-                            c.getValue().getGuest() == null
-                                    ? ""
-                                    : c.getValue().getGuest().getPhoneNumber()
-                    ));
-            phoneColumn.setSortable(true);
+            phoneColumn.setCellValueFactory(c -> {
+                var g = c.getValue().getGuest();
+                String phone = (g == null || g.getPhoneNumber() == null)
+                        ? "" : g.getPhoneNumber();
+                return new SimpleStringProperty(phone);
+            });
         }
-
         if (checkInColumn != null) {
             checkInColumn.setCellValueFactory(c ->
                     new SimpleObjectProperty<>(c.getValue().getCheckIn()));
-            checkInColumn.setSortable(true);
         }
-
         if (checkOutColumn != null) {
             checkOutColumn.setCellValueFactory(c ->
                     new SimpleObjectProperty<>(c.getValue().getCheckOut()));
-            checkOutColumn.setSortable(true);
         }
-
         if (statusColumn != null) {
             statusColumn.setCellValueFactory(c ->
-                    new SimpleObjectProperty<>(c.getValue().getStatus()));
-            statusColumn.setSortable(true);
+                    new SimpleStringProperty(
+                            c.getValue().getStatus() == null
+                                    ? "" : c.getValue().getStatus().name()));
         }
-
-        if (reservationTable != null && idColumn != null && guestColumn != null && phoneColumn != null
-                && checkInColumn != null && checkOutColumn != null && statusColumn != null) {
-            reservationTable.getColumns().setAll(idColumn, guestColumn, phoneColumn, checkInColumn, checkOutColumn, statusColumn);
+        if (reservationTable != null) {
+            reservationTable.getColumns().setAll(
+                    idColumn, guestColumn, phoneColumn,
+                    checkInColumn, checkOutColumn, statusColumn
+            );
         }
     }
 }
