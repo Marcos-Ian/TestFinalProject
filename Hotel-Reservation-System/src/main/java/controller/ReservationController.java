@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import model.Guest;
 import model.Reservation;
 import model.RoomType;
+import model.ReservationStatus;
 import service.BillingContext;
 import service.LoyaltyService;
 
@@ -252,7 +253,7 @@ public class ReservationController {
         reservation.setGuest(guest);
         reservation.setCheckIn(LocalDate.now().plusDays(3));
         reservation.setCheckOut(LocalDate.now().plusDays(6));
-        reservation.setStatus("BOOKED");
+        reservation.setStatus(ReservationStatus.BOOKED);
         this.currentReservation = reservation;
 
         List<RoomType> rooms = new ArrayList<>();
@@ -304,7 +305,7 @@ public class ReservationController {
     private void populateReservationSection(Reservation reservation, int guestCount, String bookedBy) {
         titleLabel.setText("Reservation Details");
         reservationIdLabel.setText(reservation.getId() != null ? "ID: #" + reservation.getId() : "ID: Pending");
-        statusBadge.setText(reservation.getStatus());
+        statusBadge.setText(reservation.getStatus() != null ? reservation.getStatus().name() : "");
 
         checkInLabel.setText(formatDate(reservation.getCheckIn()));
         checkOutLabel.setText(formatDate(reservation.getCheckOut()));

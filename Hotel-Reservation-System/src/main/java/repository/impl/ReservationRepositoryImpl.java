@@ -3,9 +3,12 @@ package repository.impl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import model.Reservation;
+import model.ReservationStatus;
+import model.RoomType;
 import repository.ReservationRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +21,22 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
+        return saveOrUpdate(reservation, reservation.getRooms());
+    }
+
+    @Override
+    public Reservation saveOrUpdate(Reservation reservation, List<RoomType> rooms) {
         entityManager.getTransaction().begin();
+        if (rooms != null) {
+            reservation.setRooms(new ArrayList<>(rooms));
+        }
+
         if (reservation.getId() == null) {
             entityManager.persist(reservation);
         } else {
             reservation = entityManager.merge(reservation);
         }
+
         entityManager.getTransaction().commit();
         return reservation;
     }
@@ -95,7 +108,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, String status) {
+    public List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, ReservationStatus status) {
         StringBuilder jpql = new StringBuilder("SELECT r FROM Reservation r WHERE 1=1");
 
         if (guestName != null && !guestName.isBlank()) {
@@ -114,7 +127,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         if (end != null) {
             jpql.append(" AND r.checkOut <= :end");
         }
-        if (status != null && !status.equalsIgnoreCase("All")) {
+        if (status != null) {
             jpql.append(" AND r.status = :status");
         }
 
@@ -135,10 +148,31 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         if (end != null) {
             query.setParameter("end", end);
         }
-        if (status != null && !status.equalsIgnoreCase("All")) {
+        if (status != null) {
             query.setParameter("status", status);
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public boolean hasConflict(RoomType room, LocalDate checkIn, LocalDate checkOut, Long excludeReservationId) {
+        String jpql = "SELECT COUNT(r) FROM Reservation r " +
+                "JOIN r.rooms rr " +
+                "WHERE rr = :room " +
+                "AND r.status <> :cancelled " +
+                "AND (:excludeId IS NULL OR r.id <> :excludeId) " +
+                "AND r.checkIn < :checkOut " +
+                "AND r.checkOut > :checkIn";
+
+        TypedQuery<Long> query = entityManager.createQuery(jpql, Long.class);
+        query.setParameter("room", room);
+        query.setParameter("cancelled", ReservationStatus.CANCELLED);
+        query.setParameter("excludeId", excludeReservationId);
+        query.setParameter("checkIn", checkIn);
+        query.setParameter("checkOut", checkOut);
+
+        Long count = query.getSingleResult();
+        return count != null && count > 0;
     }
 }

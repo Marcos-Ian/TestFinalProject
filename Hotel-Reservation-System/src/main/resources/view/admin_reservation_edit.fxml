@@ -19,10 +19,12 @@
         <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
         <Label text="Status" GridPane.rowIndex="5"/>
         <ComboBox fx:id="statusCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text="Rooms" GridPane.rowIndex="6"/>
+        <ListView fx:id="roomListView" GridPane.rowIndex="6" GridPane.columnIndex="1" prefHeight="120.0"/>
     </GridPane>
     <HBox spacing="8">
-        <Button fx:id="saveButton" text="Save" onAction="#saveReservation" styleClass="primary-button"/>
-        <Button fx:id="cancelButton" text="Cancel Reservation" onAction="#cancelReservation" styleClass="danger-button"/>
+        <Button fx:id="saveButton" text="Save" onAction="#onSave" styleClass="primary-button"/>
+        <Button fx:id="cancelButton" text="Cancel Reservation" onAction="#onCancelReservation" styleClass="danger-button"/>
     </HBox>
     <Label fx:id="messageLabel"/>
 </VBox>
