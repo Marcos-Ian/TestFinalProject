@@ -79,13 +79,14 @@ public class KioskGuestDetailsController {
         emailField.textProperty().addListener((obs, o, n) -> validate());
 
         // Restore guest info if present
-        Guest existing = context.getGuest();
+        model.Guest existing = context.getGuest();
         if (existing != null) {
-            firstNameField.setText(existing.getFirstName());
-            lastNameField.setText(existing.getLastName());
-            emailField.setText(existing.getEmail());
-            phoneField.setText(existing.getPhoneNumber());
+            firstNameField.setText(existing.getFirstName() == null ? "" : existing.getFirstName());
+            lastNameField.setText(existing.getLastName() == null ? "" : existing.getLastName());
+            emailField.setText(existing.getEmail() == null ? "" : existing.getEmail());
+            phoneField.setText(existing.getPhoneNumber() == null ? "" : existing.getPhoneNumber());
         }
+
 
         // Restore add-ons from context
         List<String> savedAddOns = context.getAddOns();
@@ -203,33 +204,52 @@ public class KioskGuestDetailsController {
         return addOns;
     }
 
+    private String safeText(javafx.scene.control.TextField field) {
+        String text = field.getText();
+        return text == null ? "" : text;
+    }
+
     private boolean validate() {
         boolean valid = true;
+
+        String firstName = safeText(firstNameField).trim();
+        String lastName  = safeText(lastNameField).trim();
+        String email     = safeText(emailField).trim();
+        String phone     = safeText(phoneField).trim();
+
+        // clear previous errors
         firstNameError.setText("");
         lastNameError.setText("");
-        phoneError.setText("");
         emailError.setText("");
+        phoneError.setText("");
 
-        if (firstNameField.getText().isBlank()) {
-            firstNameError.setText("First name is required.");
+        if (firstName.isEmpty()) {
+            firstNameError.setText("First name is required");
             valid = false;
         }
-        if (lastNameField.getText().isBlank()) {
-            lastNameError.setText("Last name is required.");
+        if (lastName.isEmpty()) {
+            lastNameError.setText("Last name is required");
             valid = false;
         }
-        if (phoneField.getText().isBlank()) {
-            phoneError.setText("Phone is required.");
+        if (email.isEmpty()) {
+            emailError.setText("Email is required");
             valid = false;
-        }
-        if (emailField.getText().isBlank()) {
-            emailError.setText("Email is required.");
+        } else if (!email.contains("@")) {
+            emailError.setText("Enter a valid email");
             valid = false;
         }
 
-        nextButton.setDisable(!valid);
+        if (phone.isEmpty()) {
+            phoneError.setText("Phone is required");
+            valid = false;
+        } else if (!phone.matches("\\d{10}")) {
+            phoneError.setText("Enter a 10-digit phone number");
+            valid = false;
+        }
+
         return valid;
     }
+
 
     private void updateAddOns() {
         List<String> addOns = collectAddOns();
