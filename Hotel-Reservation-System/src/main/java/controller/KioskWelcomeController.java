@@ -25,7 +25,7 @@ public class KioskWelcomeController {
 
     @FXML
     private void startBooking() throws IOException {
-        loadScene("/view/kiosk_booking_steps.fxml");
+        loadScene("/view/kiosk_step1_guests.fxml");
     }
 
     private void loadScene(String resource) throws IOException {
