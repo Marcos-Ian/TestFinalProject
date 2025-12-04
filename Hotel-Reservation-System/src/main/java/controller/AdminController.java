@@ -8,16 +8,17 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.Guest;
 import model.Reservation;
 import model.RoomType;
 import security.AdminRole;
 import security.AdminUser;
 import security.AuthenticationService;
-import service.*;
+import service.BillingContext;
+import service.LoyaltyService;
+import service.ReservationService;
+import service.RoomService;
 import util.ValidationUtils;
 
 import java.time.LocalDate;
@@ -168,9 +169,9 @@ public class AdminController {
         this.loyaltyService = Bootstrap.getLoyaltyService();
         this.billingContext = Bootstrap.getBillingContext();
         this.authService = Bootstrap.getAuthenticationService();
-        this.paymentService = Bootstrap.getPaymentService();
-        this.waitlistService = Bootstrap.getWaitlistService();
-        this.feedbackService = Bootstrap.getFeedbackService();
+        this.paymentService = new PaymentService();
+        this.waitlistService = new WaitlistService();
+        this.feedbackService = new FeedbackService();
 
         LOGGER.info("AdminController initialized");
     }
@@ -875,7 +876,7 @@ public class AdminController {
         bill.append("===============================================\n\n");
         bill.append(String.format("Reservation ID: %d\n", currentReservation.getId()));
         bill.append(String.format("Guest: %s %s\n", guest.getFirstName(), guest.getLastName()));
-        bill.append(        bill.append(String.format("Phone: %s\n", guest.getPhone()));
+        bill.append(String.format("Phone: %s\n", guest.getPhone()));
         bill.append(String.format("Email: %s\n\n", guest.getEmail()));
         bill.append(String.format("Check-in: %s\n", currentReservation.getCheckIn()));
         bill.append(String.format("Check-out: %s\n\n", currentReservation.getCheckOut()));
@@ -1341,3 +1342,82 @@ public class AdminController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    // ============================================================================
+    // PLACEHOLDER DATA TYPES AND SERVICES
+    // These lightweight implementations allow the controller skeleton to compile
+    // until the full UI and service layers are built out.
+    // ============================================================================
+
+    /** Minimal payment service placeholder. */
+    public static class PaymentService {
+        public void processPayment(Long reservationId, double amount, String method) {
+            LOGGER.info(String.format("[PaymentService] Processed $%.2f via %s for reservation %d", amount, method, reservationId));
+        }
+
+        public void processRefund(Long reservationId, double amount) {
+            LOGGER.info(String.format("[PaymentService] Refunded $%.2f for reservation %d", amount, reservationId));
+        }
+    }
+
+    /** Minimal waitlist service placeholder. */
+    public static class WaitlistService {
+        public void addToWaitlist(String guestName, String roomType, LocalDate desiredDate) {
+            LOGGER.info(String.format("[WaitlistService] Added %s for %s on %s", guestName, roomType, desiredDate));
+        }
+    }
+
+    /** Minimal feedback service placeholder. */
+    public static class FeedbackService {
+    }
+
+    // ----- DTOs used by the UI tables -----
+    public static class PaymentRecord { }
+    public static class WaitlistEntry { }
+    public static class LoyaltyTransaction { }
+    public static class FeedbackEntry { }
+    public static class RevenueReport { }
+    public static class OccupancyReport { }
+    public static class ActivityLog { }
+
+    // ----- Dialog placeholders used by the controller -----
+    public static class ReservationDialog {
+        public ReservationDialog(Reservation reservation, RoomService roomService, BillingContext billingContext) { }
+
+        public Optional<ReservationData> showAndWait() {
+            return Optional.empty();
+        }
+    }
+
+    public static class ReservationDetailsDialog {
+        public ReservationDetailsDialog(Reservation reservation) { }
+
+        public void showAndWait() {
+            // No-op placeholder
+        }
+    }
+
+    public static class WaitlistDialog {
+        public Optional<WaitlistData> showAndWait() {
+            return Optional.empty();
+        }
+    }
+
+    // ----- Simple data holders for dialog results -----
+    public static class ReservationData {
+        public String getFirstName() { return ""; }
+        public String getLastName() { return ""; }
+        public String getPhone() { return ""; }
+        public String getEmail() { return ""; }
+        public LocalDate getCheckIn() { return LocalDate.now(); }
+        public LocalDate getCheckOut() { return LocalDate.now(); }
+        public List<RoomType> getRooms() { return List.of(); }
+        public List<String> getAddOns() { return List.of(); }
+    }
+
+    public static class WaitlistData {
+        public String getGuestName() { return ""; }
+        public String getRoomType() { return ""; }
+        public LocalDate getDesiredDate() { return LocalDate.now(); }
+    }
+}
