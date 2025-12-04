@@ -64,7 +64,7 @@ public class ReservationSearchController {
     @FXML
     private TableView<Reservation> reservationTable;
     @FXML
-    private TableColumn<Reservation, Number> idColumn;
+    private TableColumn<Reservation, Long> idColumn;                  // <- Long
     @FXML
     private TableColumn<Reservation, String> guestColumn;
     @FXML
@@ -74,7 +74,7 @@ public class ReservationSearchController {
     @FXML
     private TableColumn<Reservation, LocalDate> checkOutColumn;
     @FXML
-    private TableColumn<Reservation, ReservationStatus> statusColumn;
+    private TableColumn<Reservation, ReservationStatus> statusColumn; // <- ReservationStatus
 
     @FXML
     private Label resultsLabel;
@@ -242,20 +242,15 @@ public class ReservationSearchController {
             return;
         }
 
-        // Use the TableView's comparator (built from the sorted column + sort type)
         Comparator<? super Reservation> comparator = reservationTable.getComparator();
         if (comparator != null) {
-            allResults.sort(comparator);   // ✅ sort the backing List
+            allResults.sort(comparator);
         }
 
-        // Rebuild current page after sorting
         int currentPage = reservationPagination.getCurrentPageIndex();
         reservationPagination.setPageFactory(this::createPage);
         reservationPagination.setCurrentPageIndex(currentPage);
     }
-
-
-
 
     private void openReservationEditor(Reservation reservation) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_reservation_edit.fxml"));
@@ -290,14 +285,25 @@ public class ReservationSearchController {
         }
 
         if (guestColumn != null) {
-            guestColumn.setCellValueFactory(c ->
-                    new SimpleStringProperty(c.getValue().getGuest().getFullName()));
+            guestColumn.setCellValueFactory(c -> {
+                if (c.getValue().getGuest() == null) {
+                    return new SimpleStringProperty("Walk-in");
+                }
+                String first = c.getValue().getGuest().getFirstName();
+                String last  = c.getValue().getGuest().getLastName();
+                String full  = ((first == null ? "" : first) + " " + (last == null ? "" : last)).trim();
+                return new SimpleStringProperty(full);
+            });
             guestColumn.setSortable(true);
         }
 
         if (phoneColumn != null) {
             phoneColumn.setCellValueFactory(c ->
-                    new SimpleStringProperty(c.getValue().getGuest().getPhoneNumber()));
+                    new SimpleStringProperty(
+                            c.getValue().getGuest() == null
+                                    ? ""
+                                    : c.getValue().getGuest().getPhoneNumber()
+                    ));
             phoneColumn.setSortable(true);
         }
 
@@ -315,7 +321,7 @@ public class ReservationSearchController {
 
         if (statusColumn != null) {
             statusColumn.setCellValueFactory(c ->
-                    new SimpleStringProperty(c.getValue().getStatus().name()));
+                    new SimpleObjectProperty<>(c.getValue().getStatus()));
             statusColumn.setSortable(true);
         }
 

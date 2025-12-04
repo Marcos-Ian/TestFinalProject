@@ -1339,3 +1339,35 @@
 [2025-12-04 16:55:27] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='', phone='', email='', start=null, end=null, status=All, results=9 
 [2025-12-04 16:56:02] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='', phone='', email='', start=null, end=null, status=All, results=9 
 [2025-12-04 16:56:06] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='marcos', phone='', email='', start=null, end=null, status=All, results=8 
+[2025-12-04 17:17:35] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 17:17:35] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 17:17:35] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 17:17:35] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 17:17:37] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 17:17:37] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 17:17:37] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 17:17:37] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 17:17:46] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 17:17:46] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 17:17:46] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 17:17:46] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 17:17:48] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 17:17:48] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 17:17:48] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 17:17:48] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 17:17:54] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='', phone='', email='', start=null, end=null, status=All, results=9 
+[2025-12-04 17:18:02] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='', phone='', email='', start=null, end=null, status=All, results=9 
+[2025-12-04 17:18:08] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='', phone='', email='', start=null, end=null, status=All, results=9 
+[2025-12-04 17:18:23] [INFO] [util.ActivityLogger] actor=admin | action=SEARCH | entityType=Reservation | entityId=- | message=Reservation search executed with filters: guest='', phone='', email='', start=null, end=null, status=All, results=9 
