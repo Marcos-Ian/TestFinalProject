@@ -6,8 +6,10 @@ import config.LoyaltyConfig;
 import config.PricingConfig;
 import events.RoomAvailabilitySubject;
 import repository.GuestRepository;
+import repository.RoomRepository;
 import repository.ReservationRepository;
 import repository.impl.GuestRepositoryImpl;
+import repository.impl.RoomRepositoryImpl;
 import repository.impl.ReservationRepositoryImpl;
 import service.BillingContext;
 import service.LoyaltyService;
@@ -57,15 +59,18 @@ public class Bootstrap {
 
             // Initialize repositories
             GuestRepository guestRepository = new GuestRepositoryImpl(entityManager);
+            RoomRepository roomRepository = new RoomRepositoryImpl(entityManager);
             ReservationRepository reservationRepository = new ReservationRepositoryImpl(entityManager);
             LOGGER.info("Repositories initialized");
+
+            initializeRoomTypes(roomRepository);
 
             // Initialize event system
             roomAvailabilitySubject = new RoomAvailabilitySubject();
 
             // Initialize services
-            reservationService = new ReservationService(guestRepository, reservationRepository);
-            roomService = new RoomService(roomAvailabilitySubject);
+            reservationService = new ReservationService(guestRepository, reservationRepository, roomRepository);
+            roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
             LOGGER.info("Services initialized");
             authenticationService = new AuthenticationService();
@@ -153,5 +158,28 @@ public class Bootstrap {
 
     public static RoomAvailabilitySubject getRoomAvailabilitySubject() {
         return roomAvailabilitySubject;
+    }
+
+    private static void initializeRoomTypes(RoomRepository roomRepository) {
+        if (roomRepository == null) {
+            return;
+        }
+
+        seedRoomType(roomRepository, model.RoomType.Type.SINGLE, 100.0, 2);
+        seedRoomType(roomRepository, model.RoomType.Type.DOUBLE, 150.0, 4);
+        seedRoomType(roomRepository, model.RoomType.Type.DELUXE, 250.0, 2);
+        seedRoomType(roomRepository, model.RoomType.Type.PENTHOUSE, 500.0, 2);
+    }
+
+    private static void seedRoomType(RoomRepository roomRepository, model.RoomType.Type type,
+                                     double basePrice, int capacity) {
+        roomRepository.findByType(type).ifPresentOrElse(
+                existing -> LOGGER.fine("Room type already exists: " + type),
+                () -> {
+                    model.RoomType roomType = service.factory.RoomFactory.create(type, basePrice, capacity);
+                    roomRepository.save(roomType);
+                    LOGGER.info("Seeded room type: " + type);
+                }
+        );
     }
 }

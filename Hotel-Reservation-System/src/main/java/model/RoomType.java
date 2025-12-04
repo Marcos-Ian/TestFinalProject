@@ -11,6 +11,7 @@ public class RoomType {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(unique = true, nullable = false)
     private Type type;
     private double basePrice;
     private int capacity;
