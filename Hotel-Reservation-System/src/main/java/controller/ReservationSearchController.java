@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 public class ReservationSearchController {
     private static final Logger logger = Logger.getLogger(ReservationSearchController.class.getName());
     private static final int PAGE_SIZE = 20;
+
     private final ReservationService reservationService;
     private final LoyaltyService loyaltyService;
     private final BillingContext billingContext;
