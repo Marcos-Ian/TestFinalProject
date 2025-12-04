@@ -26,7 +26,7 @@
         <Button fx:id="addWaitlistButton" text="Add to Waitlist" onAction="#addToWaitlist"/>
     </HBox>
     <TableView fx:id="reservationTable" prefHeight="300" VBox.vgrow="ALWAYS"
-               columnResizePolicy="${TableView.CONSTRAINED_RESIZE_POLICY}" maxWidth="Infinity">
+               columnResizePolicy="CONSTRAINED_RESIZE_POLICY" maxWidth="Infinity">
         <columns>
             <TableColumn fx:id="idColumn" text="ID" prefWidth="60.0"/>
             <TableColumn fx:id="guestColumn" text="Guest" prefWidth="160.0"/>
