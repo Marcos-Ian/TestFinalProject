@@ -125,15 +125,16 @@ public class ReservationService {
      *
      * @param name      guest name (optional, partial match)
      * @param phone     guest phone (optional, partial match)
+     * @param email     guest email (optional, partial match)
      * @param startDate check-in on/after (optional)
      * @param endDate   check-out on/before (optional)
      * @param status    reservation status (optional, "All" to ignore)
      * @return matching reservations
      */
-    public List<Reservation> searchReservations(String name, String phone,
+    public List<Reservation> searchReservations(String name, String phone, String email,
                                                 LocalDate startDate, LocalDate endDate,
                                                 String status) {
-        return reservationRepository.searchReservations(name, phone, startDate, endDate, status);
+        return reservationRepository.searchReservations(name, phone, email, startDate, endDate, status);
     }
 
     /**

@@ -62,5 +62,5 @@ public interface ReservationRepository {
     /**
      * Search reservations with optional filters.
      */
-    List<Reservation> searchReservations(String guestName, String phone, LocalDate start, LocalDate end, String status);
+    List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, String status);
 }

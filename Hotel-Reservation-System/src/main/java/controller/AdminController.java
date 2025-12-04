@@ -419,7 +419,7 @@ public class AdminController {
         String status = searchStatusCombo.getValue();
 
         List<Reservation> results = reservationService.searchReservations(
-                name, phone, startDate, endDate, status);
+                name, phone, "", startDate, endDate, status);
 
         reservations.setAll(results);
         LOGGER.info("Search returned " + results.size() + " results");

@@ -4,9 +4,9 @@ import app.Bootstrap;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.Guest;
 import model.Reservation;
 import security.AuthenticationService;
 import service.BillingContext;
@@ -33,6 +33,8 @@ public class ReservationSearchController {
     @FXML
     private TextField guestField;
     @FXML
+    private TextField emailField;
+    @FXML
     private TextField phoneField;
     @FXML
     private DatePicker startDatePicker;
@@ -42,6 +44,18 @@ public class ReservationSearchController {
     private ComboBox<String> statusCombo;
     @FXML
     private TableView<Reservation> reservationTable;
+    @FXML
+    private TableColumn<Reservation, Long> idColumn;
+    @FXML
+    private TableColumn<Reservation, String> guestColumn;
+    @FXML
+    private TableColumn<Reservation, String> phoneColumn;
+    @FXML
+    private TableColumn<Reservation, LocalDate> checkInColumn;
+    @FXML
+    private TableColumn<Reservation, LocalDate> checkOutColumn;
+    @FXML
+    private TableColumn<Reservation, String> statusColumn;
     @FXML
     private Label resultsLabel;
     @FXML
@@ -74,7 +88,7 @@ public class ReservationSearchController {
             statusCombo.getSelectionModel().selectFirst();
         }
         configureTable();
-        List<Reservation> all = reservationService.searchReservations(null, null, null, null, null);
+        List<Reservation> all = reservationService.searchReservations(null, "", "", null, null, null);
         reservationTable.setItems(FXCollections.observableArrayList(all));
     }
 
@@ -82,6 +96,7 @@ public class ReservationSearchController {
     private void onSearchClicked() {
         String guest = guestField.getText();
         String phone = phoneField.getText() == null ? "" : phoneField.getText().trim();
+        String email = emailField.getText() == null ? "" : emailField.getText().trim();
         LocalDate start = startDatePicker.getValue();
         LocalDate end = endDatePicker.getValue();
 
@@ -94,6 +109,7 @@ public class ReservationSearchController {
                 reservationService.searchReservations(
                         (guest == null || guest.isBlank()) ? null : guest.trim(),
                         phone,
+                        email,
                         start,
                         end,
                         status
@@ -114,9 +130,10 @@ public class ReservationSearchController {
                 "SEARCH",
                 "Reservation",
                 "-",
-                String.format("Reservation search executed with filters: guest='%s', phone='%s', start=%s, end=%s, status=%s, results=%d",
+                String.format("Reservation search executed with filters: guest='%s', phone='%s', email='%s', start=%s, end=%s, status=%s, results=%d",
                         guest,
                         phone,
+                        email,
                         start,
                         end,
                         status,
@@ -145,23 +162,39 @@ public class ReservationSearchController {
     }
 
     private void configureTable() {
-        TableColumn<Reservation, Long> idCol = new TableColumn<>("ID");
-        idCol.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getId()));
+        if (idColumn != null) {
+            idColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getId()));
+        }
 
-        TableColumn<Reservation, String> guestCol = new TableColumn<>("Guest");
-        guestCol.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getGuest() != null ?
-                        c.getValue().getGuest().getFirstName() + " " + c.getValue().getGuest().getLastName() : ""));
+        if (guestColumn != null) {
+            guestColumn.setCellValueFactory(c -> new SimpleStringProperty(
+                    c.getValue().getGuest() != null ?
+                            c.getValue().getGuest().getFirstName() + " " + c.getValue().getGuest().getLastName() : ""));
+        }
 
-        TableColumn<Reservation, LocalDate> inCol = new TableColumn<>("Check-In");
-        inCol.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getCheckIn()));
+        if (phoneColumn != null) {
+            phoneColumn.setCellValueFactory(cellData -> {
+                Guest g = cellData.getValue().getGuest();
+                String value = (g == null || g.getPhoneNumber() == null) ? "" : g.getPhoneNumber();
+                return new SimpleStringProperty(value);
+            });
+        }
 
-        TableColumn<Reservation, LocalDate> outCol = new TableColumn<>("Check-Out");
-        outCol.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getCheckOut()));
+        if (checkInColumn != null) {
+            checkInColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getCheckIn()));
+        }
 
-        TableColumn<Reservation, String> statusCol = new TableColumn<>("Status");
-        statusCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+        if (checkOutColumn != null) {
+            checkOutColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getCheckOut()));
+        }
 
-        reservationTable.getColumns().setAll(idCol, guestCol, inCol, outCol, statusCol);
+        if (statusColumn != null) {
+            statusColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+        }
+
+        if (reservationTable != null && idColumn != null && guestColumn != null && phoneColumn != null
+                && checkInColumn != null && checkOutColumn != null && statusColumn != null) {
+            reservationTable.getColumns().setAll(idColumn, guestColumn, phoneColumn, checkInColumn, checkOutColumn, statusColumn);
+        }
     }
 }
