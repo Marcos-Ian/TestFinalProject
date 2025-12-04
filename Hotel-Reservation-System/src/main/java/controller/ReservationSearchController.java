@@ -1,27 +1,21 @@
 package controller;
 
 import app.Bootstrap;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
-import java.util.Comparator;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.TableRow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import model.Guest;
 import model.Reservation;
 import model.ReservationStatus;
 import security.AuthenticationService;
@@ -30,7 +24,6 @@ import service.LoyaltyService;
 import service.ReservationService;
 import service.WaitlistService;
 import util.ActivityLogger;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -46,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class ReservationSearchController {
     private static final Logger logger = Logger.getLogger(ReservationSearchController.class.getName());
-    private static final int PAGE_SIZE = 20;
+    private static final int ROWS_PER_PAGE = 10;
 
     private final ReservationService reservationService;
     private final LoyaltyService loyaltyService;
@@ -152,17 +145,23 @@ public class ReservationSearchController {
             statusFilter = ReservationStatus.valueOf(status);
         }
 
-        allResults =
-                reservationService.searchReservations(
-                        (guest == null || guest.isBlank()) ? null : guest.trim(),
-                        phone,
-                        email,
-                        start,
-                        end,
-                        statusFilter
-                );
+        List<Reservation> results = reservationService.searchReservations(
+                (guest == null || guest.isBlank()) ? null : guest.trim(),
+                phone,
+                email,
+                start,
+                end,
+                statusFilter
+        );
 
-        applySortingAndSetupPagination();
+        allResults = results;
+
+        int pageCount = (int) Math.ceil((double) allResults.size() / ROWS_PER_PAGE);
+        if (pageCount == 0) pageCount = 1;
+
+        reservationPagination.setPageCount(pageCount);
+        reservationPagination.setCurrentPageIndex(0);
+        reservationPagination.setPageFactory(this::createPage);
         if (resultsLabel != null) {
             resultsLabel.setText(allResults.size() + " matching reservations | Billing: StandardBillingStrategy");
         }
@@ -217,29 +216,24 @@ public class ReservationSearchController {
         resultsLabel.setText("Added to waitlist and loyalty checked (points accrue on stay).");
     }
 
-    private void applySortingAndSetupPagination() {
-        if (allResults == null) {
-            allResults = new ArrayList<>();
-        }
-
-        applySortingAndRefreshPage();
-
-        int pageCount = (int) Math.ceil((double) allResults.size() / PAGE_SIZE);
-        if (pageCount == 0) {
-            pageCount = 1;
-        }
-
-        reservationPagination.setPageCount(pageCount);
-        reservationPagination.setCurrentPageIndex(0);
-        reservationPagination.setPageFactory(this::createPage);
-    }
-
     private Node createPage(int pageIndex) {
-        int fromIndex = pageIndex * PAGE_SIZE;
-        int toIndex = Math.min(fromIndex + PAGE_SIZE, allResults.size());
-        ObservableList<Reservation> page =
+        if (allResults == null || allResults.isEmpty()) {
+            reservationTable.setItems(FXCollections.observableArrayList());
+            return reservationTable;
+        }
+
+        int fromIndex = pageIndex * ROWS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, allResults.size());
+
+        if (fromIndex > toIndex) {
+            reservationTable.setItems(FXCollections.observableArrayList());
+            return reservationTable;
+        }
+
+        ObservableList<Reservation> pageData =
                 FXCollections.observableArrayList(allResults.subList(fromIndex, toIndex));
-        reservationTable.setItems(page);
+
+        reservationTable.setItems(pageData);
         return reservationTable;
     }
 
@@ -290,45 +284,38 @@ public class ReservationSearchController {
 
     private void configureTable() {
         if (idColumn != null) {
-            idColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getId()));
+            idColumn.setCellValueFactory(c ->
+                    new SimpleLongProperty(c.getValue().getId()).asObject());
             idColumn.setSortable(true);
         }
 
         if (guestColumn != null) {
-            guestColumn.setCellValueFactory(c -> new SimpleStringProperty(
-                    c.getValue().getGuest() != null ?
-                            c.getValue().getGuest().getFirstName() + " " + c.getValue().getGuest().getLastName() : ""));
+            guestColumn.setCellValueFactory(c ->
+                    new SimpleStringProperty(c.getValue().getGuest().getFullName()));
             guestColumn.setSortable(true);
         }
 
         if (phoneColumn != null) {
-            phoneColumn.setCellValueFactory(cellData -> {
-                Guest g = cellData.getValue().getGuest();
-                String value = (g == null || g.getPhoneNumber() == null) ? "" : g.getPhoneNumber();
-                return new SimpleStringProperty(value);
-            });
+            phoneColumn.setCellValueFactory(c ->
+                    new SimpleStringProperty(c.getValue().getGuest().getPhoneNumber()));
             phoneColumn.setSortable(true);
         }
 
         if (checkInColumn != null) {
-            checkInColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getCheckIn()));
+            checkInColumn.setCellValueFactory(c ->
+                    new SimpleObjectProperty<>(c.getValue().getCheckIn()));
             checkInColumn.setSortable(true);
         }
 
         if (checkOutColumn != null) {
-            checkOutColumn.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getCheckOut()));
+            checkOutColumn.setCellValueFactory(c ->
+                    new SimpleObjectProperty<>(c.getValue().getCheckOut()));
             checkOutColumn.setSortable(true);
         }
 
         if (statusColumn != null) {
-            statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-            statusColumn.setCellFactory(column -> new TableCell<>() {
-                @Override
-                protected void updateItem(ReservationStatus item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "" : item.name());
-                }
-            });
+            statusColumn.setCellValueFactory(c ->
+                    new SimpleStringProperty(c.getValue().getStatus().name()));
             statusColumn.setSortable(true);
         }
 
