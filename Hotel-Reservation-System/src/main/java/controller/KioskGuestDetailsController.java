@@ -161,7 +161,20 @@ public class KioskGuestDetailsController {
         guest.setPhoneNumber(phone);
 
         context.setGuest(guest);
-
+        List<String> addOns = new ArrayList<>();
+        if (wifiCheck.isSelected()) {
+            addOns.add("WIFI");
+        }
+        if (breakfastCheck.isSelected()) {
+            addOns.add("BREAKFAST");
+        }
+        if (parkingCheck.isSelected()) {
+            addOns.add("PARKING");
+        }
+        if (spaCheck.isSelected()) {
+            addOns.add("SPA");
+        }
+        context.setAddOns(addOns);
         // Now move to the Review screen
         loadScene("/view/kiosk_summary.fxml");
     }

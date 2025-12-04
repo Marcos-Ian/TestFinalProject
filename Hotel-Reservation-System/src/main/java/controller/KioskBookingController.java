@@ -181,8 +181,13 @@ public class KioskBookingController {
             }
             RoomSuggestion suggestion = currentSuggestions.get(index);
             for (String typeName : suggestion.getRoomTypes()) {
-                selectedRooms.add(RoomType.valueOf(typeName));
+                RoomType room = roomTypeCombo.getItems().stream()
+                        .filter(rt -> rt.getType().name().equals(typeName))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No RoomType loaded for " + typeName));
+                selectedRooms.add(room);
             }
+
         } else {
             RoomType type = roomTypeCombo.getValue();
             Integer qty = roomCountSpinner.getValue();

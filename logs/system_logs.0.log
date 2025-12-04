@@ -583,3 +583,264 @@
 [2025-12-04 12:05:01] [INFO] [service.RoomService] Found 4 available room types 
 [2025-12-04 12:05:01] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
 [2025-12-04 12:05:01] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:33:24] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 12:33:24] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 12:33:24] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 12:33:24] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 12:33:26] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 12:33:26] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 12:33:26] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 12:33:26] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 12:39:37] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 12:39:37] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 12:39:37] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 12:39:37] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 12:39:39] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 12:39:39] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 12:39:39] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 12:39:39] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 12:39:45] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:39:45] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:39:45] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 12:39:45] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:39:45] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Suggesting rooms for 2 guests (1 adults, 1 children) 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Suggesting rooms for 3 guests (1 adults, 2 children) 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Suggesting rooms for 4 guests (1 adults, 3 children) 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:39:55] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:39:56] [INFO] [service.RoomService] Suggesting rooms for 5 guests (1 adults, 4 children) 
+[2025-12-04 12:39:56] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:39:56] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:01] [INFO] [service.RoomService] Suggesting rooms for 4 guests (1 adults, 3 children) 
+[2025-12-04 12:40:01] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:01] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:02] [INFO] [service.RoomService] Suggesting rooms for 3 guests (1 adults, 2 children) 
+[2025-12-04 12:40:02] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:02] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:02] [INFO] [service.RoomService] Suggesting rooms for 2 guests (1 adults, 1 children) 
+[2025-12-04 12:40:02] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:02] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:04] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 12:40:04] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:04] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:05] [INFO] [service.RoomService] Suggesting rooms for 2 guests (2 adults, 0 children) 
+[2025-12-04 12:40:05] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:05] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:05] [INFO] [service.RoomService] Suggesting rooms for 3 guests (3 adults, 0 children) 
+[2025-12-04 12:40:05] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:05] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:06] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 12:40:06] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:06] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:07] [INFO] [service.RoomService] Suggesting rooms for 5 guests (5 adults, 0 children) 
+[2025-12-04 12:40:07] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:40:07] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:30] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-25 
+[2025-12-04 12:40:30] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:40:30] [INFO] [service.RoomService] Suggesting rooms for 5 guests (5 adults, 0 children) 
+[2025-12-04 12:40:30] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-25 
+[2025-12-04 12:40:30] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:41:01] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 12:41:01] [INFO] [service.ReservationService] Reservation created: ID=2, Guest=Marcos Ian, Rooms=3, AddOns=0 
+[2025-12-04 12:41:01] [INFO] [service.ReservationService]   - Room: SINGLE ($100.00, capacity 2) 
+[2025-12-04 12:41:01] [INFO] [service.ReservationService]   - Room: PENTHOUSE ($500.00, capacity 2) 
+[2025-12-04 12:41:01] [INFO] [service.ReservationService]   - Room: DELUXE ($250.00, capacity 2) 
+[2025-12-04 12:41:09] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:41:09] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:41:09] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 12:41:09] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:41:09] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Suggesting rooms for 2 guests (2 adults, 0 children) 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Suggesting rooms for 3 guests (3 adults, 0 children) 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:41:50] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:41:51] [INFO] [service.RoomService] Suggesting rooms for 5 guests (5 adults, 0 children) 
+[2025-12-04 12:41:51] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:41:51] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:42:00] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 12:42:00] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:42:00] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:42:42] [INFO] [service.RoomService] Suggesting rooms for 5 guests (5 adults, 0 children) 
+[2025-12-04 12:42:42] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:42:42] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:42:42] [INFO] [service.RoomService] Suggesting rooms for 6 guests (6 adults, 0 children) 
+[2025-12-04 12:42:42] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:42:42] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:42:55] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:42:55] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:42:55] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 12:42:55] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:42:55] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:47:56] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 12:47:56] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 12:47:56] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 12:47:56] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 12:47:59] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 12:47:59] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 12:47:59] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 12:47:59] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 12:49:38] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 12:49:38] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 12:49:38] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 12:49:38] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 12:49:40] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 12:49:40] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 12:49:40] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 12:49:40] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 12:49:54] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 12:49:54] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 12:49:54] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 12:49:54] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 12:49:56] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 12:49:56] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 12:49:56] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 12:49:56] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 12:50:03] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:50:03] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:50:03] [INFO] [service.RoomService] Suggesting rooms for 6 guests (4 adults, 2 children) 
+[2025-12-04 12:50:14] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-09 
+[2025-12-04 12:50:14] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:50:14] [INFO] [service.RoomService] Suggesting rooms for 6 guests (4 adults, 2 children) 
+[2025-12-04 12:51:08] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-09 
+[2025-12-04 12:51:08] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:51:08] [INFO] [service.RoomService] Suggesting rooms for 6 guests (4 adults, 2 children) 
+[2025-12-04 12:51:32] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-09 
+[2025-12-04 12:51:32] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:51:32] [INFO] [service.RoomService] Suggesting rooms for 6 guests (4 adults, 2 children) 
+[2025-12-04 12:52:50] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 12:52:50] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 12:52:50] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 12:52:50] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 12:52:52] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 12:52:52] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 12:52:52] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 12:52:52] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 12:52:59] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 12:52:59] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 12:52:59] [INFO] [service.RoomService] Suggesting rooms for 6 guests (6 adults, 0 children) 
+[2025-12-04 13:01:49] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 13:01:49] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 13:01:49] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 13:01:49] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 13:01:51] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 13:01:51] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 13:01:51] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 13:01:51] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 13:01:58] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 13:01:58] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:01:58] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 13:02:12] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 13:02:12] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:02:12] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 13:03:05] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 13:03:05] [INFO] [service.ReservationService] Reservation created: ID=3, Guest=Marcos IAn, Rooms=1, AddOns=0 
+[2025-12-04 13:03:05] [INFO] [service.ReservationService]   - Room: DOUBLE ($150.00, capacity 4) 
+[2025-12-04 13:03:20] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 13:03:20] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:03:20] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 13:03:33] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 13:03:33] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:03:33] [INFO] [service.RoomService] Suggesting rooms for 4 guests (4 adults, 0 children) 
+[2025-12-04 13:03:38] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 13:03:38] [INFO] [service.ReservationService] Reservation created: ID=4, Guest=Marcos IAn, Rooms=1, AddOns=0 
+[2025-12-04 13:03:38] [INFO] [service.ReservationService]   - Room: DOUBLE ($150.00, capacity 4) 
+[2025-12-04 13:03:44] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 13:03:44] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 13:03:44] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 13:03:44] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 13:03:46] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 13:03:46] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 13:03:46] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 13:03:46] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 13:03:49] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-06 
+[2025-12-04 13:03:49] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:03:49] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 13:04:02] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-09 
+[2025-12-04 13:04:02] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:04:02] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 13:04:37] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 13:04:37] [INFO] [service.ReservationService] Reservation created: ID=5, Guest=Marcos IAn, Rooms=2, AddOns=0 
+[2025-12-04 13:04:37] [INFO] [service.ReservationService]   - Room: PENTHOUSE ($500.00, capacity 2) 
+[2025-12-04 13:04:37] [INFO] [service.ReservationService]   - Room: PENTHOUSE ($500.00, capacity 2) 
+[2025-12-04 13:06:43] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-09 
+[2025-12-04 13:06:43] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:06:43] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 13:06:56] [INFO] [service.RoomService] Checking room availability from 2025-12-05 to 2025-12-09 
+[2025-12-04 13:06:56] [INFO] [service.RoomService] Found 4 available room types 
+[2025-12-04 13:06:56] [INFO] [service.RoomService] Suggesting rooms for 1 guests (1 adults, 0 children) 
+[2025-12-04 13:07:05] [INFO] [service.ReservationService] Creating new reservation with rooms and add-ons 
+[2025-12-04 13:07:05] [INFO] [service.ReservationService] Reservation created: ID=6, Guest=Marcos IAn, Rooms=1, AddOns=0 
+[2025-12-04 13:07:05] [INFO] [service.ReservationService]   - Room: SINGLE ($100.00, capacity 2) 
+[2025-12-04 13:07:13] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-04 13:07:13] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-04 13:07:13] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-04 13:07:13] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-04 13:07:15] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-04 13:07:15] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-04 13:07:15] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-04 13:07:15] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-04 13:07:34] [WARNING] [util.ValidationUtils] Validation failed: Check-out date must be after check-in date. 
