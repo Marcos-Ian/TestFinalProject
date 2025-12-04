@@ -93,4 +93,46 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         query.setParameter("phone", phone);
         return query.getResultList();
     }
+
+    @Override
+    public List<Reservation> searchReservations(String guestName, String phone, LocalDate start, LocalDate end, String status) {
+        StringBuilder jpql = new StringBuilder("SELECT r FROM Reservation r WHERE 1=1");
+
+        if (guestName != null && !guestName.isBlank()) {
+            jpql.append(" AND (LOWER(r.guest.firstName) LIKE LOWER(CONCAT('%', :guestName, '%'))")
+                    .append(" OR LOWER(r.guest.lastName) LIKE LOWER(CONCAT('%', :guestName, '%')))");
+        }
+        if (phone != null && !phone.isBlank()) {
+            jpql.append(" AND r.guest.phone LIKE CONCAT('%', :phone, '%')");
+        }
+        if (start != null) {
+            jpql.append(" AND r.checkIn >= :start");
+        }
+        if (end != null) {
+            jpql.append(" AND r.checkOut <= :end");
+        }
+        if (status != null && !status.equalsIgnoreCase("All")) {
+            jpql.append(" AND r.status = :status");
+        }
+
+        TypedQuery<Reservation> query = entityManager.createQuery(jpql.toString(), Reservation.class);
+
+        if (guestName != null && !guestName.isBlank()) {
+            query.setParameter("guestName", guestName);
+        }
+        if (phone != null && !phone.isBlank()) {
+            query.setParameter("phone", phone);
+        }
+        if (start != null) {
+            query.setParameter("start", start);
+        }
+        if (end != null) {
+            query.setParameter("end", end);
+        }
+        if (status != null && !status.equalsIgnoreCase("All")) {
+            query.setParameter("status", status);
+        }
+
+        return query.getResultList();
+    }
 }

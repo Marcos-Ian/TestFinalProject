@@ -58,4 +58,9 @@ public interface ReservationRepository {
      * Find reservations by guest phone
      */
     List<Reservation> findByGuestPhone(String phone);
+
+    /**
+     * Search reservations with optional filters.
+     */
+    List<Reservation> searchReservations(String guestName, String phone, LocalDate start, LocalDate end, String status);
 }

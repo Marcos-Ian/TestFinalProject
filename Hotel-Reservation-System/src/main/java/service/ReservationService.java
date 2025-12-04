@@ -120,28 +120,11 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public List<Reservation> searchReservations(String guestName, LocalDate start, LocalDate end, String status)
-    {
-        List<Reservation> all = reservationRepository.findAll();
-        return all.stream()
-            .filter(r -> {
-                if (guestName != null && !guestName.isBlank()) {
-                    String fullName = (r.getGuest().getFirstName() + " " + r.getGuest().getLastName()).toLowerCase();
-                    if (!fullName.contains(guestName.toLowerCase())) return false;
-                }
-                if (start != null && r.getCheckIn().isBefore(start)) return false;
-                if (end != null && r.getCheckOut().isAfter(end)) return false;
-                if (status != null && (r.getStatus() == null || !r.getStatus().equalsIgnoreCase(status))) return false;
-                return true;
-            })
-            .toList();
-    }
-
     /**
      * Search reservations using optional filters that mirror the admin UI fields.
      *
      * @param name      guest name (optional, partial match)
-     * @param phone     guest phone (optional, exact match)
+     * @param phone     guest phone (optional, partial match)
      * @param startDate check-in on/after (optional)
      * @param endDate   check-out on/before (optional)
      * @param status    reservation status (optional, "All" to ignore)
@@ -150,19 +133,7 @@ public class ReservationService {
     public List<Reservation> searchReservations(String name, String phone,
                                                 LocalDate startDate, LocalDate endDate,
                                                 String status) {
-        List<Reservation> all = reservationRepository.findAll();
-
-        return all.stream()
-                .filter(res -> name == null || name.isBlank() ||
-                        (res.getGuest() != null && matchesIgnoreCase(res.getGuest().getFirstName(), name)) ||
-                        (res.getGuest() != null && matchesIgnoreCase(res.getGuest().getLastName(), name)))
-                .filter(res -> phone == null || phone.isBlank() ||
-                        (res.getGuest() != null && phone.equals(res.getGuest().getPhone())))
-                .filter(res -> startDate == null || (res.getCheckIn() != null && !res.getCheckIn().isBefore(startDate)))
-                .filter(res -> endDate == null || (res.getCheckOut() != null && !res.getCheckOut().isAfter(endDate)))
-                .filter(res -> status == null || status.equalsIgnoreCase("All") ||
-                        (res.getStatus() != null && res.getStatus().equalsIgnoreCase(status)))
-                .toList();
+        return reservationRepository.searchReservations(name, phone, startDate, endDate, status);
     }
 
     /**
@@ -272,7 +243,4 @@ public class ReservationService {
         return guestRepository.save(guest);
     }
 
-    private boolean matchesIgnoreCase(String value, String query) {
-        return value != null && value.toLowerCase().contains(query.toLowerCase());
-    }
 }
