@@ -156,6 +156,11 @@ public class ReservationSearchController {
 
         allResults = results;
 
+        // NEW: always show current search results in the table
+        reservationTable.setItems(
+                FXCollections.observableArrayList(allResults)
+        );
+
         int pageCount = (int) Math.ceil((double) allResults.size() / ROWS_PER_PAGE);
         if (pageCount == 0) pageCount = 1;
 
@@ -225,7 +230,7 @@ public class ReservationSearchController {
         int fromIndex = pageIndex * ROWS_PER_PAGE;
         int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, allResults.size());
 
-        if (fromIndex > toIndex) {
+        if (fromIndex >= allResults.size()) {
             reservationTable.setItems(FXCollections.observableArrayList());
             return reservationTable;
         }
