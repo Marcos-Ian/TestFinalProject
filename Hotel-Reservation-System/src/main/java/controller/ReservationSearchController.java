@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 /**
  * Provides search and waitlist management for admins.
  */
-public class AdminReservationSearchController {
+public class ReservationSearchController {
     private final ReservationService reservationService;
     private final LoyaltyService loyaltyService;
     private final BillingContext billingContext;
@@ -30,28 +30,28 @@ public class AdminReservationSearchController {
     @FXML
     private TextField guestField;
     @FXML
-    private DatePicker startPicker;
+    private DatePicker startDatePicker;
     @FXML
-    private DatePicker endPicker;
+    private DatePicker endDatePicker;
     @FXML
     private ComboBox<String> statusCombo;
     @FXML
     private TableView<Reservation> reservationTable;
     @FXML
-    private Label resultLabel;
+    private Label resultsLabel;
     @FXML
     private Button addWaitlistButton;
 
-    public AdminReservationSearchController() {
+    public ReservationSearchController() {
         this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyService(),
                 Bootstrap.getBillingContext(), new WaitlistService(), null);
     }
 
-    public AdminReservationSearchController(ReservationService reservationService,
-                                            LoyaltyService loyaltyService,
-                                            BillingContext billingContext,
-                                            WaitlistService waitlistService,
-                                            Consumer<Void> editLoader) {
+    public ReservationSearchController(ReservationService reservationService,
+                                       LoyaltyService loyaltyService,
+                                       BillingContext billingContext,
+                                       WaitlistService waitlistService,
+                                       Consumer<Void> editLoader) {
         this.reservationService = reservationService;
         this.loyaltyService = loyaltyService;
         this.billingContext = billingContext;
@@ -66,18 +66,33 @@ public class AdminReservationSearchController {
             statusCombo.getSelectionModel().selectFirst();
         }
         configureTable();
-        loadResults();
+        List<Reservation> all = reservationService.searchReservations(null, null, null, null);
+        reservationTable.setItems(FXCollections.observableArrayList(all));
     }
 
     @FXML
-    private void loadResults() {
-        List<Reservation> results = reservationService.searchReservations(
-                guestField.getText(), null,
-                startPicker.getValue(), endPicker.getValue(),
-                statusCombo.getSelectionModel().getSelectedItem());
-        ObservableList<Reservation> data = FXCollections.observableArrayList(results);
-        reservationTable.setItems(data);
-        resultLabel.setText(results.size() + " matching reservations | Billing: " + billingContext.getStrategy().getClass().getSimpleName());
+    private void onSearchClicked() {
+        String guest = guestField.getText();
+        LocalDate start = startDatePicker.getValue();
+        LocalDate end = endDatePicker.getValue();
+
+        String status = statusCombo.getValue();
+        if (status != null && status.equalsIgnoreCase("All")) {
+            status = null;
+        }
+
+        List<Reservation> results =
+                reservationService.searchReservations(
+                        (guest == null || guest.isBlank()) ? null : guest.trim(),
+                        start,
+                        end,
+                        status
+                );
+
+        reservationTable.setItems(FXCollections.observableArrayList(results));
+        if (resultsLabel != null) {
+            resultsLabel.setText(results.size() + " matching reservations | Billing: StandardBillingStrategy");
+        }
     }
 
     @FXML
@@ -91,13 +106,13 @@ public class AdminReservationSearchController {
     private void addToWaitlist() {
         Reservation selected = reservationTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            resultLabel.setText("Select a reservation to waitlist similar guests.");
+            resultsLabel.setText("Select a reservation to waitlist similar guests.");
             return;
         }
         String guestName = selected.getGuest() != null ?
                 selected.getGuest().getFirstName() + " " + selected.getGuest().getLastName() : "Walk-in";
         waitlistService.addToWaitlist(guestName, "DOUBLE", selected.getCheckIn());
-        resultLabel.setText("Added to waitlist and loyalty checked (points accrue on stay).");
+        resultsLabel.setText("Added to waitlist and loyalty checked (points accrue on stay).");
     }
 
     private void configureTable() {

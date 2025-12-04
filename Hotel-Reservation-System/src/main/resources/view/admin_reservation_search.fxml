@@ -4,23 +4,23 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="10"
-      fx:controller="controller.AdminReservationSearchController">
+      fx:controller="controller.ReservationSearchController">
     <Label text="Reservation Search" styleClass="header-label"/>
     <GridPane hgap="8" vgap="8">
         <Label text="Guest" GridPane.rowIndex="0"/>
         <TextField fx:id="guestField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
         <Label text="Start" GridPane.rowIndex="1"/>
-        <DatePicker fx:id="startPicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <DatePicker fx:id="startDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
         <Label text="End" GridPane.rowIndex="2"/>
-        <DatePicker fx:id="endPicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <DatePicker fx:id="endDatePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         <Label text="Status" GridPane.rowIndex="3"/>
         <ComboBox fx:id="statusCombo" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
     </GridPane>
     <HBox spacing="8">
-        <Button text="Search" onAction="#loadResults" styleClass="primary-button"/>
+        <Button fx:id="searchButton" text="Search" onAction="#onSearchClicked" styleClass="primary-button"/>
         <Button text="Edit" onAction="#openEdit"/>
         <Button fx:id="addWaitlistButton" text="Add to Waitlist" onAction="#addToWaitlist"/>
     </HBox>
     <TableView fx:id="reservationTable" prefHeight="300"/>
-    <Label fx:id="resultLabel"/>
+    <Label fx:id="resultsLabel"/>
 </VBox>

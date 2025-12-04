@@ -63,8 +63,8 @@ public class AdminDashboardController {
     @FXML
     private void loadSearchView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_reservation_search.fxml"));
-        loader.setControllerFactory(type -> type == AdminReservationSearchController.class
-                ? new AdminReservationSearchController(
+        loader.setControllerFactory(type -> type == ReservationSearchController.class
+                ? new ReservationSearchController(
                 reservationService,
                 loyaltyService,
                 billingContext,
