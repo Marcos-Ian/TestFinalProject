@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="10"
+      fx:controller="controller.AdminReservationEditController">
+    <Label text="Reservation Editor" styleClass="header-label"/>
+    <GridPane hgap="8" vgap="8">
+        <Label text="Reservation ID" GridPane.rowIndex="0"/>
+        <TextField fx:id="reservationIdField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="First Name" GridPane.rowIndex="1"/>
+        <TextField fx:id="firstNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Last Name" GridPane.rowIndex="2"/>
+        <TextField fx:id="lastNameField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Check-In" GridPane.rowIndex="3"/>
+        <DatePicker fx:id="checkInPicker" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Check-Out" GridPane.rowIndex="4"/>
+        <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Status" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="statusCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+    <HBox spacing="8">
+        <Button fx:id="saveButton" text="Save" onAction="#saveReservation" styleClass="primary-button"/>
+        <Button fx:id="cancelButton" text="Cancel Reservation" onAction="#cancelReservation" styleClass="danger-button"/>
+    </HBox>
+    <Label fx:id="messageLabel"/>
+</VBox>
