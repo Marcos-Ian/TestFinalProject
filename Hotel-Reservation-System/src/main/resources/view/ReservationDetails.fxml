@@ -24,7 +24,10 @@
 
     <center>
         <ScrollPane fitToWidth="true">
-            <VBox spacing="20" padding="15">
+            <VBox spacing="20">
+                <padding>
+                    <Insets topRightBottomLeft="15.0" />
+                </padding>
                 <!-- Guest Information -->
                 <VBox spacing="10" styleClass="section-box">
                     <Label text="Guest Information" styleClass="header-label"/>
@@ -170,7 +173,10 @@
     </center>
 
     <bottom>
-        <HBox spacing="10" alignment="CENTER_RIGHT" padding="10">
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets topRightBottomLeft="10.0" />
+            </padding>
             <Button fx:id="modifyButton" text="Modify"/>
             <Button fx:id="applyDiscountButton" text="Apply Discount"/>
             <Button fx:id="processPaymentButton" text="Process Payment"/>
