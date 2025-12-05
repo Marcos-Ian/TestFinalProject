@@ -2,6 +2,7 @@ package controller;
 
 import app.Bootstrap;
 import config.LoyaltyConfig;
+import config.PricingConfig;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,11 +15,11 @@ import javafx.stage.Stage;
 import model.Guest;
 import model.Reservation;
 import model.RoomType;
-import security.AdminUser;
-import security.AuthenticationService;
 import service.BillingContext;
 import service.LoyaltyService;
 import service.ReservationService;
+import security.AdminUser;
+import security.AuthenticationService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,8 +31,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ReservationController {
-    private static final Logger LOGGER = Logger.getLogger(ReservationController.class.getName());
+/**
+ * Enhanced controller for viewing complete reservation details with discount support
+ */
+public class ReservationDetailsController {
+    private static final Logger LOGGER = Logger.getLogger(ReservationDetailsController.class.getName());
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
     private final BillingContext billingContext;
@@ -44,6 +48,7 @@ public class ReservationController {
     private final ObservableList<AddOnRow> addOnRows = FXCollections.observableArrayList();
     private final ObservableList<PaymentRow> paymentRows = FXCollections.observableArrayList();
 
+    // Static pricing map
     private static final Map<String, Double> ADD_ON_PRICES = new HashMap<>();
     private static final Map<String, Boolean> ADD_ON_PER_NIGHT = new HashMap<>();
 
@@ -71,9 +76,10 @@ public class ReservationController {
     @FXML private Label guestEmailLabel;
     @FXML private Label loyaltyStatusLabel;
     @FXML private Button enrollLoyaltyButton;
-    @FXML private VBox loyaltyNumberSection;
     @FXML private Label loyaltyNumberLabel;
-    @FXML private VBox loyaltyPointsSection;
+    @FXML private Label loyaltyNumberSection;
+    @FXML private Label loyaltyPointsSection;
+
     @FXML private Label loyaltyPointsLabel;
 
     // ─────────── RESERVATION DETAILS ───────────
@@ -127,7 +133,7 @@ public class ReservationController {
     @FXML private Button checkoutButton;
     @FXML private Button cancelButton;
 
-    public ReservationController() {
+    public ReservationDetailsController() {
         BillingContext context;
         LoyaltyService loyalty;
         ReservationService resService;
@@ -152,22 +158,11 @@ public class ReservationController {
         this.authService = auth;
     }
 
-    public ReservationController(BillingContext billingContext, LoyaltyService loyaltyService) {
-        this.billingContext = billingContext;
-        this.loyaltyService = loyaltyService;
-        this.reservationService = null;
-        this.authService = null;
-    }
-
     @FXML
     public void initialize() {
         configureTables();
         configureButtons();
         syncSectionVisibility();
-
-        if (currentReservation == null) {
-            populateSampleData();
-        }
     }
 
     private void syncSectionVisibility() {
@@ -180,7 +175,7 @@ public class ReservationController {
     }
 
     private void configureTables() {
-        if (roomTypeCol != null) {
+        if (roomsTable != null && roomTypeCol != null) {
             roomTypeCol.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getRoomType()));
             roomQuantityCol.setCellValueFactory(cellData ->
@@ -194,7 +189,7 @@ public class ReservationController {
             roomsTable.setItems(roomRows);
         }
 
-        if (addonNameCol != null) {
+        if (addonsTable != null && addonNameCol != null) {
             addonNameCol.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getName()));
             addonPricingCol.setCellValueFactory(cellData ->
@@ -206,7 +201,7 @@ public class ReservationController {
             addonsTable.setItems(addOnRows);
         }
 
-        if (paymentDateCol != null) {
+        if (paymentsTable != null && paymentDateCol != null) {
             paymentDateCol.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getDate()));
             paymentTypeCol.setCellValueFactory(cellData ->
@@ -226,13 +221,13 @@ public class ReservationController {
             backButton.setOnAction(event -> handleBack());
         }
         if (modifyButton != null) {
-            modifyButton.setOnAction(event -> showInfo("Modify", "Modify reservation functionality"));
+            modifyButton.setOnAction(event -> handleModify());
         }
         if (applyDiscountButton != null) {
             applyDiscountButton.setOnAction(event -> handleApplyDiscount());
         }
         if (processPaymentButton != null) {
-            processPaymentButton.setOnAction(event -> showInfo("Payment", "Process payment functionality"));
+            processPaymentButton.setOnAction(event -> handleProcessPayment());
         }
         if (checkoutButton != null) {
             checkoutButton.setOnAction(event -> handleCheckout());
@@ -242,11 +237,12 @@ public class ReservationController {
         }
     }
 
+    /**
+     * Display complete reservation details
+     */
     public void displayReservation(Reservation reservation, List<RoomType> rooms,
                                    List<String> addOns, List<PaymentRow> payments,
-                                   int totalGuests, double amountPaid,
-                                   double discount, double loyaltyRedemption,
-                                   String bookedBy) {
+                                   int totalGuests, double amountPaid, String bookedBy) {
         this.currentReservation = reservation;
         this.paymentRows.setAll(payments);
 
@@ -254,52 +250,15 @@ public class ReservationController {
         populateReservationSection(reservation, totalGuests, bookedBy);
         populateRoomTable(rooms, reservation.getCheckIn(), reservation.getCheckOut());
         populateAddOnTable(addOns, reservation.getCheckIn(), reservation.getCheckOut());
-        updateFinancials(reservation.getCheckIn(), reservation.getCheckOut(), rooms, addOns,
-                amountPaid, discount, loyaltyRedemption);
-    }
-
-    private void populateSampleData() {
-        Guest guest = new Guest();
-        guest.setFirstName("Alex");
-        guest.setLastName("Jordan");
-        guest.setEmail("alex.jordan@example.com");
-        guest.setPhone("5551234567");
-
-        Reservation reservation = new Reservation();
-        reservation.setGuest(guest);
-        reservation.setCheckIn(LocalDate.now().plusDays(3));
-        reservation.setCheckOut(LocalDate.now().plusDays(6));
-        reservation.setStatus(model.ReservationStatus.BOOKED);
-        reservation.setDiscountPercent(0.0);
-        this.currentReservation = reservation;
-
-        List<RoomType> rooms = new ArrayList<>();
-        RoomType deluxe = new RoomType();
-        deluxe.setType(RoomType.Type.DELUXE);
-        deluxe.setBasePrice(220.0);
-        deluxe.setCapacity(2);
-        rooms.add(deluxe);
-
-        RoomType doubleRoom = new RoomType();
-        doubleRoom.setType(RoomType.Type.DOUBLE);
-        doubleRoom.setBasePrice(180.0);
-        doubleRoom.setCapacity(4);
-        rooms.add(doubleRoom);
-
-        List<String> addOns = List.of("Breakfast", "WiFi");
-        List<PaymentRow> payments = new ArrayList<>();
-        payments.add(new PaymentRow("Today", "Card", 200.0, "Front Desk", "Deposit"));
-
-        displayReservation(reservation, rooms, addOns, payments, 3,
-                200.0, 0.0, 0.0, "Kiosk");
+        updateFinancials(reservation, rooms, addOns, amountPaid);
     }
 
     private void populateGuestSection(Guest guest) {
         guestNameLabel.setText(guest.getFirstName() + " " + guest.getLastName());
-        guestPhoneLabel.setText(guest.getPhone());
-        guestEmailLabel.setText(guest.getEmail());
+        guestPhoneLabel.setText(guest.getPhone() != null ? guest.getPhone() : "N/A");
+        guestEmailLabel.setText(guest.getEmail() != null ? guest.getEmail() : "N/A");
 
-        boolean isMember = guest.getEmail() != null && guest.getEmail().contains("@");
+        boolean isMember = guest.getLoyaltyNumber() != null && !guest.getLoyaltyNumber().isEmpty();
         loyaltyStatusLabel.setText(isMember ? "Yes" : "No");
 
         if (enrollLoyaltyButton != null) {
@@ -307,17 +266,17 @@ public class ReservationController {
             enrollLoyaltyButton.setManaged(!isMember);
         }
 
-        int points = isMember ? loyaltyService.calculateEarnedPoints(150.0) : 0;
         loyaltyNumberSection.setVisible(isMember);
         loyaltyNumberSection.setManaged(isMember);
         loyaltyPointsSection.setVisible(isMember);
         loyaltyPointsSection.setManaged(isMember);
 
         if (isMember) {
-            loyaltyNumberLabel.setText("GP-" + guest.getFirstName().substring(0, 1).toUpperCase() +
-                    "" + guest.getLastName().substring(0, 1).toUpperCase() + "1234");
+            loyaltyNumberLabel.setText(guest.getLoyaltyNumber());
+            int points = loyaltyService.calculateEarnedPoints(500.0); // Example
             loyaltyPointsLabel.setText(String.valueOf(points));
         }
+
         syncSectionVisibility();
     }
 
@@ -349,7 +308,8 @@ public class ReservationController {
             RoomType sample = roomList.get(0);
             int quantity = roomList.size();
             double subtotal = sample.getBasePrice() * quantity * nights;
-            roomRows.add(new RoomRow(type.name(), quantity, sample.getCapacity(), sample.getBasePrice(), subtotal));
+            roomRows.add(new RoomRow(type.name(), quantity, sample.getCapacity(),
+                    sample.getBasePrice(), subtotal));
         });
     }
 
@@ -365,14 +325,17 @@ public class ReservationController {
         }
     }
 
-    private void updateFinancials(LocalDate checkIn, LocalDate checkOut, List<RoomType> rooms,
-                                  List<String> addOns, double amountPaid,
-                                  double discount, double loyaltyRedemption) {
-        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+    private void updateFinancials(Reservation reservation, List<RoomType> rooms,
+                                  List<String> addOns, double amountPaid) {
+        long nights = ChronoUnit.DAYS.between(
+                reservation.getCheckIn(), reservation.getCheckOut());
+
+        // Calculate room subtotal
         double roomSubtotal = rooms.stream()
                 .mapToDouble(room -> room.getBasePrice() * nights)
                 .sum();
 
+        // Calculate add-ons total
         double addonsTotal = addOns.stream()
                 .mapToDouble(addOn -> {
                     double price = ADD_ON_PRICES.getOrDefault(addOn, 0.0);
@@ -382,23 +345,26 @@ public class ReservationController {
 
         double subtotal = roomSubtotal + addonsTotal;
 
-        // Apply discount if exists
-        double discountPercent = currentReservation != null ? currentReservation.getDiscountPercent() : 0.0;
+        // Apply discount
+        double discountPercent = reservation.getDiscountPercent();
         double discountAmount = subtotal * (discountPercent / 100.0);
         double afterDiscount = subtotal - discountAmount;
 
         // Calculate tax on discounted amount
-        double tax = afterDiscount * 0.13;
+        double taxRate = 0.13; // 13% tax
+        double tax = afterDiscount * taxRate;
 
-        double grandTotal = afterDiscount - loyaltyRedemption + tax;
+        // Grand total
+        double grandTotal = afterDiscount + tax;
         double balance = Math.max(0, grandTotal - amountPaid);
 
+        // Update labels
         roomSubtotalLabel.setText(formatCurrency(roomSubtotal));
         addonsTotalLabel.setText(formatCurrency(addonsTotal));
         subtotalLabel.setText(formatCurrency(subtotal));
         taxLabel.setText(formatCurrency(tax));
 
-        // Show/hide discount
+        // Show/hide discount row
         boolean hasDiscount = discountPercent > 0;
         discountRow.setVisible(hasDiscount);
         discountRow.setManaged(hasDiscount);
@@ -408,11 +374,11 @@ public class ReservationController {
             discountLabel.setText(String.format("-$%.2f (%.1f%%)", discountAmount, discountPercent));
         }
 
-        loyaltyRedemptionRow.setVisible(loyaltyRedemption > 0);
-        loyaltyRedemptionRow.setManaged(loyaltyRedemption > 0);
-        loyaltyRedemptionLabel.setVisible(loyaltyRedemption > 0);
-        loyaltyRedemptionLabel.setManaged(loyaltyRedemption > 0);
-        loyaltyRedemptionLabel.setText("-" + formatCurrency(loyaltyRedemption));
+        // Hide loyalty redemption for now
+        loyaltyRedemptionRow.setVisible(false);
+        loyaltyRedemptionRow.setManaged(false);
+        loyaltyRedemptionLabel.setVisible(false);
+        loyaltyRedemptionLabel.setManaged(false);
 
         grandTotalLabel.setText(formatCurrency(grandTotal));
         paidLabel.setText(formatCurrency(amountPaid));
@@ -426,20 +392,27 @@ public class ReservationController {
         stage.close();
     }
 
+    private void handleModify() {
+        showInfo("Modify", "Modify reservation functionality");
+    }
+
     private void handleApplyDiscount() {
         if (currentReservation == null) {
             showWarning("No Reservation", "No reservation loaded");
             return;
         }
 
+        // Get current user and check permissions
         AdminUser currentUser = authService != null ? authService.getCurrentUser() : null;
         if (currentUser == null) {
             showWarning("Not Authorized", "You must be logged in to apply discounts");
             return;
         }
 
+        // Determine max discount based on role
         double maxDiscount = currentUser.getRole() == AdminUser.Role.MANAGER ? 30.0 : 15.0;
 
+        // Show dialog to enter discount
         TextInputDialog dialog = new TextInputDialog(
                 String.valueOf(currentReservation.getDiscountPercent()));
         dialog.setTitle("Apply Discount");
@@ -461,13 +434,14 @@ public class ReservationController {
                     return;
                 }
 
+                // Apply discount
                 if (reservationService != null) {
                     reservationService.applyDiscount(currentReservation.getId(), percent);
                     currentReservation.setDiscountPercent(percent);
 
                     // Refresh display
-                    updateFinancials(currentReservation.getCheckIn(), currentReservation.getCheckOut(),
-                            currentReservation.getRooms(), new ArrayList<>(), 0.0, 0.0, 0.0);
+                    updateFinancials(currentReservation, currentReservation.getRooms(),
+                            new ArrayList<>(), 0.0);
 
                     showInfo("Success", String.format("%.1f%% discount applied", percent));
                 }
@@ -478,6 +452,10 @@ public class ReservationController {
                 LOGGER.log(Level.SEVERE, "Discount error", e);
             }
         });
+    }
+
+    private void handleProcessPayment() {
+        showInfo("Payment", "Process payment functionality");
     }
 
     private void handleCheckout() {
@@ -520,6 +498,8 @@ public class ReservationController {
         });
     }
 
+    // ─────────── UTILITY METHODS ───────────
+
     private void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -549,10 +529,11 @@ public class ReservationController {
     }
 
     private String formatDate(LocalDate date) {
-        return DATE_FORMATTER.format(date);
+        return date != null ? DATE_FORMATTER.format(date) : "N/A";
     }
 
-    // Table row DTOs
+    // ─────────── TABLE ROW CLASSES ───────────
+
     public static class RoomRow {
         private final String roomType;
         private final int quantity;

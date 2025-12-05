@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -7,273 +6,185 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.ReservationController"
-            prefHeight="700.0" prefWidth="900.0" styleClass="details-container">
+            prefHeight="700.0" prefWidth="900.0">
 
     <top>
-        <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="15" right="20" bottom="15" left="20"/>
-            </padding>
-            <Button fx:id="backButton" text="← Back" styleClass="back-button"/>
-            <Label fx:id="titleLabel" text="Reservation Details" styleClass="page-title">
-                <font>
-                    <Font name="System Bold" size="24"/>
-                </font>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
+            <Button fx:id="backButton" text="← Back"/>
+            <Label fx:id="titleLabel" text="Reservation Details">
+                <font><Font name="System Bold" size="20"/></font>
             </Label>
             <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="reservationIdLabel" text="ID: #0000" styleClass="reservation-id">
-                <font>
-                    <Font name="System Bold" size="16"/>
-                </font>
+            <Label fx:id="reservationIdLabel" text="ID: #0000">
+                <font><Font name="System Bold" size="14"/></font>
             </Label>
+            <Label fx:id="statusBadge" text="BOOKED"/>
         </HBox>
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
-            <VBox spacing="20" styleClass="details-content">
-                <padding>
-                    <Insets top="20" right="30" bottom="20" left="30"/>
-                </padding>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="15" style="-fx-padding: 20;">
 
-                <!-- Status Badge -->
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Status:" styleClass="label-bold"/>
-                    <Label fx:id="statusBadge" text="BOOKED" styleClass="status-badge"/>
-                </HBox>
+                <!-- Guest Information -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Guest Information" styleClass="header-label"/>
+                    <GridPane hgap="15" vgap="8">
+                        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="guestNameLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                <!-- Guest Information Section -->
-                <VBox spacing="15" styleClass="section-box">
-                    <Label text="Guest Information" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="18"/>
-                        </font>
-                    </Label>
+                        <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="guestPhoneLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                    <GridPane hgap="20" vgap="12">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
+                        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="guestEmailLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <Label text="Full Name" styleClass="field-label"/>
-                            <Label fx:id="guestNameLabel" text="" styleClass="field-value"/>
+                        <Label text="Loyalty:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label fx:id="loyaltyStatusLabel" text="No"/>
+                            <Button fx:id="enrollLoyaltyButton" text="Enroll" visible="false" managed="false"/>
+                        </HBox>
+
+                        <VBox fx:id="loyaltyNumberSection"
+                              spacing="5"
+                              visible="false"
+                              managed="false">
+                            <Label text="Loyalty Number:" styleClass="section-label"/>
+                            <Label fx:id="loyaltyNumberLabel"/>
                         </VBox>
 
-                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <Label text="Phone Number" styleClass="field-label"/>
-                            <Label fx:id="guestPhoneLabel" text="" styleClass="field-value"/>
+                        <VBox fx:id="loyaltyPointsSection"
+                              spacing="5"
+                              visible="false"
+                              managed="false">
+                            <Label text="Loyalty Points:" styleClass="section-label"/>
+                            <Label fx:id="loyaltyPointsLabel"/>
                         </VBox>
 
-                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                            <Label text="Email Address" styleClass="field-label"/>
-                            <Label fx:id="guestEmailLabel" text="" styleClass="field-value"/>
-                        </VBox>
-
-                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <Label text="Loyalty Member" styleClass="field-label"/>
-                            <HBox spacing="8" alignment="CENTER_LEFT">
-                                <Label fx:id="loyaltyStatusLabel" text="No" styleClass="field-value"/>
-                                <Button fx:id="enrollLoyaltyButton" text="Enroll" styleClass="small-button"
-                                        visible="false" managed="false"/>
-                            </HBox>
-                        </VBox>
-
-                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2"
-                              fx:id="loyaltyNumberSection" visible="false" managed="false">
-                            <Label text="Loyalty Number" styleClass="field-label"/>
-                            <Label fx:id="loyaltyNumberLabel" text="" styleClass="field-value"/>
-                        </VBox>
-
-                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                              fx:id="loyaltyPointsSection" visible="false" managed="false">
-                            <Label text="Available Points" styleClass="field-label"/>
-                            <Label fx:id="loyaltyPointsLabel" text="0" styleClass="field-value"/>
-                        </VBox>
                     </GridPane>
                 </VBox>
 
-                <!-- Reservation Details Section -->
-                <VBox spacing="15" styleClass="section-box">
-                    <Label text="Reservation Details" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="18"/>
-                        </font>
-                    </Label>
+                <!-- Reservation Details -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Reservation Details" styleClass="header-label"/>
+                    <GridPane hgap="15" vgap="8">
+                        <Label text="Check-In:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="checkInLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                    <GridPane hgap="20" vgap="12">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
+                        <Label text="Check-Out:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="checkOutLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <Label text="Check-In Date" styleClass="field-label"/>
-                            <Label fx:id="checkInLabel" text="" styleClass="field-value"/>
-                        </VBox>
+                        <Label text="Nights:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="nightsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <Label text="Check-Out Date" styleClass="field-label"/>
-                            <Label fx:id="checkOutLabel" text="" styleClass="field-value"/>
-                        </VBox>
+                        <Label text="Guests:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <Label fx:id="guestsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                            <Label text="Number of Nights" styleClass="field-label"/>
-                            <Label fx:id="nightsLabel" text="" styleClass="field-value"/>
-                        </VBox>
+                        <Label text="Booked:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <Label fx:id="bookingDateLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <Label text="Number of Guests" styleClass="field-label"/>
-                            <Label fx:id="guestsLabel" text="" styleClass="field-value"/>
-                        </VBox>
-
-                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                            <Label text="Booking Date" styleClass="field-label"/>
-                            <Label fx:id="bookingDateLabel" text="" styleClass="field-value"/>
-                        </VBox>
-
-                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                            <Label text="Booked By" styleClass="field-label"/>
-                            <Label fx:id="bookedByLabel" text="Kiosk" styleClass="field-value"/>
-                        </VBox>
+                        <Label text="By:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <Label fx:id="bookedByLabel" text="Kiosk" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                     </GridPane>
                 </VBox>
 
-                <!-- Room Details Section -->
-                <VBox spacing="15" styleClass="section-box">
-                    <Label text="Room Details" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="18"/>
-                        </font>
-                    </Label>
-
-                    <TableView fx:id="roomsTable" styleClass="rooms-table" prefHeight="150">
+                <!-- Rooms -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Room Details" styleClass="header-label"/>
+                    <TableView fx:id="roomsTable" prefHeight="150">
                         <columns>
                             <TableColumn fx:id="roomTypeCol" text="Room Type" prefWidth="150"/>
-                            <TableColumn fx:id="roomQuantityCol" text="Quantity" prefWidth="100"/>
-                            <TableColumn fx:id="roomCapacityCol" text="Capacity" prefWidth="100"/>
-                            <TableColumn fx:id="roomPriceCol" text="Price/Night" prefWidth="120"/>
-                            <TableColumn fx:id="roomTotalCol" text="Subtotal" prefWidth="120"/>
+                            <TableColumn fx:id="roomQuantityCol" text="Quantity" prefWidth="80"/>
+                            <TableColumn fx:id="roomCapacityCol" text="Capacity" prefWidth="80"/>
+                            <TableColumn fx:id="roomPriceCol" text="Price/Night" prefWidth="100"/>
+                            <TableColumn fx:id="roomTotalCol" text="Subtotal" prefWidth="100"/>
                         </columns>
                     </TableView>
                 </VBox>
 
-                <!-- Add-on Services Section -->
-                <VBox spacing="15" styleClass="section-box">
-                    <Label text="Add-on Services" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="18"/>
-                        </font>
-                    </Label>
-
-                    <TableView fx:id="addonsTable" styleClass="addons-table" prefHeight="120">
+                <!-- Add-ons -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Add-on Services" styleClass="header-label"/>
+                    <TableView fx:id="addonsTable" prefHeight="120">
                         <columns>
                             <TableColumn fx:id="addonNameCol" text="Service" prefWidth="200"/>
-                            <TableColumn fx:id="addonPricingCol" text="Pricing Model" prefWidth="150"/>
-                            <TableColumn fx:id="addonPriceCol" text="Price" prefWidth="120"/>
-                            <TableColumn fx:id="addonTotalCol" text="Total" prefWidth="120"/>
+                            <TableColumn fx:id="addonPricingCol" text="Pricing" prefWidth="120"/>
+                            <TableColumn fx:id="addonPriceCol" text="Price" prefWidth="100"/>
+                            <TableColumn fx:id="addonTotalCol" text="Total" prefWidth="100"/>
                         </columns>
                     </TableView>
                 </VBox>
 
-                <!-- Financial Summary Section -->
-                <VBox spacing="15" styleClass="section-box">
-                    <Label text="Financial Summary" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="18"/>
-                        </font>
-                    </Label>
+                <!-- Financial Summary -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Financial Summary" styleClass="header-label"/>
+                    <GridPane hgap="20" vgap="8">
+                        <Label text="Room Subtotal:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="roomSubtotalLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                    <GridPane hgap="30" vgap="10" styleClass="financial-grid">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="70"/>
-                            <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
-                        </columnConstraints>
+                        <Label text="Add-ons Total:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="addonsTotalLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                        <Label text="Room Subtotal:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="financial-label"/>
-                        <Label fx:id="roomSubtotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="financial-value"/>
+                        <Label text="Subtotal:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="subtotalLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                        <Label text="Add-ons Total:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="financial-label"/>
-                        <Label fx:id="addonsTotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="financial-value"/>
+                        <Label fx:id="discountRow" text="Discount:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                               visible="false" managed="false"/>
+                        <Label fx:id="discountLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                               visible="false" managed="false"/>
 
-                        <Label text="Subtotal (before tax):" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="financial-label"/>
-                        <Label fx:id="subtotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="financial-value"/>
+                        <Label text="Tax (13%):" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <Label fx:id="taxLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                        <Label text="Tax (13%):" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="financial-label"/>
-                        <Label fx:id="taxLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="financial-value"/>
-
-                        <Label fx:id="discountRow" text="Discount Applied:" GridPane.columnIndex="0" GridPane.rowIndex="4"
-                               styleClass="financial-label" visible="false" managed="false"/>
-                        <Label fx:id="discountLabel" text="-$0.00" GridPane.columnIndex="1" GridPane.rowIndex="4"
-                               styleClass="discount-value" visible="false" managed="false"/>
-
-                        <Label fx:id="loyaltyRedemptionRow" text="Loyalty Redemption:" GridPane.columnIndex="0" GridPane.rowIndex="5"
-                               styleClass="financial-label" visible="false" managed="false"/>
-                        <Label fx:id="loyaltyRedemptionLabel" text="-$0.00" GridPane.columnIndex="1" GridPane.rowIndex="5"
-                               styleClass="discount-value" visible="false" managed="false"/>
+                        <Label fx:id="loyaltyRedemptionRow" text="Loyalty:" GridPane.columnIndex="0" GridPane.rowIndex="5"
+                               visible="false" managed="false"/>
+                        <Label fx:id="loyaltyRedemptionLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="5"
+                               visible="false" managed="false"/>
 
                         <Separator GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2"/>
 
-                        <Label text="Grand Total:" GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="total-label">
-                            <font>
-                                <Font name="System Bold" size="18"/>
-                            </font>
+                        <Label text="TOTAL:" GridPane.columnIndex="0" GridPane.rowIndex="7">
+                            <font><Font name="System Bold" size="16"/></font>
                         </Label>
-                        <Label fx:id="grandTotalLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="7" styleClass="total-value">
-                            <font>
-                                <Font name="System Bold" size="18"/>
-                            </font>
+                        <Label fx:id="grandTotalLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                            <font><Font name="System Bold" size="16"/></font>
                         </Label>
 
-                        <Label text="Amount Paid:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="financial-label"/>
-                        <Label fx:id="paidLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="8" styleClass="paid-value"/>
+                        <Label text="Paid:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                        <Label fx:id="paidLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
-                        <Label text="Outstanding Balance:" GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="balance-label">
-                            <font>
-                                <Font name="System Bold" size="16"/>
-                            </font>
+                        <Label text="Balance:" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                            <font><Font name="System Bold" size="14"/></font>
                         </Label>
-                        <Label fx:id="balanceLabel" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="9" styleClass="balance-value">
-                            <font>
-                                <Font name="System Bold" size="16"/>
-                            </font>
+                        <Label fx:id="balanceLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                            <font><Font name="System Bold" size="14"/></font>
                         </Label>
                     </GridPane>
                 </VBox>
 
-                <!-- Payment History Section -->
-                <VBox spacing="15" styleClass="section-box">
-                    <Label text="Payment History" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="18"/>
-                        </font>
-                    </Label>
-
-                    <TableView fx:id="paymentsTable" styleClass="payments-table" prefHeight="150">
+                <!-- Payment History -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Payment History" styleClass="header-label"/>
+                    <TableView fx:id="paymentsTable" prefHeight="120">
                         <columns>
-                            <TableColumn fx:id="paymentDateCol" text="Date/Time" prefWidth="150"/>
-                            <TableColumn fx:id="paymentTypeCol" text="Payment Type" prefWidth="120"/>
-                            <TableColumn fx:id="paymentAmountCol" text="Amount" prefWidth="120"/>
-                            <TableColumn fx:id="paymentByCol" text="Processed By" prefWidth="150"/>
-                            <TableColumn fx:id="paymentNotesCol" text="Notes" prefWidth="250"/>
+                            <TableColumn fx:id="paymentDateCol" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="paymentTypeCol" text="Type" prefWidth="100"/>
+                            <TableColumn fx:id="paymentAmountCol" text="Amount" prefWidth="100"/>
+                            <TableColumn fx:id="paymentByCol" text="By" prefWidth="120"/>
+                            <TableColumn fx:id="paymentNotesCol" text="Notes" prefWidth="200"/>
                         </columns>
                     </TableView>
                 </VBox>
 
                 <!-- Action Buttons -->
-                <HBox spacing="15" alignment="CENTER" styleClass="action-buttons">
-                    <Button fx:id="modifyButton" text="Modify Reservation"
-                            styleClass="action-button" prefWidth="160" prefHeight="45"/>
-                    <Button fx:id="applyDiscountButton" text="Apply Discount"
-                            styleClass="action-button" prefWidth="140" prefHeight="45"/>
-                    <Button fx:id="processPaymentButton" text="Process Payment"
-                            styleClass="primary-button" prefWidth="160" prefHeight="45"/>
-                    <Button fx:id="checkoutButton" text="Checkout"
-                            styleClass="checkout-button" prefWidth="120" prefHeight="45"/>
-                    <Button fx:id="cancelButton" text="Cancel Reservation"
-                            styleClass="danger-button" prefWidth="160" prefHeight="45"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="modifyButton" text="Modify" styleClass="primary-button"/>
+                    <Button fx:id="applyDiscountButton" text="Apply Discount" styleClass="primary-button"/>
+                    <Button fx:id="processPaymentButton" text="Process Payment" styleClass="primary-button"/>
+                    <Button fx:id="checkoutButton" text="Checkout" styleClass="primary-button"/>
+                    <Button fx:id="cancelButton" text="Cancel Reservation" styleClass="danger-button"/>
                 </HBox>
+
             </VBox>
         </ScrollPane>
     </center>

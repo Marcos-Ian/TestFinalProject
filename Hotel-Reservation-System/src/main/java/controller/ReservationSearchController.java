@@ -14,6 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Reservation;
 import model.ReservationStatus;
+import model.RoomType;
 import security.AuthenticationService;
 import service.BillingContext;
 import service.LoyaltyService;
@@ -23,13 +24,14 @@ import util.ActivityLogger;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Provides search and waitlist management for admins.
+ * Controller for searching and viewing reservations
  */
 public class ReservationSearchController {
     private static final Logger logger = Logger.getLogger(ReservationSearchController.class.getName());
@@ -41,37 +43,21 @@ public class ReservationSearchController {
     private final Consumer<Void> editLoader;
     private final AuthenticationService authService;
 
-    @FXML
-    private TextField guestField;
-    @FXML
-    private TextField emailField;
-    @FXML
-    private TextField phoneField;
-    @FXML
-    private DatePicker startDatePicker;
-    @FXML
-    private DatePicker endDatePicker;
-    @FXML
-    private ComboBox<String> statusCombo;
-    @FXML
-    private TableView<Reservation> reservationTable;
-    @FXML
-    private TableColumn<Reservation, Number> idColumn;
-    @FXML
-    private TableColumn<Reservation, String> guestColumn;
-    @FXML
-    private TableColumn<Reservation, String> phoneColumn;
-    @FXML
-    private TableColumn<Reservation, LocalDate> checkInColumn;
-    @FXML
-    private TableColumn<Reservation, LocalDate> checkOutColumn;
-    @FXML
-    private TableColumn<Reservation, String> statusColumn;
-
-    @FXML
-    private Label resultsLabel;
-    @FXML
-    private Button addWaitlistButton;
+    @FXML private TextField guestField;
+    @FXML private TextField emailField;
+    @FXML private TextField phoneField;
+    @FXML private DatePicker startDatePicker;
+    @FXML private DatePicker endDatePicker;
+    @FXML private ComboBox<String> statusCombo;
+    @FXML private TableView<Reservation> reservationTable;
+    @FXML private TableColumn<Reservation, Number> idColumn;
+    @FXML private TableColumn<Reservation, String> guestColumn;
+    @FXML private TableColumn<Reservation, String> phoneColumn;
+    @FXML private TableColumn<Reservation, LocalDate> checkInColumn;
+    @FXML private TableColumn<Reservation, LocalDate> checkOutColumn;
+    @FXML private TableColumn<Reservation, String> statusColumn;
+    @FXML private Label resultsLabel;
+    @FXML private Button addWaitlistButton;
 
     public ReservationSearchController() {
         this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyService(),
@@ -101,19 +87,25 @@ public class ReservationSearchController {
             statusCombo.getSelectionModel().selectFirst();
         }
         configureTable();
-        reservationTable.setRowFactory(tv -> {
-            TableRow<Reservation> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    try {
-                        openReservationEditor(row.getItem());
-                    } catch (IOException e) {
-                        logger.log(Level.SEVERE, "Failed to open editor", e);
+
+        // Configure double-click to open details
+        if (reservationTable != null) {
+            reservationTable.setRowFactory(tv -> {
+                TableRow<Reservation> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && !row.isEmpty()) {
+                        try {
+                            openReservationDetails(row.getItem());
+                        } catch (IOException e) {
+                            logger.log(Level.SEVERE, "Failed to open details", e);
+                            showError("Error", "Failed to open reservation details: " + e.getMessage());
+                        }
                     }
-                }
+                });
+                return row;
             });
-            return row;
-        });
+        }
+
         handleSearch();
     }
 
@@ -123,16 +115,23 @@ public class ReservationSearchController {
     }
 
     private void handleSearch() {
-        String guest = guestField.getText();
-        String phone = phoneField.getText() == null ? "" : phoneField.getText().trim();
-        String email = emailField.getText() == null ? "" : emailField.getText().trim();
-        LocalDate start = startDatePicker.getValue();
-        LocalDate end = endDatePicker.getValue();
+        String guest = guestField != null ? guestField.getText() : "";
+        String phone = phoneField != null ? phoneField.getText() : "";
+        String email = emailField != null ? emailField.getText() : "";
+        LocalDate start = startDatePicker != null ? startDatePicker.getValue() : null;
+        LocalDate end = endDatePicker != null ? endDatePicker.getValue() : null;
 
-        String status = statusCombo.getValue();
+        phone = phone == null ? "" : phone.trim();
+        email = email == null ? "" : email.trim();
+
+        String status = statusCombo != null ? statusCombo.getValue() : "All";
         ReservationStatus statusFilter = null;
         if (status != null && !status.equalsIgnoreCase("All")) {
-            statusFilter = ReservationStatus.valueOf(status);
+            try {
+                statusFilter = ReservationStatus.valueOf(status);
+            } catch (IllegalArgumentException e) {
+                logger.warning("Invalid status: " + status);
+            }
         }
 
         List<Reservation> results = reservationService.searchReservations(
@@ -144,9 +143,12 @@ public class ReservationSearchController {
                 statusFilter
         );
 
-        reservationTable.setItems(FXCollections.observableArrayList(results));
+        if (reservationTable != null) {
+            reservationTable.setItems(FXCollections.observableArrayList(results));
+        }
+
         if (resultsLabel != null) {
-            resultsLabel.setText(results.size() + " matching reservations | Billing: StandardBillingStrategy");
+            resultsLabel.setText(results.size() + " matching reservations");
         }
 
         String actor = "UNKNOWN";
@@ -159,14 +161,8 @@ public class ReservationSearchController {
                 "RESERVATION_SEARCH",
                 "Reservation",
                 "-",
-                String.format("Reservation search executed with filters: guest='%s', phone='%s', email='%s', start=%s, end=%s, status=%s, results=%d",
-                        guest,
-                        phone,
-                        email,
-                        start,
-                        end,
-                        status,
-                        results.size())
+                String.format("Search: guest='%s', phone='%s', email='%s', start=%s, end=%s, status=%s, results=%d",
+                        guest, phone, email, start, end, status, results.size())
         );
     }
 
@@ -179,45 +175,123 @@ public class ReservationSearchController {
     private void onEditReservation() throws IOException {
         Reservation selected = reservationTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert("No selection", "Please select a reservation to edit.");
+            showAlert("No selection", "Please select a reservation to view.");
             return;
         }
 
-        openReservationEditor(selected);
+        openReservationDetails(selected);
     }
 
     @FXML
     private void addToWaitlist() {
-        Reservation selected = reservationTable.getSelectionModel().getSelectedItem();
+        Reservation selected = reservationTable != null ?
+                reservationTable.getSelectionModel().getSelectedItem() : null;
         if (selected == null) {
-            resultsLabel.setText("Select a reservation to waitlist similar guests.");
+            if (resultsLabel != null) {
+                resultsLabel.setText("Select a reservation to waitlist similar guests.");
+            }
             return;
         }
         String guestName = selected.getGuest() != null ?
                 selected.getGuest().getFirstName() + " " + selected.getGuest().getLastName() : "Walk-in";
         waitlistService.addToWaitlist(guestName, "DOUBLE", selected.getCheckIn());
-        resultsLabel.setText("Added to waitlist and loyalty checked (points accrue on stay).");
+        if (resultsLabel != null) {
+            resultsLabel.setText("Added to waitlist");
+        }
     }
 
-    private void openReservationEditor(Reservation reservation) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_reservation_edit.fxml"));
+    /**
+     * Open the detailed reservation view
+     */
+    private void openReservationDetails(Reservation reservation) throws IOException {
+        logger.info("Opening details for reservation: " + reservation.getId());
+
+        // Try to load the FXML file
+        java.net.URL fxmlLocation = getClass().getResource("/view/ReservationDetails.fxml");
+        if (fxmlLocation == null) {
+            logger.severe("FXML file not found at: /view/ReservationDetails.fxml");
+            showError("File Not Found",
+                    "Could not find ReservationDetails.fxml\n\n" +
+                            "Please ensure the file exists at:\n" +
+                            "src/main/resources/view/ReservationDetails.fxml");
+            return;
+        }
+
+        logger.info("Loading FXML from: " + fxmlLocation);
+        FXMLLoader loader = new FXMLLoader(fxmlLocation);
         Parent root = loader.load();
         Object controller = loader.getController();
-        if (controller instanceof AdminReservationEditController editController) {
-            editController.setReservation(reservation);
+
+        if (controller instanceof ReservationController detailsController) {
+            // Get rooms from reservation
+            List<RoomType> rooms = reservation.getRooms() != null ?
+                    new ArrayList<>(reservation.getRooms()) : new ArrayList<>();
+
+            logger.info("Reservation has " + rooms.size() + " rooms");
+
+            // Get add-ons from reservation (stored in a field if you have one)
+            // TODO: If you have a ReservationAddOn entity/table, load from there
+            // For now, create sample add-ons based on the reservation
+            List<String> addOns = new ArrayList<>();
+            // Example: addOns could be stored as a comma-separated string in reservation
+            // or in a separate ReservationAddOn table
+
+            // Get payment history
+            // TODO: If you have a Payment entity/table, load actual payments
+            List<ReservationController.PaymentRow> payments = new ArrayList<>();
+
+            // Calculate total guests from rooms
+            int totalGuests = rooms.stream()
+                    .mapToInt(RoomType::getCapacity)
+                    .sum();
+            if (totalGuests == 0) totalGuests = 2; // Default
+
+            // TODO: Load actual payment amount from Payment table
+            double amountPaid = 0.0; // Change this to actual paid amount
+
+            // Get discount from reservation
+            double discount = reservation.getDiscountPercent() != null ?
+                    reservation.getDiscountPercent() : 0.0;
+
+            // TODO: Load actual loyalty redemption if applicable
+            double loyaltyRedemption = 0.0;
+
+            // Determine who booked it
+            String bookedBy = "Kiosk"; // TODO: Get from reservation metadata
+
+            logger.info("Displaying reservation: guests=" + totalGuests +
+                    ", discount=" + discount + "%, paid=$" + amountPaid);
+
+            // Display the reservation with actual data
+            detailsController.displayReservation(
+                    reservation, rooms, addOns, payments, totalGuests,
+                    amountPaid, discount, loyaltyRedemption, bookedBy
+            );
+        } else {
+            logger.warning("Controller is not ReservationController: " +
+                    (controller != null ? controller.getClass().getName() : "null"));
         }
 
         Stage stage = new Stage();
-        stage.setTitle("Edit Reservation");
-        stage.setScene(new Scene(root));
+        stage.setTitle("Reservation Details - #" + reservation.getId());
+        stage.setScene(new Scene(root, 900, 700));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
 
+        // Refresh search results after closing details
         handleSearch();
     }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -240,7 +314,7 @@ public class ReservationSearchController {
                 String first = g.getFirstName() == null ? "" : g.getFirstName();
                 String last = g.getLastName() == null ? "" : g.getLastName();
                 String name = (first + " " + last).trim();
-                return new SimpleStringProperty(name);
+                return new SimpleStringProperty(name.isEmpty() ? "Unknown" : name);
             });
         }
         if (phoneColumn != null) {
@@ -264,12 +338,6 @@ public class ReservationSearchController {
                     new SimpleStringProperty(
                             c.getValue().getStatus() == null
                                     ? "" : c.getValue().getStatus().name()));
-        }
-        if (reservationTable != null) {
-            reservationTable.getColumns().setAll(
-                    idColumn, guestColumn, phoneColumn,
-                    checkInColumn, checkOutColumn, statusColumn
-            );
         }
     }
 }
