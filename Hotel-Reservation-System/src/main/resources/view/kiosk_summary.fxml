@@ -70,7 +70,7 @@
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <Button text="Back" onAction="#backToGuestDetails"/>
                 <Button fx:id="confirmButton" text="Confirm Booking" onAction="#confirmReservation" styleClass="primary-button"/>
-                <Button text="Finish" onAction="#finishAndRestart"/>
+                <Button fx:id="finishButton" text="Finish" onAction="#onFinishClicked"/>
             </HBox>
         </VBox>
     </center>

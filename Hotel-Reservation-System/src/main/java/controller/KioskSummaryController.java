@@ -64,6 +64,8 @@ public class KioskSummaryController {
     private ListView<String> addOnList;
     @FXML
     private Button confirmButton;
+    @FXML
+    private Button finishButton;
 
     public KioskSummaryController() {
         this(KioskFlowContext.getInstance());
@@ -162,9 +164,22 @@ public class KioskSummaryController {
     }
 
     @FXML
-    private void finishAndRestart() throws IOException {
-        context.reset();
-        loadScene("/view/kiosk_welcome.fxml");
+    private void onFinishClicked() {
+        try {
+            context.reset();
+
+            Stage stage = (Stage) finishButton.getScene().getWindow();
+            Parent root = FXMLLoader.load(
+                    getClass().getResource("/view/main.fxml")
+            );
+
+            Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
