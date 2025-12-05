@@ -227,7 +227,7 @@ public class ReservationSearchController {
         if (idColumn != null) {
             idColumn.setCellValueFactory(c -> {
                 Long id = c.getValue().getId();
-                return new SimpleLongProperty(id == null ? 0L : id).asObject();
+                return new SimpleLongProperty(id == null ? 0L : id);
             });
         }
         if (guestColumn != null) {

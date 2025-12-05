@@ -1,270 +1,556 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import java.lang.String?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.AdminController"
-            prefHeight="800.0" prefWidth="1200.0" styleClass="dashboard-container">
+            fx:controller="controller.AdminDashboardController"
+            prefHeight="700.0" prefWidth="1200.0" styleClass="dashboard-root">
 
-    <!-- Top Menu Bar -->
+    <!-- Top Header Bar -->
     <top>
-        <VBox styleClass="top-bar">
-            <MenuBar styleClass="menu-bar">
-                <Menu text="File">
-                    <MenuItem text="Logout" fx:id="logoutMenuItem"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="Exit" fx:id="exitMenuItem"/>
-                </Menu>
-                <Menu text="Reservations">
-                    <MenuItem text="New Reservation" fx:id="newReservationMenuItem"/>
-                    <MenuItem text="Search Reservations" fx:id="searchReservationsMenuItem"/>
-                    <MenuItem text="Group Booking" fx:id="groupBookingMenuItem"/>
-                </Menu>
-                <Menu text="Guests">
-                    <MenuItem text="Search Guests" fx:id="searchGuestsMenuItem"/>
-                    <MenuItem text="Loyalty Program" fx:id="loyaltyMenuItem"/>
-                    <MenuItem text="Waitlist" fx:id="waitlistMenuItem"/>
-                </Menu>
-                <Menu text="Reports">
-                    <MenuItem text="Revenue Report" fx:id="revenueReportMenuItem"/>
-                    <MenuItem text="Occupancy Report" fx:id="occupancyReportMenuItem"/>
-                    <MenuItem text="Activity Logs" fx:id="activityLogsMenuItem"/>
-                    <MenuItem text="Feedback Summary" fx:id="feedbackMenuItem"/>
-                </Menu>
-                <Menu text="Help">
-                    <MenuItem text="About" fx:id="aboutMenuItem"/>
-                </Menu>
-            </MenuBar>
+        <HBox styleClass="top-header" spacing="15" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="15" right="25" bottom="15" left="25"/>
+            </padding>
 
-            <!-- Header Info Bar -->
-            <HBox styleClass="info-bar" spacing="20" alignment="CENTER_LEFT">
-                <padding>
-                    <Insets top="10" right="20" bottom="10" left="20"/>
-                </padding>
-                <Label text="Grand Plaza Hotel - Admin Portal" styleClass="app-title">
+            <Label text="Grand Plaza Hotel" styleClass="brand-title">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Label fx:id="welcomeLabel" text="Welcome, Admin" styleClass="user-name">
                     <font>
-                        <Font name="System Bold" size="16"/>
+                        <Font size="14"/>
                     </font>
                 </Label>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Label fx:id="userLabel" text="User: Admin" styleClass="user-info"/>
-                <Label fx:id="roleLabel" text="Role: Admin" styleClass="role-info"/>
-                <Label fx:id="dateTimeLabel" text="Date/Time" styleClass="datetime-info"/>
+                <Label text="|" styleClass="separator"/>
+                <Label fx:id="billingLabel" text="StandardBillingStrategy" styleClass="billing-info">
+                    <font>
+                        <Font size="12"/>
+                    </font>
+                </Label>
             </HBox>
-        </VBox>
+
+            <Button fx:id="logoutButton" text="Logout" styleClass="logout-btn" onAction="#logout"/>
+        </HBox>
     </top>
 
-    <!-- Main Content Area -->
+    <!-- Main Content with Tabs -->
     <center>
-        <SplitPane dividerPositions="0.25" styleClass="main-split">
-            <!-- Left Navigation Panel -->
-            <VBox spacing="5" styleClass="nav-panel">
+        <HBox styleClass="main-content">
+            <!-- Left Sidebar Navigation -->
+            <VBox styleClass="sidebar-nav" spacing="5" prefWidth="220">
                 <padding>
-                    <Insets top="15" right="10" bottom="15" left="10"/>
+                    <Insets top="20" right="0" bottom="20" left="0"/>
                 </padding>
 
-                <Label text="Quick Actions" styleClass="nav-header">
-                    <font>
-                        <Font name="System Bold" size="14"/>
-                    </font>
-                </Label>
-
-                <Button fx:id="dashboardBtn" text="📊 Dashboard"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="newBookingBtn" text="➕ New Reservation"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="searchBtn" text="🔍 Search"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="checkoutBtn" text="✓ Checkout"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="paymentsBtn" text="💳 Payments"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-
-                <Separator/>
-
-                <Label text="Management" styleClass="nav-header">
-                    <font>
-                        <Font name="System Bold" size="14"/>
-                    </font>
-                </Label>
-
-                <Button fx:id="waitlistBtn" text="📋 Waitlist"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="loyaltyBtn" text="⭐ Loyalty"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="feedbackBtn" text="💬 Feedback"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-                <Button fx:id="reportsBtn" text="📈 Reports"
-                        styleClass="nav-button" prefWidth="200" prefHeight="40"/>
-            </VBox>
-
-            <!-- Right Content Panel -->
-            <StackPane fx:id="contentPane" styleClass="content-pane">
-                <!-- Dashboard Overview (Default View) -->
-                <VBox fx:id="dashboardView" spacing="20" styleClass="dashboard-view">
+                <Label text="NAVIGATION" styleClass="nav-section-title">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets left="20" bottom="8"/>
                     </padding>
+                    <font>
+                        <Font name="System Bold" size="11"/>
+                    </font>
+                </Label>
 
-                    <Label text="Dashboard Overview" styleClass="content-title">
+                <Button fx:id="searchButton" text="🔍  Reservations"
+                        styleClass="nav-btn, nav-btn-active"
+                        onAction="#loadSearchView"
+                        prefHeight="40" maxWidth="Infinity"/>
+
+                <Button fx:id="guestsButton" text="👥  Guests"
+                        styleClass="nav-btn"
+                        onAction="#showGuestsTab"
+                        prefHeight="40" maxWidth="Infinity"/>
+
+                <Button fx:id="roomsButton" text="🛏️  Rooms"
+                        styleClass="nav-btn"
+                        onAction="#showRoomsTab"
+                        prefHeight="40" maxWidth="Infinity"/>
+
+                <Button fx:id="feedbackButton" text="💬  Feedback"
+                        styleClass="nav-btn"
+                        onAction="#showFeedbackTab"
+                        prefHeight="40" maxWidth="Infinity"/>
+
+                <Separator>
+                    <padding>
+                        <Insets top="10" bottom="10"/>
+                    </padding>
+                </Separator>
+
+                <Label text="REPORTS" styleClass="nav-section-title">
+                    <padding>
+                        <Insets left="20" bottom="8" top="5"/>
+                    </padding>
+                    <font>
+                        <Font name="System Bold" size="11"/>
+                    </font>
+                </Label>
+
+                <Button fx:id="reportsButton" text="📊  Reports"
+                        styleClass="nav-btn"
+                        onAction="#showReportsTab"
+                        prefHeight="40" maxWidth="Infinity"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <VBox styleClass="sidebar-footer" spacing="8">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    <Label text="System Status" styleClass="footer-label">
                         <font>
-                            <Font name="System Bold" size="24"/>
+                            <Font size="11"/>
                         </font>
                     </Label>
-
-                    <!-- Quick Stats Cards -->
-                    <GridPane hgap="20" vgap="20">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="25"/>
-                            <ColumnConstraints percentWidth="25"/>
-                            <ColumnConstraints percentWidth="25"/>
-                            <ColumnConstraints percentWidth="25"/>
-                        </columnConstraints>
-
-                        <!-- Today's Reservations Card -->
-                        <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15"/>
-                            </padding>
-                            <Label text="Today's Reservations" styleClass="stat-label"/>
-                            <Label fx:id="todayReservationsLabel" text="0" styleClass="stat-value">
-                                <font>
-                                    <Font name="System Bold" size="32"/>
-                                </font>
-                            </Label>
-                        </VBox>
-
-                        <!-- Available Rooms Card -->
-                        <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15"/>
-                            </padding>
-                            <Label text="Available Rooms" styleClass="stat-label"/>
-                            <Label fx:id="availableRoomsLabel" text="0" styleClass="stat-value">
-                                <font>
-                                    <Font name="System Bold" size="32"/>
-                                </font>
-                            </Label>
-                        </VBox>
-
-                        <!-- Check-ins Today Card -->
-                        <VBox styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15"/>
-                            </padding>
-                            <Label text="Check-ins Today" styleClass="stat-label"/>
-                            <Label fx:id="checkinsLabel" text="0" styleClass="stat-value">
-                                <font>
-                                    <Font name="System Bold" size="32"/>
-                                </font>
-                            </Label>
-                        </VBox>
-
-                        <!-- Check-outs Today Card -->
-                        <VBox styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15"/>
-                            </padding>
-                            <Label text="Check-outs Today" styleClass="stat-label"/>
-                            <Label fx:id="checkoutsLabel" text="0" styleClass="stat-value">
-                                <font>
-                                    <Font name="System Bold" size="32"/>
-                                </font>
-                            </Label>
-                        </VBox>
-                    </GridPane>
-
-                    <!-- Search Section -->
-                    <VBox spacing="15" styleClass="search-section">
-                        <Label text="Search Guests &amp; Reservations" styleClass="section-title">
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <Label text="●" styleClass="status-indicator-active"/>
+                        <Label text="Connected" styleClass="status-text">
                             <font>
-                                <Font name="System Bold" size="18"/>
+                                <Font size="11"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Right Content Area with TabPane -->
+            <TabPane fx:id="mainTabPane" styleClass="main-tabs" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+
+                <!-- RESERVATIONS TAB -->
+                <Tab text="Reservations" closable="false">
+                    <BorderPane fx:id="contentPane" styleClass="content-area">
+                        <padding>
+                            <Insets top="25" right="30" bottom="25" left="30"/>
+                        </padding>
+
+                        <center>
+                            <VBox spacing="20">
+                                <HBox alignment="CENTER_LEFT" spacing="15">
+                                    <Label text="Reservation Records" styleClass="content-title">
+                                        <font>
+                                            <Font name="System Bold" size="22"/>
+                                        </font>
+                                    </Label>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Button text="+ New Reservation" styleClass="primary-action-btn"/>
+                                </HBox>
+
+                                <!-- Filter Section -->
+                                <VBox styleClass="filter-section" spacing="15">
+                                    <padding>
+                                        <Insets top="20" right="20" bottom="20" left="20"/>
+                                    </padding>
+
+                                    <GridPane hgap="15" vgap="12">
+                                        <columnConstraints>
+                                            <ColumnConstraints percentWidth="25"/>
+                                            <ColumnConstraints percentWidth="25"/>
+                                            <ColumnConstraints percentWidth="25"/>
+                                            <ColumnConstraints percentWidth="25"/>
+                                        </columnConstraints>
+
+                                        <VBox spacing="5" GridPane.columnIndex="0">
+                                            <Label text="Guest Name" styleClass="field-label-small"/>
+                                            <TextField fx:id="searchNameField" promptText="Search by name..." styleClass="input-field"/>
+                                        </VBox>
+
+                                        <VBox spacing="5" GridPane.columnIndex="1">
+                                            <Label text="Phone Number" styleClass="field-label-small"/>
+                                            <TextField fx:id="searchPhoneField" promptText="Search by phone..." styleClass="input-field"/>
+                                        </VBox>
+
+                                        <VBox spacing="5" GridPane.columnIndex="2">
+                                            <Label text="Status" styleClass="field-label-small"/>
+                                            <ComboBox fx:id="searchStatusCombo" promptText="All Statuses" styleClass="input-field" prefWidth="200"/>
+                                        </VBox>
+
+                                        <VBox spacing="5" GridPane.columnIndex="3">
+                                            <Label text="Check-in Date" styleClass="field-label-small"/>
+                                            <DatePicker fx:id="searchStartDatePicker" promptText="Select date..." styleClass="input-field"/>
+                                        </VBox>
+                                    </GridPane>
+
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Button fx:id="searchButton2" text="Search" styleClass="primary-action-btn" prefWidth="120"/>
+                                        <Button fx:id="clearSearchButton" text="Clear" styleClass="secondary-action-btn" prefWidth="100"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button text="Refresh Data" styleClass="secondary-action-btn"/>
+                                    </HBox>
+                                </VBox>
+
+                                <!-- Reservations Table -->
+                                <VBox spacing="12" VBox.vgrow="ALWAYS">
+                                    <HBox alignment="CENTER_LEFT" spacing="10">
+                                        <Label text="All Reservations" styleClass="section-subtitle">
+                                            <font>
+                                                <Font name="System Bold" size="14"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="recordCountLabel" text="(0 records)" styleClass="record-count"/>
+                                    </HBox>
+
+                                    <TableView fx:id="reservationTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                                        <columns>
+                                            <TableColumn fx:id="colReservationId" text="ID" prefWidth="60"/>
+                                            <TableColumn fx:id="colGuestName" text="Guest Name" prefWidth="150"/>
+                                            <TableColumn fx:id="colRoomType" text="Room Type" prefWidth="120"/>
+                                            <TableColumn fx:id="colCheckIn" text="Check In" prefWidth="110"/>
+                                            <TableColumn fx:id="colCheckOut" text="Check Out" prefWidth="110"/>
+                                            <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+                                        </columns>
+                                    </TableView>
+
+                                    <!-- Action Buttons -->
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Button fx:id="viewDetailsButton" text="View Details" styleClass="action-btn"/>
+                                        <Button fx:id="checkOutButton" text="Check Out Guest" styleClass="checkout-btn"/>
+                                        <Button fx:id="cancelReservationButton" text="Cancel Reservation" styleClass="danger-btn"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button text="View Bills" styleClass="info-btn"/>
+                                        <Button text="View Reports" styleClass="info-btn"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </center>
+                    </BorderPane>
+                </Tab>
+
+                <!-- GUESTS TAB -->
+                <Tab text="Guests" closable="false">
+                    <VBox spacing="20" styleClass="tab-content">
+                        <padding>
+                            <Insets top="25" right="30" bottom="25" left="30"/>
+                        </padding>
+
+                        <Label text="Guest Management" styleClass="content-title">
+                            <font>
+                                <Font name="System Bold" size="22"/>
                             </font>
                         </Label>
 
-                        <HBox spacing="15" alignment="CENTER_LEFT">
-                            <TextField fx:id="searchField" promptText="Search by name, phone, or reservation ID"
-                                       prefWidth="400" styleClass="search-input"/>
-                            <ComboBox fx:id="searchTypeCombo" promptText="Search Type" prefWidth="150">
-                                <items>
-                                    <String fx:value="All"/>
-                                    <String fx:value="Guest Name"/>
-                                    <String fx:value="Phone"/>
-                                    <String fx:value="Reservation ID"/>
-                                    <String fx:value="Status"/>
-                                </items>
-                            </ComboBox>
-                            <DatePicker fx:id="searchFromDate" promptText="From Date" prefWidth="140"/>
-                            <DatePicker fx:id="searchToDate" promptText="To Date" prefWidth="140"/>
-                            <Button fx:id="searchButton" text="Search" styleClass="primary-button" prefWidth="100"/>
-                            <Button fx:id="clearSearchButton" text="Clear" styleClass="secondary-button" prefWidth="80"/>
-                        </HBox>
-                    </VBox>
+                        <!-- Guest Search -->
+                        <VBox styleClass="filter-section" spacing="15">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
 
-                    <!-- Results Table -->
-                    <VBox spacing="10" VBox.vgrow="ALWAYS">
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <Label text="Search Results" styleClass="section-title">
-                                <font>
-                                    <Font name="System Bold" size="16"/>
-                                </font>
-                            </Label>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Button fx:id="exportButton" text="Export CSV" styleClass="export-button"/>
-                        </HBox>
+                            <HBox spacing="15">
+                                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label text="Search Guest" styleClass="field-label-small"/>
+                                    <TextField fx:id="guestSearchField" promptText="Name, email, or phone..." styleClass="input-field"/>
+                                </VBox>
+                                <VBox spacing="5">
+                                    <Label text=" " styleClass="field-label-small"/>
+                                    <Button text="Search" styleClass="primary-action-btn" prefWidth="100"/>
+                                </VBox>
+                            </HBox>
+                        </VBox>
 
-                        <TableView fx:id="resultsTable" styleClass="results-table" VBox.vgrow="ALWAYS">
+                        <!-- Guests Table -->
+                        <TableView fx:id="guestsTable" styleClass="data-table" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
-                                <TableColumn fx:id="guestNameColumn" text="Guest Name" prefWidth="150"/>
-                                <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="120"/>
-                                <TableColumn fx:id="checkInColumn" text="Check-In" prefWidth="100"/>
-                                <TableColumn fx:id="checkOutColumn" text="Check-Out" prefWidth="100"/>
-                                <TableColumn fx:id="roomTypeColumn" text="Room Type" prefWidth="120"/>
-                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
-                                <TableColumn fx:id="totalColumn" text="Total" prefWidth="100"/>
-                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                                <TableColumn text="ID" prefWidth="60"/>
+                                <TableColumn text="Name" prefWidth="150"/>
+                                <TableColumn text="Email" prefWidth="180"/>
+                                <TableColumn text="Phone" prefWidth="130"/>
+                                <TableColumn text="Loyalty Member" prefWidth="120"/>
+                                <TableColumn text="Total Bookings" prefWidth="120"/>
                             </columns>
                         </TableView>
 
-                        <!-- Pagination Controls -->
-                        <HBox spacing="10" alignment="CENTER">
-                            <Button fx:id="firstPageButton" text="⏮ First" styleClass="page-button"/>
-                            <Button fx:id="prevPageButton" text="◀ Prev" styleClass="page-button"/>
-                            <Label fx:id="pageLabel" text="Page 1 of 1" styleClass="page-label"/>
-                            <Button fx:id="nextPageButton" text="Next ▶" styleClass="page-button"/>
-                            <Button fx:id="lastPageButton" text="Last ⏭" styleClass="page-button"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="Rows per page:" styleClass="page-label"/>
-                            <ComboBox fx:id="rowsPerPageCombo" value="25" prefWidth="80">
-                                <items>
-                                    <String fx:value="10"/>
-                                    <String fx:value="25"/>
-                                    <String fx:value="50"/>
-                                    <String fx:value="100"/>
-                                </items>
-                            </ComboBox>
+                        <HBox spacing="10">
+                            <Button text="View History" styleClass="action-btn"/>
+                            <Button text="Enroll in Loyalty" styleClass="primary-action-btn"/>
                         </HBox>
                     </VBox>
-                </VBox>
-            </StackPane>
-        </SplitPane>
-    </center>
+                </Tab>
 
-    <!-- Status Bar -->
-    <bottom>
-        <HBox styleClass="status-bar" spacing="20" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="8" right="15" bottom="8" left="15"/>
-            </padding>
-            <Label fx:id="statusLabel" text="Ready" styleClass="status-text"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="connectionLabel" text="🟢 Connected" styleClass="connection-status"/>
+                <!-- ROOMS TAB -->
+                <Tab text="Rooms" closable="false">
+                    <VBox spacing="20" styleClass="tab-content">
+                        <padding>
+                            <Insets top="25" right="30" bottom="25" left="30"/>
+                        </padding>
+
+                        <Label text="Room Status" styleClass="content-title">
+                            <font>
+                                <Font name="System Bold" size="22"/>
+                            </font>
+                        </Label>
+
+                        <!-- Room Stats -->
+                        <HBox spacing="20">
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Total Rooms" styleClass="stat-label"/>
+                                <Label text="25" styleClass="stat-value">
+                                    <font>
+                                        <Font name="System Bold" size="32"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Available" styleClass="stat-label"/>
+                                <Label text="18" styleClass="stat-value stat-success">
+                                    <font>
+                                        <Font name="System Bold" size="32"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Occupied" styleClass="stat-label"/>
+                                <Label text="7" styleClass="stat-value stat-warning">
+                                    <font>
+                                        <Font name="System Bold" size="32"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Rooms Table -->
+                        <TableView fx:id="roomsTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn text="Room Number" prefWidth="120"/>
+                                <TableColumn text="Room Type" prefWidth="130"/>
+                                <TableColumn text="Status" prefWidth="110"/>
+                                <TableColumn text="Current Guest" prefWidth="150"/>
+                                <TableColumn text="Check-out Date" prefWidth="120"/>
+                                <TableColumn text="Base Price" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </Tab>
+
+                <!-- FEEDBACK TAB -->
+                <Tab text="Feedback" closable="false">
+                    <VBox spacing="20" styleClass="tab-content">
+                        <padding>
+                            <Insets top="25" right="30" bottom="25" left="30"/>
+                        </padding>
+
+                        <Label text="Guest Feedback" styleClass="content-title">
+                            <font>
+                                <Font name="System Bold" size="22"/>
+                            </font>
+                        </Label>
+
+                        <!-- Feedback Stats -->
+                        <HBox spacing="20">
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Average Rating" styleClass="stat-label"/>
+                                <Label text="4.5 ⭐" styleClass="stat-value">
+                                    <font>
+                                        <Font name="System Bold" size="28"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Total Feedback" styleClass="stat-label"/>
+                                <Label text="147" styleClass="stat-value">
+                                    <font>
+                                        <Font name="System Bold" size="32"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="This Month" styleClass="stat-label"/>
+                                <Label text="23" styleClass="stat-value stat-info">
+                                    <font>
+                                        <Font name="System Bold" size="32"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Filter -->
+                        <HBox spacing="15" styleClass="filter-section">
+                            <padding>
+                                <Insets top="15" right="20" bottom="15" left="20"/>
+                            </padding>
+                            <VBox spacing="5">
+                                <Label text="Filter by Rating" styleClass="field-label-small"/>
+                                <ComboBox fx:id="filterRatingCombo" promptText="All Ratings" styleClass="input-field" prefWidth="150"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text="Date" styleClass="field-label-small"/>
+                                <DatePicker fx:id="filterDatePicker" styleClass="input-field" prefWidth="150"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text=" " styleClass="field-label-small"/>
+                                <Button fx:id="filterFeedbackButton" text="Filter" styleClass="primary-action-btn"/>
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <VBox spacing="5">
+                                <Label text=" " styleClass="field-label-small"/>
+                                <Button fx:id="exportFeedbackButton" text="Export CSV" styleClass="export-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Feedback Table -->
+                        <TableView fx:id="feedbackTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colFeedbackReservationId" text="Res. ID" prefWidth="70"/>
+                                <TableColumn fx:id="colFeedbackGuest" text="Guest" prefWidth="140"/>
+                                <TableColumn fx:id="colFeedbackRating" text="Rating" prefWidth="80"/>
+                                <TableColumn fx:id="colFeedbackComment" text="Comment" prefWidth="350"/>
+                                <TableColumn fx:id="colFeedbackDate" text="Date" prefWidth="110"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </Tab>
+
+                <!-- REPORTS TAB -->
+                <Tab text="Reports" closable="false">
+                    <VBox spacing="20" styleClass="tab-content">
+                        <padding>
+                            <Insets top="25" right="30" bottom="25" left="30"/>
+                        </padding>
+
+                        <Label text="Reports & Analytics" styleClass="content-title">
+                            <font>
+                                <Font name="System Bold" size="22"/>
+                            </font>
+                        </Label>
+
+                        <!-- Report Type Selection -->
+                        <HBox spacing="15">
+                            <Button text="Revenue Report" styleClass="report-type-btn report-type-active"/>
+                            <Button text="Occupancy Report" styleClass="report-type-btn"/>
+                            <Button text="Activity Logs" styleClass="report-type-btn"/>
+                        </HBox>
+
+                        <!-- Report Filters -->
+                        <VBox styleClass="filter-section" spacing="15">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
+
+                            <Label text="Revenue Report Settings" styleClass="section-subtitle">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                            </Label>
+
+                            <GridPane hgap="15" vgap="12">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="25"/>
+                                    <ColumnConstraints percentWidth="25"/>
+                                    <ColumnConstraints percentWidth="25"/>
+                                    <ColumnConstraints percentWidth="25"/>
+                                </columnConstraints>
+
+                                <VBox spacing="5" GridPane.columnIndex="0">
+                                    <Label text="Period Type" styleClass="field-label-small"/>
+                                    <ComboBox fx:id="revenueTypeCombo" promptText="Select Period" styleClass="input-field" prefWidth="200"/>
+                                </VBox>
+
+                                <VBox spacing="5" GridPane.columnIndex="1">
+                                    <Label text="From Date" styleClass="field-label-small"/>
+                                    <DatePicker fx:id="revenueStartDate" styleClass="input-field"/>
+                                </VBox>
+
+                                <VBox spacing="5" GridPane.columnIndex="2">
+                                    <Label text="To Date" styleClass="field-label-small"/>
+                                    <DatePicker fx:id="revenueEndDate" styleClass="input-field"/>
+                                </VBox>
+
+                                <VBox spacing="5" GridPane.columnIndex="3">
+                                    <Label text=" " styleClass="field-label-small"/>
+                                    <Button fx:id="generateRevenueReportButton" text="Generate Report" styleClass="primary-action-btn" prefWidth="180"/>
+                                </VBox>
+                            </GridPane>
+                        </VBox>
+
+                        <!-- Report Summary -->
+                        <HBox spacing="20">
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Total Revenue" styleClass="stat-label"/>
+                                <Label fx:id="totalRevenueLabel" text="$12,450" styleClass="stat-value stat-success">
+                                    <font>
+                                        <Font name="System Bold" size="28"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Total Bookings" styleClass="stat-label"/>
+                                <Label fx:id="totalReservationsLabel" text="45" styleClass="stat-value">
+                                    <font>
+                                        <Font name="System Bold" size="32"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+
+                            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                <padding>
+                                    <Insets top="18" right="18" bottom="18" left="18"/>
+                                </padding>
+                                <Label text="Avg Per Booking" styleClass="stat-label"/>
+                                <Label fx:id="avgRevenueLabel" text="$276.67" styleClass="stat-value stat-info">
+                                    <font>
+                                        <Font name="System Bold" size="28"/>
+                                    </font>
+                                </Label>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Report Table -->
+                        <TableView fx:id="revenueReportTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="revPeriodColumn" text="Period" prefWidth="150"/>
+                                <TableColumn fx:id="revCountColumn" text="Bookings" prefWidth="100"/>
+                                <TableColumn fx:id="revSubtotalColumn" text="Subtotal" prefWidth="120"/>
+                                <TableColumn fx:id="revTaxColumn" text="Tax" prefWidth="100"/>
+                                <TableColumn fx:id="revDiscountsColumn" text="Discounts" prefWidth="100"/>
+                                <TableColumn fx:id="revTotalColumn" text="Total" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+
+                        <HBox spacing="10">
+                            <Button fx:id="exportRevenueButton" text="Export to CSV" styleClass="export-btn"/>
+                            <Button text="Export to PDF" styleClass="export-btn"/>
+                        </HBox>
+                    </VBox>
+                </Tab>
+
+            </TabPane>
         </HBox>
-    </bottom>
+    </center>
 
 </BorderPane>
