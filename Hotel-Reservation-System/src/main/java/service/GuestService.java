@@ -20,8 +20,8 @@ public class GuestService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Guest> searchGuests(String name, String phone, String email) {
-        return guestRepository.searchGuests(name, phone, email);
+    public List<Guest> searchGuests(String name, String phone, String email, String street, String city, String province, String postal) {
+        return guestRepository.searchGuests(name, phone, email, street, city, province, postal);
     }
 
     public Guest enrollInLoyalty(Guest guest) {
