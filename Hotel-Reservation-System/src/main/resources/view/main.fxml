@@ -26,9 +26,6 @@
 
             <Button fx:id="adminButton" text="Administrator" prefWidth="220"
                     onAction="#openAdmin"/>
-
-            <Button fx:id="feedbackButton" text="Guest Feedback" prefWidth="220"
-                    onAction="#openFeedback"/>
         </VBox>
     </center>
 

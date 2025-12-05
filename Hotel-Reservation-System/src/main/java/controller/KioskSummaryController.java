@@ -173,7 +173,7 @@ public class KioskSummaryController {
                 return;
             }
 
-            loadScene("/view/kiosk_welcome.fxml");
+            loadScene("/view/main.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }

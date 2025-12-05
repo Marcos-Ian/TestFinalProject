@@ -22,9 +22,6 @@ public class MainController {
     private Button adminButton;
 
     @FXML
-    private Button feedbackButton;
-
-    @FXML
     private void openKiosk() throws IOException {
         loadScene("/view/kiosk_welcome.fxml");
     }
@@ -32,11 +29,6 @@ public class MainController {
     @FXML
     private void openAdmin() throws IOException {
         loadScene("/view/admin_login.fxml");
-    }
-
-    @FXML
-    private void openFeedback() throws IOException {
-        loadScene("/view/feedback.fxml");
     }
 
     private void loadScene(String resource) throws IOException {
