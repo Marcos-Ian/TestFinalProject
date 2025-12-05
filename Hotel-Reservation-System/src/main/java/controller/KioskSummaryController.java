@@ -169,25 +169,11 @@ public class KioskSummaryController {
     private void onFinishClicked() {
         try {
             if (context.getLastReservationId() == null) {
-                new Alert(Alert.AlertType.WARNING, "Please confirm your reservation before submitting feedback.").showAndWait();
+                new Alert(Alert.AlertType.WARNING, "Please confirm your reservation before finishing.").showAndWait();
                 return;
             }
 
-            Stage stage = (Stage) finishButton.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/feedback.fxml"));
-            loader.setControllerFactory(type -> type == FeedbackController.class
-                    ? new FeedbackController(
-                            Bootstrap.getFeedbackService(),
-                            context.getLastReservationId(),
-                            context.getGuest() != null ? context.getGuest().getEmail() : null,
-                            context)
-                    : createController(type));
-            Parent root = loader.load();
-
-            Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
-            stage.setScene(scene);
-            stage.show();
+            loadScene("/view/kiosk_welcome.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
