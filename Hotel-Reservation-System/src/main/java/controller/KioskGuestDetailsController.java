@@ -36,6 +36,14 @@ public class KioskGuestDetailsController {
     @FXML
     private TextField emailField;
     @FXML
+    private TextField streetField;
+    @FXML
+    private TextField cityField;
+    @FXML
+    private TextField provinceField;
+    @FXML
+    private TextField postalCodeField;
+    @FXML
     private Label firstNameError;
     @FXML
     private Label lastNameError;
@@ -85,6 +93,10 @@ public class KioskGuestDetailsController {
             lastNameField.setText(existing.getLastName() == null ? "" : existing.getLastName());
             emailField.setText(existing.getEmail() == null ? "" : existing.getEmail());
             phoneField.setText(existing.getPhoneNumber() == null ? "" : existing.getPhoneNumber());
+            streetField.setText(existing.getStreet() == null ? "" : existing.getStreet());
+            cityField.setText(existing.getCity() == null ? "" : existing.getCity());
+            provinceField.setText(existing.getProvince() == null ? "" : existing.getProvince());
+            postalCodeField.setText(existing.getPostalCode() == null ? "" : existing.getPostalCode());
         }
 
 
@@ -166,6 +178,10 @@ public class KioskGuestDetailsController {
         guest.setLastName(lastName);
         guest.setEmail(email);
         guest.setPhoneNumber(phone);
+        guest.setStreet(streetField.getText());
+        guest.setCity(cityField.getText());
+        guest.setProvince(provinceField.getText());
+        guest.setPostalCode(postalCodeField.getText());
 
         context.setGuest(guest);
         List<String> addOns = new ArrayList<>();
