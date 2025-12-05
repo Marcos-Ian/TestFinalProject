@@ -4,6 +4,7 @@
 package service;
 
 import config.PricingConfig;
+import model.Reservation;
 import model.RoomType;
 import service.strategy.BillingStrategy;
 
@@ -44,7 +45,7 @@ public class BillingContext {
     }
 
     public BillingContext() {
-        // Default constructor
+        this(new PricingConfig());
     }
 
     public BillingContext(PricingConfig pricingConfig) {
@@ -104,7 +105,8 @@ public class BillingContext {
         double afterStrategy = strategy != null ? strategy.apply(subtotal) : subtotal;
 
         // Add tax (10% standard rate)
-        double tax = afterStrategy * 0.10;
+        double taxRate = pricingConfig != null ? pricingConfig.getTaxRate() : 0.10;
+        double tax = afterStrategy * taxRate;
 
         // Final total
         double total = afterStrategy + tax;
@@ -194,7 +196,8 @@ public class BillingContext {
         double addOnTotal = calculateAddOnCharges(addOns, nights);
         double subtotal = roomTotal + addOnTotal;
         double afterStrategy = strategy != null ? strategy.apply(subtotal) : subtotal;
-        double tax = afterStrategy * 0.10;
+        double taxRate = pricingConfig != null ? pricingConfig.getTaxRate() : 0.10;
+        double tax = afterStrategy * taxRate;
         double total = afterStrategy + tax;
 
         return new BillingBreakdown(roomTotal, addOnTotal, subtotal,
@@ -228,6 +231,32 @@ public class BillingContext {
      */
     public static Map<String, Double> getAvailableAddOns() {
         return new HashMap<>(ADD_ON_PRICES);
+    }
+
+    /**
+     * Calculate totals for a reservation, applying discount before loyalty and tax.
+     */
+    public double calculateTotal(Reservation reservation) {
+        if (reservation == null) {
+            return 0.0;
+        }
+
+        double baseSubtotal = reservation.calculateBaseSubtotal();
+        double discountPercent = reservation.getDiscountPercent();
+        double afterDiscount = baseSubtotal - (baseSubtotal * (discountPercent / 100.0));
+
+        double afterLoyalty = applyLoyaltyIfEnabled(reservation, afterDiscount);
+        double nonNegativeSubtotal = Math.max(afterLoyalty, 0.0);
+
+        double taxRate = pricingConfig != null ? pricingConfig.getTaxRate() : 0.10;
+        double tax = nonNegativeSubtotal * taxRate;
+
+        return Math.max(nonNegativeSubtotal + tax, 0.0);
+    }
+
+    private double applyLoyaltyIfEnabled(Reservation reservation, double amount) {
+        // Placeholder for future loyalty integration. Loyalty should be applied after discount.
+        return amount;
     }
 }
 

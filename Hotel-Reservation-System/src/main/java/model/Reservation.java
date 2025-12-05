@@ -1,7 +1,10 @@
 package model;
 
+import config.PricingConfig;
 import jakarta.persistence.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,9 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
+    @Column(name = "discount_percent")
+    private Double discountPercent = 0.0;
+
     @ManyToMany
     @JoinTable(name = "reservation_room",
             joinColumns = @JoinColumn(name = "reservation_id"),
@@ -37,4 +43,56 @@ public class Reservation {
     public void setStatus(ReservationStatus status) { this.status = status; }
     public List<RoomType> getRooms() { return rooms; }
     public void setRooms(List<RoomType> rooms) { this.rooms = rooms; }
+
+    public Double getDiscountPercent() {
+        return discountPercent != null ? discountPercent : 0.0;
+    }
+
+    public void setDiscountPercent(Double discountPercent) {
+        this.discountPercent = discountPercent;
+    }
+
+    /**
+     * Base subtotal before any discounts or loyalty.
+     */
+    public double calculateBaseSubtotal() {
+        if (checkIn == null || checkOut == null || rooms == null || rooms.isEmpty()) {
+            return 0.0;
+        }
+
+        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        if (nights <= 0) {
+            return 0.0;
+        }
+
+        PricingConfig pricingConfig = new PricingConfig();
+        double total = 0.0;
+
+        for (RoomType room : rooms) {
+            double basePrice = room.getBasePrice();
+            LocalDate currentDate = checkIn;
+            for (int i = 0; i < nights; i++) {
+                double nightly = basePrice;
+                if (isWeekend(currentDate)) {
+                    nightly *= pricingConfig.getWeekendMultiplier();
+                } else {
+                    nightly *= pricingConfig.getWeekdayMultiplier();
+                }
+
+                if (pricingConfig.isPeakSeason(currentDate)) {
+                    nightly *= pricingConfig.getPeakSeasonMultiplier();
+                }
+
+                total += nightly;
+                currentDate = currentDate.plusDays(1);
+            }
+        }
+
+        return total;
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        DayOfWeek day = date.getDayOfWeek();
+        return day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
+    }
 }
