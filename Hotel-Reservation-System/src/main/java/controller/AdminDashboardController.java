@@ -4,9 +4,13 @@ import app.Bootstrap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import security.AdminUser;
 import service.BillingContext;
 import service.FeedbackService;
@@ -32,13 +36,17 @@ public class AdminDashboardController {
     @FXML
     private Label billingLabel;
     @FXML
-    private BorderPane contentPane;
-    @FXML
     private Button searchButton;
     @FXML
     private Button createButton;
     @FXML
     private Button logoutButton;
+    @FXML
+    private TabPane mainTabPane;
+    @FXML
+    private Tab guestsTab;
+    @FXML
+    private Tab reservationsTab;
 
     public AdminDashboardController() {
         this(new AdminUser());
@@ -54,33 +62,19 @@ public class AdminDashboardController {
     }
 
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() {
         welcomeLabel.setText("Welcome, " + adminUser.getUsername());
         billingLabel.setText("Billing Strategy: " + billingContext.getStrategy().getClass().getSimpleName());
-        loadSearchView();
+        if (mainTabPane != null && guestsTab != null) {
+            mainTabPane.getSelectionModel().select(guestsTab);
+        }
     }
 
     @FXML
-    private void loadSearchView() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_reservation_search.fxml"));
-        loader.setControllerFactory(type -> type == ReservationSearchController.class
-                ? new ReservationSearchController(
-                reservationService,
-                loyaltyService,
-                billingContext,
-                waitlistService,
-                (Void ignored) -> {
-                    try {
-                        loadEditView();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                },
-                Bootstrap.getAuthenticationService()
-        )
-                : createController(type));
-        Parent view = loader.load();
-        contentPane.setCenter(view);
+    private void loadSearchView() {
+        if (mainTabPane != null && reservationsTab != null) {
+            mainTabPane.getSelectionModel().select(reservationsTab);
+        }
     }
 
 
@@ -93,7 +87,12 @@ public class AdminDashboardController {
                     ? new AdminReservationEditController(reservationService, loyaltyService, waitlistService, feedbackService)
                     : createController(type));
             Parent view = loader.load();
-            contentPane.setCenter(view);
+
+            Stage stage = new Stage();
+            stage.setTitle("Create/Modify Reservation");
+            stage.setScene(new Scene(view));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load edit view", e);
         }
@@ -103,7 +102,7 @@ public class AdminDashboardController {
     private void logout() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin_login.fxml"));
         Parent view = loader.load();
-        contentPane.getScene().setRoot(view);
+        logoutButton.getScene().setRoot(view);
     }
 
     private Object createController(Class<?> type) {
