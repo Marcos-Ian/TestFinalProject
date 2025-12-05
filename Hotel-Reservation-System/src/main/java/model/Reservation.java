@@ -12,6 +12,7 @@ public class Reservation {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
 
     private LocalDate checkIn;

@@ -96,7 +96,8 @@ public class ReservationSearchController {
     @FXML
     public void initialize() {
         if (statusCombo != null) {
-            statusCombo.setItems(FXCollections.observableArrayList("All", "BOOKED", "CANCELLED", "CHECKED_OUT", "CONFIRMED"));
+            statusCombo.setItems(FXCollections.observableArrayList(
+                    "All", "BOOKED", "CHECKED_IN", "COMPLETED", "CANCELLED", "CHECKED_OUT", "CONFIRMED"));
             statusCombo.getSelectionModel().selectFirst();
         }
         configureTable();
@@ -155,7 +156,7 @@ public class ReservationSearchController {
 
         ActivityLogger.log(
                 actor,
-                "SEARCH",
+                "RESERVATION_SEARCH",
                 "Reservation",
                 "-",
                 String.format("Reservation search executed with filters: guest='%s', phone='%s', email='%s', start=%s, end=%s, status=%s, results=%d",

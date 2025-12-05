@@ -6,6 +6,7 @@ package repository;
 import model.Reservation;
 import model.ReservationStatus;
 import model.RoomType;
+import model.Guest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +71,11 @@ public interface ReservationRepository {
      * Find reservations by guest phone
      */
     List<Reservation> findByGuestPhone(String phone);
+
+    /**
+     * Find reservations for a specific guest.
+     */
+    List<Reservation> findByGuest(Guest guest);
 
     /**
      * Search reservations with optional filters.

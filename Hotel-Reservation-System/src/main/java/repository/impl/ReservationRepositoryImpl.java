@@ -2,6 +2,7 @@ package repository.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import model.Guest;
 import model.Reservation;
 import model.ReservationStatus;
 import model.RoomType;
@@ -104,6 +105,18 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 "SELECT r FROM Reservation r WHERE r.guest.phone = :phone",
                 Reservation.class);
         query.setParameter("phone", phone);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Reservation> findByGuest(Guest guest) {
+        if (guest == null || guest.getId() == null) {
+            return List.of();
+        }
+        TypedQuery<Reservation> query = entityManager.createQuery(
+                "SELECT r FROM Reservation r WHERE r.guest.id = :guestId",
+                Reservation.class);
+        query.setParameter("guestId", guest.getId());
         return query.getResultList();
     }
 
