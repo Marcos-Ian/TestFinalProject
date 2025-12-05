@@ -17,6 +17,7 @@ import security.AdminUser;
 import security.AuthenticationService;
 import service.BillingContext;
 import service.LoyaltyService;
+import service.FeedbackService;
 import service.ReservationService;
 import service.RoomService;
 import util.ValidationUtils;
@@ -1369,10 +1370,6 @@ public class AdminController {
         public void addToWaitlist(String guestName, String roomType, LocalDate desiredDate) {
             LOGGER.info(String.format("[WaitlistService] Added %s for %s on %s", guestName, roomType, desiredDate));
         }
-    }
-
-    /** Minimal feedback service placeholder. */
-    public static class FeedbackService {
     }
 
     // ----- DTOs used by the UI tables -----
