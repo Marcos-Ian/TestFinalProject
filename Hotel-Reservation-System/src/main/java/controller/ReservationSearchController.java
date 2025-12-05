@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Reservation;
+import model.ReservationAddOn;
 import model.ReservationStatus;
 import model.RoomType;
 import security.AuthenticationService;
@@ -203,6 +204,11 @@ public class ReservationSearchController {
     /**
      * Open the detailed reservation view
      */
+    // UPDATE this method in ReservationSearchController.java
+
+    /**
+     * Open the detailed reservation view
+     */
     private void openReservationDetails(Reservation reservation) throws IOException {
         logger.info("Opening details for reservation: " + reservation.getId());
 
@@ -229,15 +235,16 @@ public class ReservationSearchController {
 
             logger.info("Reservation has " + rooms.size() + " rooms");
 
-            // Get add-ons from reservation (stored in a field if you have one)
-            // TODO: If you have a ReservationAddOn entity/table, load from there
-            // For now, create sample add-ons based on the reservation
+            // Get add-ons from reservation entity
             List<String> addOns = new ArrayList<>();
-            // Example: addOns could be stored as a comma-separated string in reservation
-            // or in a separate ReservationAddOn table
+            if (reservation.getAddOns() != null) {
+                for (ReservationAddOn addOn : reservation.getAddOns()) {
+                    addOns.add(addOn.getAddOnName());
+                }
+            }
+            logger.info("Reservation has " + addOns.size() + " add-ons");
 
-            // Get payment history
-            // TODO: If you have a Payment entity/table, load actual payments
+            // Get payment history (for now empty, can be implemented later)
             List<ReservationController.PaymentRow> payments = new ArrayList<>();
 
             // Calculate total guests from rooms
@@ -246,21 +253,22 @@ public class ReservationSearchController {
                     .sum();
             if (totalGuests == 0) totalGuests = 2; // Default
 
-            // TODO: Load actual payment amount from Payment table
-            double amountPaid = 0.0; // Change this to actual paid amount
+            // Get amount paid (for now 0, implement payment tracking later)
+            double amountPaid = 0.0;
 
             // Get discount from reservation
             double discount = reservation.getDiscountPercent() != null ?
                     reservation.getDiscountPercent() : 0.0;
 
-            // TODO: Load actual loyalty redemption if applicable
+            // Get loyalty redemption (for now 0, implement later)
             double loyaltyRedemption = 0.0;
 
             // Determine who booked it
             String bookedBy = "Kiosk"; // TODO: Get from reservation metadata
 
             logger.info("Displaying reservation: guests=" + totalGuests +
-                    ", discount=" + discount + "%, paid=$" + amountPaid);
+                    ", discount=" + discount + "%, paid=$" + amountPaid +
+                    ", add-ons=" + addOns.size());
 
             // Display the reservation with actual data
             detailsController.displayReservation(

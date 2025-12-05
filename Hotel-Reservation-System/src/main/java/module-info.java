@@ -1,3 +1,4 @@
+// Replace Hotel-Reservation-System/src/main/java/module-info.java
 module hotel.reservation.system {
     // JavaFX
     requires javafx.controls;
@@ -13,8 +14,8 @@ module hotel.reservation.system {
 
     // 🔑 Open packages for reflection
     // Hibernate needs these to access private fields on your entities
-    opens model;       // Guest, Reservation, RoomType, etc.
-    opens security;    // AdminUser
+    opens model to org.hibernate.orm.core, jakarta.persistence;
+    opens security to org.hibernate.orm.core, jakarta.persistence;
 
     // JavaFX FXML controllers (if any)
     opens controller to javafx.fxml;

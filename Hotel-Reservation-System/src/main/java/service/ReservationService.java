@@ -19,7 +19,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 import util.ActivityLogger;
+// ADD these imports at the top of ReservationService.java
 
+import config.PricingConfig;
+import model.ReservationAddOn;
+import service.BillingContext;
+import java.time.DayOfWeek;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
 /**
  * Business layer gateway that validates reservations before persistence.
  * Enhanced with full booking workflow including rooms and add-ons.
@@ -89,29 +96,52 @@ public class ReservationService {
 
         List<RoomType> managedRooms = attachManagedRooms(rooms);
 
-        // Save reservation
+        // Calculate and save total amount using BillingContext
+        long nights = ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
+        double roomTotal = calculateRoomCharges(managedRooms, reservation.getCheckIn(), nights);
+        double addOnTotal = calculateAddOnCharges(addOns, nights);
+        double subtotal = roomTotal + addOnTotal;
+
+        // Apply discount if exists
+        double discountPercent = reservation.getDiscountPercent();
+        double discountAmount = subtotal * (discountPercent / 100.0);
+        double afterDiscount = subtotal - discountAmount;
+
+        // Calculate tax
+        double taxRate = 0.13; // 13% tax
+        double tax = afterDiscount * taxRate;
+
+        // Set total on reservation
+        double totalAmount = afterDiscount + tax;
+        reservation.setTotalAmount(totalAmount);
+
+        // IMPORTANT: Clear and add to existing collection, don't replace it
+        reservation.getAddOns().clear();
+
+        // Create add-on entities and add them to the existing collection
+        if (addOns != null && !addOns.isEmpty()) {
+            Map<String, Double> addOnPrices = BillingContext.getAvailableAddOns();
+
+            for (String addOnName : addOns) {
+                Double price = addOnPrices.get(addOnName);
+                if (price != null) {
+                    boolean perNight = BillingContext.isAddOnPerNight(addOnName);
+                    ReservationAddOn addOn = new ReservationAddOn(reservation, addOnName, price, perNight);
+                    reservation.getAddOns().add(addOn);
+                }
+            }
+        }
+
+        // Save reservation with all associations
         Reservation saved = reservationRepository.saveOrUpdate(reservation, managedRooms);
 
-        // TODO: Save room bookings and add-ons in separate tables
-        // This would require ReservationRoom and ReservationAddOn entities
-        // For now, log the information
-        LOGGER.info(String.format("Reservation created: ID=%d, Guest=%s %s, Rooms=%d, AddOns=%d",
+        LOGGER.info(String.format("Reservation created: ID=%d, Guest=%s %s, Total=$%.2f, Rooms=%d, AddOns=%d",
                 saved.getId(),
                 persistedGuest.getFirstName(),
                 persistedGuest.getLastName(),
+                totalAmount,
                 rooms.size(),
-                addOns.size()));
-
-        // Log room details
-        for (RoomType room : rooms) {
-            LOGGER.info(String.format("  - Room: %s ($%.2f, capacity %d)",
-                    room.getType(), room.getBasePrice(), room.getCapacity()));
-        }
-
-        // Log add-on details
-        for (String addOn : addOns) {
-            LOGGER.info(String.format("  - Add-on: %s", addOn));
-        }
+                saved.getAddOns().size()));
 
         return saved;
     }
@@ -126,7 +156,54 @@ public class ReservationService {
 
         return reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
     }
+    private double calculateRoomCharges(List<RoomType> rooms, LocalDate checkIn, long nights) {
+        PricingConfig pricingConfig = new PricingConfig();
+        double total = 0.0;
 
+        for (RoomType room : rooms) {
+            double roomBasePrice = room.getBasePrice();
+            LocalDate currentDate = checkIn;
+            for (int i = 0; i < nights; i++) {
+                double nightPrice = roomBasePrice;
+                if (isWeekend(currentDate)) {
+                    nightPrice *= pricingConfig.getWeekendMultiplier();
+                } else {
+                    nightPrice *= pricingConfig.getWeekdayMultiplier();
+                }
+
+                if (pricingConfig.isPeakSeason(currentDate)) {
+                    nightPrice *= pricingConfig.getPeakSeasonMultiplier();
+                }
+
+                total += nightPrice;
+                currentDate = currentDate.plusDays(1);
+            }
+        }
+
+        return total;
+    }
+
+    private double calculateAddOnCharges(List<String> addOns, long nights) {
+        if (addOns == null) return 0.0;
+
+        double total = 0.0;
+        Map<String, Double> addOnPrices = BillingContext.getAvailableAddOns();
+
+        for (String addOn : addOns) {
+            Double price = addOnPrices.get(addOn);
+            if (price == null) continue;
+
+            boolean perNight = BillingContext.isAddOnPerNight(addOn);
+            total += perNight ? (price * nights) : price;
+        }
+
+        return total;
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        DayOfWeek day = date.getDayOfWeek();
+        return day == DayOfWeek.FRIDAY || day == DayOfWeek.SATURDAY;
+    }
     /**
      * Retrieve every reservation in the system.
      */

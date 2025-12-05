@@ -1,3 +1,4 @@
+// Replace the existing Reservation.java with this updated version
 package model;
 
 import config.PricingConfig;
@@ -20,17 +21,26 @@ public class Reservation {
 
     private LocalDate checkIn;
     private LocalDate checkOut;
+
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     @Column(name = "discount_percent")
     private Double discountPercent = 0.0;
 
+    // NEW: Store the calculated total amount
+    @Column(name = "total_amount")
+    private Double totalAmount = 0.0;
+
     @ManyToMany
     @JoinTable(name = "reservation_room",
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "room_type_id"))
     private List<RoomType> rooms = new ArrayList<>();
+
+    // NEW: Relationship to add-ons
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ReservationAddOn> addOns = new ArrayList<>();
 
     public Long getId() { return id; }
     public Guest getGuest() { return guest; }
@@ -50,6 +60,24 @@ public class Reservation {
 
     public void setDiscountPercent(Double discountPercent) {
         this.discountPercent = discountPercent;
+    }
+
+    // NEW: Getters and setters for totalAmount
+    public Double getTotalAmount() {
+        return totalAmount != null ? totalAmount : 0.0;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    // NEW: Getters and setters for addOns
+    public List<ReservationAddOn> getAddOns() {
+        return addOns;
+    }
+
+    public void setAddOns(List<ReservationAddOn> addOns) {
+        this.addOns = addOns;
     }
 
     /**

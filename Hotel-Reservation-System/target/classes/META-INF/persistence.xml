@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Replace Hotel-Reservation-System/src/main/resources/META-INF/persistence.xml -->
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
     <persistence-unit name="hotelPU">
         <class>model.Guest</class>
         <class>model.Reservation</class>
         <class>model.RoomType</class>
+        <class>model.ReservationAddOn</class>
         <class>security.AdminUser</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlite:hotel.db"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.community.dialect.SQLiteDialect"/>
-
         </properties>
     </persistence-unit>
 </persistence>

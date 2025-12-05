@@ -25,21 +25,33 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return saveOrUpdate(reservation, reservation.getRooms());
     }
 
+    // REPLACE the saveOrUpdate method in ReservationRepositoryImpl.java
+
     @Override
     public Reservation saveOrUpdate(Reservation reservation, List<RoomType> rooms) {
         entityManager.getTransaction().begin();
-        if (rooms != null) {
-            reservation.setRooms(new ArrayList<>(rooms));
-        }
 
-        if (reservation.getId() == null) {
-            entityManager.persist(reservation);
-        } else {
-            reservation = entityManager.merge(reservation);
-        }
+        try {
+            if (rooms != null) {
+                reservation.setRooms(new ArrayList<>(rooms));
+            }
 
-        entityManager.getTransaction().commit();
-        return reservation;
+            if (reservation.getId() == null) {
+                // For new reservations, persist first
+                entityManager.persist(reservation);
+            } else {
+                // For updates, merge
+                reservation = entityManager.merge(reservation);
+            }
+
+            entityManager.getTransaction().commit();
+            return reservation;
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new RuntimeException("Failed to save reservation", e);
+        }
     }
 
     @Override
