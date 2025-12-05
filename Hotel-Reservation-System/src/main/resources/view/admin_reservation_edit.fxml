@@ -42,7 +42,7 @@
 
         <children>
             <Label text="Base Subtotal:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <Label fx:id="baseSubtotalLabel" text="$0.00"
+            <Label fx:id="baseSubtotalLabel" text=""
                    GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
             <Label text="Discount (%):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -55,7 +55,7 @@
                     GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
             <Label text="Total After Discount &amp; Loyalty:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-            <Label fx:id="totalAfterDiscountLabel" text="$0.00"
+            <Label fx:id="totalAfterDiscountLabel" text=""
                    GridPane.rowIndex="3" GridPane.columnIndex="1"/>
         </children>
     </GridPane>
