@@ -36,13 +36,7 @@ public class KioskGuestDetailsController {
     @FXML
     private TextField emailField;
     @FXML
-    private TextField streetField;
-    @FXML
-    private TextField cityField;
-    @FXML
-    private TextField provinceField;
-    @FXML
-    private TextField postalCodeField;
+    private TextField addressField;
     @FXML
     private Label firstNameError;
     @FXML
@@ -51,6 +45,8 @@ public class KioskGuestDetailsController {
     private Label phoneError;
     @FXML
     private Label emailError;
+    @FXML
+    private Label addressError;
     @FXML
     private CheckBox wifiCheck;
     @FXML
@@ -85,6 +81,7 @@ public class KioskGuestDetailsController {
         lastNameField.textProperty().addListener((obs, o, n) -> validate());
         phoneField.textProperty().addListener((obs, o, n) -> validate());
         emailField.textProperty().addListener((obs, o, n) -> validate());
+        addressField.textProperty().addListener((obs, o, n) -> validate());
 
         // Restore guest info if present
         model.Guest existing = context.getGuest();
@@ -93,10 +90,7 @@ public class KioskGuestDetailsController {
             lastNameField.setText(existing.getLastName() == null ? "" : existing.getLastName());
             emailField.setText(existing.getEmail() == null ? "" : existing.getEmail());
             phoneField.setText(existing.getPhoneNumber() == null ? "" : existing.getPhoneNumber());
-            streetField.setText(existing.getStreet() == null ? "" : existing.getStreet());
-            cityField.setText(existing.getCity() == null ? "" : existing.getCity());
-            provinceField.setText(existing.getProvince() == null ? "" : existing.getProvince());
-            postalCodeField.setText(existing.getPostalCode() == null ? "" : existing.getPostalCode());
+            addressField.setText(existing.getAddress() == null ? "" : existing.getAddress());
         }
 
 
@@ -125,11 +119,13 @@ public class KioskGuestDetailsController {
         lastNameError.setText("");
         emailError.setText("");
         phoneError.setText("");
+        addressError.setText("");
 
         String firstName = firstNameField.getText().trim();
         String lastName  = lastNameField.getText().trim();
         String email     = emailField.getText().trim();
         String phone     = phoneField.getText().trim();
+        String address  = addressField.getText().trim();
 
         boolean valid = true;
 
@@ -162,6 +158,11 @@ public class KioskGuestDetailsController {
             valid = false;
         }
 
+        if (address.isEmpty()) {
+            addressError.setText("Address is required");
+            valid = false;
+        }
+
         // If any field is invalid, stay on this screen
         if (!valid) {
             // optional: if you have a status label, give a general message
@@ -178,10 +179,7 @@ public class KioskGuestDetailsController {
         guest.setLastName(lastName);
         guest.setEmail(email);
         guest.setPhoneNumber(phone);
-        guest.setStreet(streetField.getText());
-        guest.setCity(cityField.getText());
-        guest.setProvince(provinceField.getText());
-        guest.setPostalCode(postalCodeField.getText());
+        guest.setAddress(address);
 
         context.setGuest(guest);
         List<String> addOns = new ArrayList<>();
@@ -232,12 +230,14 @@ public class KioskGuestDetailsController {
         String lastName  = safeText(lastNameField).trim();
         String email     = safeText(emailField).trim();
         String phone     = safeText(phoneField).trim();
+        String address  = safeText(addressField).trim();
 
         // clear previous errors
         firstNameError.setText("");
         lastNameError.setText("");
         emailError.setText("");
         phoneError.setText("");
+        addressError.setText("");
 
         if (firstName.isEmpty()) {
             firstNameError.setText("First name is required");
@@ -260,6 +260,11 @@ public class KioskGuestDetailsController {
             valid = false;
         } else if (!phone.matches("\\d{10}")) {
             phoneError.setText("Enter a 10-digit phone number");
+            valid = false;
+        }
+
+        if (address.isEmpty()) {
+            addressError.setText("Address is required");
             valid = false;
         }
 

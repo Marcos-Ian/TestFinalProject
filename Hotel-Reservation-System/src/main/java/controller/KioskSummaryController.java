@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import model.Guest;
 import model.Reservation;
 import model.RoomType;
 import model.ReservationStatus;
@@ -37,6 +38,8 @@ public class KioskSummaryController {
 
     @FXML
     private Label guestsLabel;
+    @FXML
+    private Label addressLabel;
     @FXML
     private Label datesLabel;
     @FXML
@@ -81,6 +84,8 @@ public class KioskSummaryController {
     @FXML
     public void initialize() {
         guestsLabel.setText(String.format("%d adults, %d children", context.getAdults(), context.getChildren()));
+        Guest guest = context.getGuest();
+        addressLabel.setText(guest != null && guest.getAddress() != null ? guest.getAddress() : "");
         LocalDate in = context.getCheckIn();
         LocalDate out = context.getCheckOut();
         long nights = in != null && out != null ? ChronoUnit.DAYS.between(in, out) : 0;

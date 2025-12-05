@@ -16,6 +16,7 @@ public class Guest {
     private String phone;
     private String email;
     private String loyaltyNumber;
+    private String address;
     private String street;
     private String city;
     private String province;
@@ -49,6 +50,14 @@ public class Guest {
     public String getLoyaltyNumber() { return loyaltyNumber; }
 
     public void setLoyaltyNumber(String loyaltyNumber) { this.loyaltyNumber = loyaltyNumber; }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public List<Reservation> getReservations() { return reservations; }
 
