@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import model.Guest;
 import model.Reservation;
@@ -141,11 +142,12 @@ public class KioskSummaryController {
             reservation.setStatus(ReservationStatus.BOOKED);
 
             // This will run validateGuest(...) and can throw IllegalArgumentException
-            reservationService.createReservation(
+            Reservation savedReservation = reservationService.createReservation(
                     reservation,
                     context.getSelectedRooms(),
                     context.getAddOns()
             );
+            context.setLastReservationId(savedReservation.getId());
 
             statusLabel.setText("Your reservation has been saved. Billing will be handled at the front desk.");
             statusLabel.setTextFill(Color.GREEN);
@@ -166,12 +168,21 @@ public class KioskSummaryController {
     @FXML
     private void onFinishClicked() {
         try {
-            context.reset();
+            if (context.getLastReservationId() == null) {
+                new Alert(Alert.AlertType.WARNING, "Please confirm your reservation before submitting feedback.").showAndWait();
+                return;
+            }
 
             Stage stage = (Stage) finishButton.getScene().getWindow();
-            Parent root = FXMLLoader.load(
-                    getClass().getResource("/view/main.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/feedback.fxml"));
+            loader.setControllerFactory(type -> type == FeedbackController.class
+                    ? new FeedbackController(
+                            Bootstrap.getFeedbackService(),
+                            context.getLastReservationId(),
+                            context.getGuest() != null ? context.getGuest().getEmail() : null,
+                            context)
+                    : createController(type));
+            Parent root = loader.load();
 
             Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
@@ -190,5 +201,13 @@ public class KioskSummaryController {
         Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         stage.setScene(scene);
+    }
+
+    private Object createController(Class<?> type) {
+        try {
+            return type.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to create controller: " + type, e);
+        }
     }
 }

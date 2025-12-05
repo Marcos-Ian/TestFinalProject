@@ -83,7 +83,7 @@ public class Bootstrap {
             guestService = new GuestService(guestRepository, reservationRepository);
             roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
-            feedbackService = new FeedbackService(guestRepository, reservationRepository, feedbackRepository);
+            feedbackService = new FeedbackService(reservationRepository, feedbackRepository);
             LOGGER.info("Services initialized");
 
             // Initialize billing context with default strategy

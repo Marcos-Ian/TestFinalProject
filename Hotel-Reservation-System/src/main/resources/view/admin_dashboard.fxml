@@ -38,6 +38,25 @@
                         <fx:include source="admin_reservation_search.fxml"/>
                     </content>
                 </Tab>
+                <Tab fx:id="feedbackTab" text="Feedback">
+                    <content>
+                        <VBox spacing="12">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
+                            <Label text="Guest Feedback" styleClass="header-label"/>
+                            <TableView fx:id="feedbackTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="fbDateCol" text="Date" prefWidth="120"/>
+                                    <TableColumn fx:id="fbEmailCol" text="Guest Email" prefWidth="200"/>
+                                    <TableColumn fx:id="fbReservationCol" text="Reservation ID" prefWidth="140"/>
+                                    <TableColumn fx:id="fbRatingCol" text="Rating" prefWidth="90"/>
+                                    <TableColumn fx:id="fbCommentsCol" text="Comments" prefWidth="320"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </content>
+                </Tab>
             </tabs>
         </TabPane>
     </center>
