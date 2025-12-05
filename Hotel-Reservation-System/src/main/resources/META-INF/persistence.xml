@@ -6,6 +6,7 @@
         <class>model.Reservation</class>
         <class>model.RoomType</class>
         <class>model.ReservationAddOn</class>
+        <class>model.Feedback</class>
         <class>security.AdminUser</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.sqlite.JDBC"/>

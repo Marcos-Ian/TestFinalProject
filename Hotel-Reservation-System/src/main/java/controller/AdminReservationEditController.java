@@ -62,7 +62,7 @@ public class AdminReservationEditController {
     private ListView<RoomType> roomListView;
 
     public AdminReservationEditController() {
-        this(Bootstrap.getReservationService(), Bootstrap.getBillingContext(), Bootstrap.getLoyaltyService(), new WaitlistService(), new FeedbackService());
+        this(Bootstrap.getReservationService(), Bootstrap.getBillingContext(), Bootstrap.getLoyaltyService(), new WaitlistService(), Bootstrap.getFeedbackService());
     }
 
     public AdminReservationEditController(ReservationService reservationService, BillingContext billingContext, LoyaltyService loyaltyService,

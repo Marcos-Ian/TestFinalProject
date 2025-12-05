@@ -171,7 +171,7 @@ public class AdminController {
         this.authService = Bootstrap.getAuthenticationService();
         this.paymentService = new PaymentService();
         this.waitlistService = new WaitlistService();
-        this.feedbackService = new FeedbackService();
+        this.feedbackService = Bootstrap.getFeedbackService();
 
         LOGGER.info("AdminController initialized");
     }

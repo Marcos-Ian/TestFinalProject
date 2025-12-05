@@ -1,5 +1,6 @@
 package controller;
 
+import app.Bootstrap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +10,7 @@ import javafx.scene.control.TextField;
 import service.FeedbackService;
 
 /**
- * Collects guest feedback and stores it using the lightweight FeedbackService.
+ * Collects guest feedback and stores it using the FeedbackService.
  */
 public class FeedbackController {
     private final FeedbackService feedbackService;
@@ -19,16 +20,14 @@ public class FeedbackController {
     @FXML
     private TextArea commentsArea;
     @FXML
-    private TextField reservationField;
-    @FXML
-    private TextField guestField;
+    private TextField emailField;
     @FXML
     private Label statusLabel;
     @FXML
     private Button submitButton;
 
     public FeedbackController() {
-        this(new FeedbackService());
+        this(Bootstrap.getFeedbackService());
     }
 
     public FeedbackController(FeedbackService feedbackService) {
@@ -38,10 +37,13 @@ public class FeedbackController {
     @FXML
     private void submitFeedback() {
         int rating = (int) ratingSlider.getValue();
-        Long reservationId = reservationField.getText().isBlank() ? null : Long.parseLong(reservationField.getText());
-        feedbackService.submitFeedback(reservationId, guestField.getText(), rating, commentsArea.getText());
-        statusLabel.setText("Thank you for your feedback!");
-        commentsArea.clear();
-        reservationField.clear();
+        try {
+            feedbackService.submitFeedback(emailField.getText(), rating, commentsArea.getText());
+            statusLabel.setText("Thank you for your feedback!");
+            commentsArea.clear();
+            emailField.clear();
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            statusLabel.setText(ex.getMessage());
+        }
     }
 }

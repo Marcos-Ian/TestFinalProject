@@ -33,6 +33,14 @@ public class GuestRepositoryImpl implements GuestRepository {
     }
 
     @Override
+    public Optional<Guest> findByEmail(String email) {
+        TypedQuery<Guest> query = entityManager.createQuery(
+                "SELECT g FROM Guest g WHERE LOWER(g.email) = LOWER(:email)", Guest.class);
+        query.setParameter("email", email);
+        return query.getResultStream().findFirst();
+    }
+
+    @Override
     public List<Guest> findByName(String name) {
         String pattern = "%" + name.toLowerCase() + "%";
         TypedQuery<Guest> query = entityManager.createQuery(

@@ -78,6 +78,16 @@ public interface ReservationRepository {
     List<Reservation> findByGuest(Guest guest);
 
     /**
+     * Check if a guest has any reservations.
+     */
+    boolean existsByGuest(Guest guest);
+
+    /**
+     * Check if a guest has a reservation with the given status.
+     */
+    boolean existsByGuestAndStatus(Guest guest, ReservationStatus status);
+
+    /**
      * Search reservations with optional filters.
      */
     List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, ReservationStatus status);
