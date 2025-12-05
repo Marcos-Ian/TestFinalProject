@@ -26,5 +26,35 @@
         <Button fx:id="saveButton" text="Save" onAction="#onSave" styleClass="primary-button"/>
         <Button fx:id="cancelButton" text="Cancel Reservation" onAction="#onCancelReservation" styleClass="danger-button"/>
     </HBox>
+    <Label text="Billing Summary" styleClass="section-header"/>
+
+    <GridPane hgap="10" vgap="8">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="40"/>
+            <ColumnConstraints percentWidth="60"/>
+        </columnConstraints>
+
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+
+        <Label text="Base Subtotal:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="baseSubtotalLabel" text="$0.00"
+               GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Discount (%):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="discountPercentField" promptText="e.g. 10"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Button fx:id="applyDiscountButton"
+                text="Apply Discount"
+                onAction="#onApplyDiscountClicked"
+                GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Total After Discount &amp; Loyalty:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="totalAfterDiscountLabel" text="$0.00"
+               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
     <Label fx:id="messageLabel"/>
 </VBox>

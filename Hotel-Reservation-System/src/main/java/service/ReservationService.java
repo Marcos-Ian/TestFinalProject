@@ -10,12 +10,15 @@ import model.RoomType;
 import repository.GuestRepository;
 import repository.ReservationRepository;
 import repository.RoomRepository;
+import security.AdminUser;
+import security.AuthenticationService;
 import util.ValidationUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+import util.ActivityLogger;
 
 /**
  * Business layer gateway that validates reservations before persistence.
@@ -27,13 +30,16 @@ public class ReservationService {
     private final GuestRepository guestRepository;
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
+    private final AuthenticationService authenticationService;
 
     public ReservationService(GuestRepository guestRepository,
                               ReservationRepository reservationRepository,
-                              RoomRepository roomRepository) {
+                              RoomRepository roomRepository,
+                              AuthenticationService authenticationService) {
         this.guestRepository = guestRepository;
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
+        this.authenticationService = authenticationService;
     }
 
     /**
@@ -215,6 +221,57 @@ public class ReservationService {
      */
     public Optional<Reservation> findById(Long id) {
         return reservationRepository.findById(id);
+    }
+
+    public void applyDiscount(Long reservationId, double percent) {
+        AdminUser currentUser = authenticationService.getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalStateException("No logged-in user when applying discount.");
+        }
+
+        double maxAllowed;
+        switch (currentUser.getRole()) {
+            case MANAGER:
+                maxAllowed = 30.0;
+                break;
+            case ADMIN:
+                maxAllowed = 15.0;
+                break;
+            default:
+                maxAllowed = 0.0;
+        }
+
+        if (percent < 0) {
+            throw new IllegalArgumentException("Discount percent cannot be negative.");
+        }
+        if (percent > maxAllowed) {
+            throw new IllegalArgumentException(
+                    "Discount " + percent + "% exceeds allowed cap of " + maxAllowed + "% for role " + currentUser.getRole());
+        }
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found: " + reservationId));
+
+        double base = reservation.calculateBaseSubtotal();
+        double discountAmount = base * (percent / 100.0);
+        if (discountAmount > base) {
+            throw new IllegalArgumentException("Discount would make subtotal negative.");
+        }
+
+        reservation.setDiscountPercent(percent);
+        reservationRepository.saveOrUpdate(reservation, reservation.getRooms() != null ? reservation.getRooms() : new ArrayList<>());
+
+        ActivityLogger.log(
+                currentUser.getUsername(),
+                "APPLY_DISCOUNT",
+                "Reservation",
+                reservation.getId() != null ? reservation.getId().toString() : "-",
+                String.format("Applied %.2f%% discount. Base: %.2f, Discount: %.2f, New subtotal: %.2f",
+                        percent,
+                        base,
+                        discountAmount,
+                        base - discountAmount)
+        );
     }
 
     /**

@@ -70,17 +70,18 @@ public class Bootstrap {
             // Initialize event system
             roomAvailabilitySubject = new RoomAvailabilitySubject();
 
+            authenticationService = new AuthenticationService();
+            LOGGER.info("Authentication service initialized");
+
             // Initialize services
-            reservationService = new ReservationService(guestRepository, reservationRepository, roomRepository);
+            reservationService = new ReservationService(guestRepository, reservationRepository, roomRepository, authenticationService);
             guestService = new GuestService(guestRepository, reservationRepository);
             roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
             LOGGER.info("Services initialized");
-            authenticationService = new AuthenticationService();
-            LOGGER.info("Authentication service initialized");
 
             // Initialize billing context with default strategy
-            billingContext = new BillingContext();
+            billingContext = new BillingContext(pricingConfig);
             billingContext.setStrategy(new StandardBillingStrategy(pricingConfig));
             LOGGER.info("Billing context initialized with standard strategy");
 

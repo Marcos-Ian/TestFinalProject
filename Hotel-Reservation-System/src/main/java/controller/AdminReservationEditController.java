@@ -10,11 +10,12 @@ import model.Guest;
 import model.Reservation;
 import model.ReservationStatus;
 import model.RoomType;
+import service.BillingContext;
+import service.FeedbackService;
 import service.LoyaltyService;
 import service.ReservationConflictException;
 import service.ReservationService;
 import service.WaitlistService;
-import service.FeedbackService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 public class AdminReservationEditController {
     private final ReservationService reservationService;
+    private final BillingContext billingContext;
     private final LoyaltyService loyaltyService;
     private final WaitlistService waitlistService;
     private final FeedbackService feedbackService;
@@ -49,15 +51,24 @@ public class AdminReservationEditController {
     @FXML
     private Button cancelButton;
     @FXML
+    private Label baseSubtotalLabel;
+    @FXML
+    private Label totalAfterDiscountLabel;
+    @FXML
+    private TextField discountPercentField;
+    @FXML
+    private Button applyDiscountButton;
+    @FXML
     private ListView<RoomType> roomListView;
 
     public AdminReservationEditController() {
-        this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyService(), new WaitlistService(), new FeedbackService());
+        this(Bootstrap.getReservationService(), Bootstrap.getBillingContext(), Bootstrap.getLoyaltyService(), new WaitlistService(), new FeedbackService());
     }
 
-    public AdminReservationEditController(ReservationService reservationService, LoyaltyService loyaltyService,
+    public AdminReservationEditController(ReservationService reservationService, BillingContext billingContext, LoyaltyService loyaltyService,
                                           WaitlistService waitlistService, FeedbackService feedbackService) {
         this.reservationService = reservationService;
+        this.billingContext = billingContext;
         this.loyaltyService = loyaltyService;
         this.waitlistService = waitlistService;
         this.feedbackService = feedbackService;
@@ -138,6 +149,19 @@ public class AdminReservationEditController {
             statusCombo.getSelectionModel().select(this.reservation.getStatus());
         }
         preselectRooms();
+        refreshPriceView();
+    }
+
+    private void refreshPriceView() {
+        if (reservation == null) return;
+
+        double base = reservation.calculateBaseSubtotal();
+        double total = billingContext.calculateTotal(reservation);
+
+        baseSubtotalLabel.setText(String.format("$%.2f", base));
+        totalAfterDiscountLabel.setText(String.format("$%.2f", total));
+
+        discountPercentField.setText(String.format("%.2f", reservation.getDiscountPercent()));
     }
 
     private void configureRoomList() {
@@ -178,6 +202,47 @@ public class AdminReservationEditController {
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void onApplyDiscountClicked() {
+        if (reservation == null) return;
+
+        try {
+            String text = discountPercentField.getText();
+            double percent = text == null || text.isBlank() ? 0.0 : Double.parseDouble(text.trim());
+
+            reservationService.applyDiscount(reservation.getId(), percent);
+
+            Reservation updated = reservationService.findById(reservation.getId()).orElse(reservation);
+            this.reservation = updated;
+
+            refreshPriceView();
+
+            showInfo("Discount applied", "Discount of " + percent + "% has been applied successfully.");
+        } catch (NumberFormatException ex) {
+            showError("Invalid value", "Please enter a valid discount percent.");
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            showError("Cannot apply discount", ex.getMessage());
+        } catch (Exception ex) {
+            showError("Error", "Unexpected error applying discount: " + ex.getMessage());
+        }
+    }
+
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
