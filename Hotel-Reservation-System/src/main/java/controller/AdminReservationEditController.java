@@ -74,6 +74,16 @@ public class AdminReservationEditController {
         this.feedbackService = feedbackService;
         this.reservation = new Reservation();
     }
+    public AdminReservationEditController(ReservationService reservationService,
+                                          LoyaltyService loyaltyService,
+                                          WaitlistService waitlistService,
+                                          FeedbackService feedbackService) {
+        this(reservationService,
+                Bootstrap.getBillingContext(),   // reuse the same BillingContext source
+                loyaltyService,
+                waitlistService,
+                feedbackService);
+    }
 
     @FXML
     public void initialize() {

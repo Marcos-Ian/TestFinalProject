@@ -32,16 +32,18 @@
                 </columnConstraints>
                 <Label text="Guests" GridPane.rowIndex="0"/>
                 <Label fx:id="guestsLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                <Label text="Dates" GridPane.rowIndex="1"/>
-                <Label fx:id="datesLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                <Label text="Nights" GridPane.rowIndex="2"/>
-                <Label fx:id="nightsLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                <Label text="Room plan" GridPane.rowIndex="3"/>
-                <Label fx:id="roomsLabel" wrapText="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                <Label text="Add-ons" GridPane.rowIndex="4"/>
-                <ListView fx:id="addOnList" GridPane.rowIndex="4" GridPane.columnIndex="1" prefHeight="80"/>
-                <Label text="Add-ons summary" GridPane.rowIndex="5"/>
-                <Label fx:id="addOnsLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                <Label text="Address" GridPane.rowIndex="1"/>
+                <Label fx:id="addressLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" wrapText="true"/>
+                <Label text="Dates" GridPane.rowIndex="2"/>
+                <Label fx:id="datesLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label text="Nights" GridPane.rowIndex="3"/>
+                <Label fx:id="nightsLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Label text="Room plan" GridPane.rowIndex="4"/>
+                <Label fx:id="roomsLabel" wrapText="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label text="Add-ons" GridPane.rowIndex="5"/>
+                <ListView fx:id="addOnList" GridPane.rowIndex="5" GridPane.columnIndex="1" prefHeight="80"/>
+                <Label text="Add-ons summary" GridPane.rowIndex="6"/>
+                <Label fx:id="addOnsLabel" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
             </GridPane>
 
             <TitledPane text="Cost breakdown" expanded="true">

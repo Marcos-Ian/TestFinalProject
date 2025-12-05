@@ -46,6 +46,10 @@
                 <Label text="Phone*" GridPane.rowIndex="6"/>
                 <TextField fx:id="phoneField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
                 <Label fx:id="phoneError" textFill="red" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                <Label text="Address*" GridPane.rowIndex="8"/>
+                <TextField fx:id="addressField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+                <Label fx:id="addressError" textFill="red" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
             </GridPane>
 
             <TitledPane text="Add-ons" expanded="true">
