@@ -40,6 +40,7 @@
             </GridPane>
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <Button text="Back" onAction="#backToWelcome"/>
+                <Button fx:id="finishButton" text="Finish" onAction="#onFinishGuestFlow"/>
                 <Button fx:id="nextButton" text="Next: Dates &amp; plan" onAction="#goToDatesAndPlan" styleClass="primary-button"/>
             </HBox>
         </VBox>

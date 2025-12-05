@@ -28,6 +28,8 @@ public class KioskGuestsController {
     @FXML
     private Label childrenErrorLabel;
     @FXML
+    private Button finishButton;
+    @FXML
     private Button nextButton;
 
     public KioskGuestsController() {
@@ -58,6 +60,20 @@ public class KioskGuestsController {
     @FXML
     private void backToWelcome() throws IOException {
         loadScene("/view/kiosk_welcome.fxml");
+    }
+
+    @FXML
+    private void onFinishGuestFlow() {
+        try {
+            Stage stage = (Stage) finishButton.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/kiosk_welcome.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void validate() {
