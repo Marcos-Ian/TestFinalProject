@@ -124,31 +124,31 @@
                     <Label text="Financial Summary" styleClass="header-label"/>
                     <GridPane hgap="15" vgap="8">
                         <Label text="Room Subtotal" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <Label fx:id="roomSubtotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label fx:id="roomSubtotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                         <Label text="Add-ons Total" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <Label fx:id="addonsTotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label fx:id="addonsTotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
                         <Label text="Subtotal" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <Label fx:id="subtotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label fx:id="subtotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
                         <Label fx:id="discountRow" text="Discount" GridPane.columnIndex="0" GridPane.rowIndex="3" visible="false" managed="false"/>
-                        <Label fx:id="discountLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false" managed="false"/>
+                        <Label fx:id="discountLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false" managed="false"/>
 
                         <Label text="Tax" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                        <Label fx:id="taxLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label fx:id="taxLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
                         <Label fx:id="loyaltyRedemptionRow" text="Loyalty Redemption" GridPane.columnIndex="0" GridPane.rowIndex="5" visible="false" managed="false"/>
-                        <Label fx:id="loyaltyRedemptionLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="5" visible="false" managed="false"/>
+                        <Label fx:id="loyaltyRedemptionLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="5" visible="false" managed="false"/>
 
                         <Label text="Grand Total" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                        <Label fx:id="grandTotalLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Label fx:id="grandTotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
                         <Label text="Paid" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                        <Label fx:id="paidLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                        <Label fx:id="paidLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 
                         <Label text="Balance" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                        <Label fx:id="balanceLabel" text="$0.00" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                        <Label fx:id="balanceLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
                     </GridPane>
                 </VBox>
 
