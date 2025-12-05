@@ -31,13 +31,7 @@ public class AdminGuestSearchController {
     @FXML
     private TextField emailField;
     @FXML
-    private TextField streetField;
-    @FXML
-    private TextField cityField;
-    @FXML
-    private TextField provinceField;
-    @FXML
-    private TextField postalCodeField;
+    private TextField addressField;
     @FXML
     private TableView<Guest> guestTable;
     @FXML
@@ -88,12 +82,7 @@ public class AdminGuestSearchController {
         }
         if (addressColumn != null) {
             addressColumn.setCellValueFactory(c -> new SimpleStringProperty(
-                    String.format("%s, %s, %s, %s",
-                            valueOrEmpty(c.getValue().getStreet()),
-                            valueOrEmpty(c.getValue().getCity()),
-                            valueOrEmpty(c.getValue().getProvince()),
-                            valueOrEmpty(c.getValue().getPostalCode())
-                    )));
+                    c.getValue().getAddress() != null ? c.getValue().getAddress() : ""));
         }
         if (loyaltyColumn != null) {
             loyaltyColumn.setCellValueFactory(c -> new SimpleStringProperty(
@@ -134,12 +123,13 @@ public class AdminGuestSearchController {
         String name = nameField != null ? nameField.getText() : "";
         String phone = phoneField != null ? phoneField.getText() : "";
         String email = emailField != null ? emailField.getText() : "";
-        String street = streetField != null ? streetField.getText() : "";
-        String city = cityField != null ? cityField.getText() : "";
-        String province = provinceField != null ? provinceField.getText() : "";
-        String postal = postalCodeField != null ? postalCodeField.getText() : "";
+        String address = addressField != null ? addressField.getText() : "";
 
-        List<Guest> results = guestService.searchGuests(name, phone, email, street, city, province, postal);
+        if (address != null) {
+            address = address.trim();
+        }
+
+        List<Guest> results = guestService.searchGuests(name, phone, email, address);
         ObservableList<Guest> list = FXCollections.observableArrayList(results);
         guestTable.setItems(list);
 
@@ -154,8 +144,8 @@ public class AdminGuestSearchController {
                 "GUEST_SEARCH",
                 "Guest",
                 "-",
-                String.format("filters: name='%s', phone='%s', email='%s', street='%s', city='%s', province='%s', postal='%s', results=%d",
-                        name, phone, email, street, city, province, postal, results.size()));
+                String.format("filters: name='%s', phone='%s', email='%s', address='%s', results=%d",
+                        name, phone, email, address, results.size()));
     }
 
     private void showGuestDetails(Guest guest, List<Reservation> reservations) {
@@ -164,10 +154,7 @@ public class AdminGuestSearchController {
                 new Label("Name: " + guest.getFirstName() + " " + guest.getLastName()),
                 new Label("Phone: " + guest.getPhoneNumber()),
                 new Label("Email: " + guest.getEmail()),
-                new Label("Street: " + valueOrEmpty(guest.getStreet())),
-                new Label("City: " + valueOrEmpty(guest.getCity())),
-                new Label("Province: " + valueOrEmpty(guest.getProvince())),
-                new Label("Postal Code: " + valueOrEmpty(guest.getPostalCode())),
+                new Label("Address: " + valueOrEmpty(guest.getAddress())),
                 new Label("Loyalty: " + (guest.getLoyaltyNumber() == null ? "Not enrolled" : guest.getLoyaltyNumber())),
                 new Label("Reservations:")
         );
