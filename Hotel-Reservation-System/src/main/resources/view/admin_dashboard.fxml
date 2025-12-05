@@ -30,7 +30,7 @@
             <tabs>
                 <Tab fx:id="guestsTab" text="Guests">
                     <content>
-                        <fx:include source="admin_guest_search.fxml"/>
+                        <fx:include source="/view/admin_guest_search.fxml"/>
                     </content>
                 </Tab>
                 <Tab fx:id="reservationsTab" text="Reservations">
