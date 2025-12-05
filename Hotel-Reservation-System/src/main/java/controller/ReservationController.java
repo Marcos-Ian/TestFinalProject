@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Guest;
 import model.Reservation;
+import model.ReservationAddOn;
 import model.RoomType;
 import security.AdminUser;
 import security.AuthenticationService;
@@ -240,6 +241,39 @@ public class ReservationController {
         if (cancelButton != null) {
             cancelButton.setOnAction(event -> handleCancel());
         }
+    }
+
+    /**
+     * Convenience method to populate the details view using only the reservation entity.
+     */
+    public void displayReservation(Reservation reservation) {
+        List<RoomType> rooms = reservation.getRooms() != null ?
+                new ArrayList<>(reservation.getRooms()) : new ArrayList<>();
+
+        List<String> addOns = new ArrayList<>();
+        if (reservation.getAddOns() != null) {
+            for (ReservationAddOn addOn : reservation.getAddOns()) {
+                addOns.add(addOn.getAddOnName());
+            }
+        }
+
+        List<PaymentRow> payments = new ArrayList<>();
+
+        int totalGuests = rooms.stream()
+                .mapToInt(RoomType::getCapacity)
+                .sum();
+        if (totalGuests == 0) {
+            totalGuests = 2;
+        }
+
+        double amountPaid = 0.0;
+        double discount = reservation.getDiscountPercent() != null ?
+                reservation.getDiscountPercent() : 0.0;
+        double loyaltyRedemption = 0.0;
+        String bookedBy = "Kiosk";
+
+        displayReservation(reservation, rooms, addOns, payments, totalGuests,
+                amountPaid, discount, loyaltyRedemption, bookedBy);
     }
 
     public void displayReservation(Reservation reservation, List<RoomType> rooms,

@@ -13,9 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Reservation;
-import model.ReservationAddOn;
 import model.ReservationStatus;
-import model.RoomType;
 import security.AuthenticationService;
 import service.BillingContext;
 import service.LoyaltyService;
@@ -226,58 +224,12 @@ public class ReservationSearchController {
         logger.info("Loading FXML from: " + fxmlLocation);
         FXMLLoader loader = new FXMLLoader(fxmlLocation);
         Parent root = loader.load();
-        Object controller = loader.getController();
+        ReservationController controller = loader.getController();
 
-        if (controller instanceof ReservationController detailsController) {
-            // Get rooms from reservation
-            List<RoomType> rooms = reservation.getRooms() != null ?
-                    new ArrayList<>(reservation.getRooms()) : new ArrayList<>();
-
-            logger.info("Reservation has " + rooms.size() + " rooms");
-
-            // Get add-ons from reservation entity
-            List<String> addOns = new ArrayList<>();
-            if (reservation.getAddOns() != null) {
-                for (ReservationAddOn addOn : reservation.getAddOns()) {
-                    addOns.add(addOn.getAddOnName());
-                }
-            }
-            logger.info("Reservation has " + addOns.size() + " add-ons");
-
-            // Get payment history (for now empty, can be implemented later)
-            List<ReservationController.PaymentRow> payments = new ArrayList<>();
-
-            // Calculate total guests from rooms
-            int totalGuests = rooms.stream()
-                    .mapToInt(RoomType::getCapacity)
-                    .sum();
-            if (totalGuests == 0) totalGuests = 2; // Default
-
-            // Get amount paid (for now 0, implement payment tracking later)
-            double amountPaid = 0.0;
-
-            // Get discount from reservation
-            double discount = reservation.getDiscountPercent() != null ?
-                    reservation.getDiscountPercent() : 0.0;
-
-            // Get loyalty redemption (for now 0, implement later)
-            double loyaltyRedemption = 0.0;
-
-            // Determine who booked it
-            String bookedBy = "Kiosk"; // TODO: Get from reservation metadata
-
-            logger.info("Displaying reservation: guests=" + totalGuests +
-                    ", discount=" + discount + "%, paid=$" + amountPaid +
-                    ", add-ons=" + addOns.size());
-
-            // Display the reservation with actual data
-            detailsController.displayReservation(
-                    reservation, rooms, addOns, payments, totalGuests,
-                    amountPaid, discount, loyaltyRedemption, bookedBy
-            );
+        if (controller != null) {
+            controller.displayReservation(reservation);
         } else {
-            logger.warning("Controller is not ReservationController: " +
-                    (controller != null ? controller.getClass().getName() : "null"));
+            logger.warning("Controller is not available after loading ReservationDetails.fxml");
         }
 
         Stage stage = new Stage();
