@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="20">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <Label text="Guest Search" styleClass="header-label"/>
+
+    <VBox spacing="10">
+        <Label text="Search Guests"/>
+        <TextField fx:id="guestSearchField" promptText="Name, email, or phone..."/>
+    </VBox>
+
+    <TableView fx:id="guestsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" prefWidth="60"/>
+            <TableColumn text="Name" prefWidth="160"/>
+            <TableColumn text="Email" prefWidth="200"/>
+            <TableColumn text="Phone" prefWidth="160"/>
+            <TableColumn text="Loyalty" prefWidth="120"/>
+        </columns>
+    </TableView>
+</VBox>
