@@ -27,6 +27,7 @@ public class KioskFlowContext {
     private double roomSubtotal;
     private double addOnSubtotal;
     private double tax;
+    private Long lastReservationId;
 
     private KioskFlowContext() {
     }
@@ -49,6 +50,7 @@ public class KioskFlowContext {
         roomSubtotal = 0.0;
         addOnSubtotal = 0.0;
         tax = 0.0;
+        lastReservationId = null;
     }
 
     public LocalDate getCheckIn() {
@@ -156,5 +158,13 @@ public class KioskFlowContext {
 
     public void setTax(double tax) {
         this.tax = tax;
+    }
+
+    public Long getLastReservationId() {
+        return lastReservationId;
+    }
+
+    public void setLastReservationId(Long lastReservationId) {
+        this.lastReservationId = lastReservationId;
     }
 }

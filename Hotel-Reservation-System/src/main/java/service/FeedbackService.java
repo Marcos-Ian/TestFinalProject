@@ -1,47 +1,48 @@
 package service;
 
 import model.Feedback;
-import model.Guest;
-import model.ReservationStatus;
+import model.Reservation;
 import repository.FeedbackRepository;
-import repository.GuestRepository;
 import repository.ReservationRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 public class FeedbackService {
-    private final GuestRepository guestRepository;
     private final ReservationRepository reservationRepository;
     private final FeedbackRepository feedbackRepository;
 
-    public FeedbackService(GuestRepository guestRepository,
-                           ReservationRepository reservationRepository,
+    public FeedbackService(ReservationRepository reservationRepository,
                            FeedbackRepository feedbackRepository) {
-        this.guestRepository = guestRepository;
         this.reservationRepository = reservationRepository;
         this.feedbackRepository = feedbackRepository;
     }
 
-    public Feedback submitFeedback(String guestEmail, int rating, String comments) {
-        if (guestEmail == null || guestEmail.isBlank()) {
-            throw new IllegalArgumentException("Guest email is required for feedback");
+    public Feedback submitFeedback(String guestEmail, Long reservationId, int rating, String comments) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
         }
 
-        Guest guest = guestRepository.findByEmail(guestEmail)
-                .orElseThrow(() -> new IllegalArgumentException("No guest found with email: " + guestEmail));
+        if (reservationId == null) {
+            throw new IllegalArgumentException("Reservation not found.");
+        }
 
-        boolean hasReservation = reservationRepository.existsByGuestAndStatus(guest, ReservationStatus.CHECKED_OUT)
-                || reservationRepository.existsByGuestAndStatus(guest, ReservationStatus.COMPLETED)
-                || reservationRepository.existsByGuest(guest);
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found."));
 
-        if (!hasReservation) {
-            throw new IllegalStateException("Guest with email " + guestEmail +
-                    " has no completed reservation – feedback is only allowed for real stays.");
+        String reservationEmail = reservation.getGuest() != null ? reservation.getGuest().getEmail() : null;
+        boolean emailsMatch = guestEmail != null
+                && reservationEmail != null
+                && reservationEmail.toLowerCase(Locale.ROOT).equals(guestEmail.toLowerCase(Locale.ROOT));
+
+        if (!emailsMatch) {
+            throw new IllegalArgumentException("Email does not match the reservation guest.");
         }
 
         Feedback feedback = new Feedback();
         feedback.setGuestEmail(guestEmail);
+        feedback.setReservation(reservation);
         feedback.setRating(rating);
         feedback.setComments(comments);
         feedback.setCreatedAt(LocalDateTime.now());
@@ -49,7 +50,7 @@ public class FeedbackService {
         return feedbackRepository.save(feedback);
     }
 
-    public List<Feedback> listFeedback() {
+    public List<Feedback> getAllFeedback() {
         return feedbackRepository.findAll();
     }
 }

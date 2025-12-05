@@ -13,6 +13,10 @@ public class Feedback {
     @Column(name = "guest_email", nullable = false)
     private String guestEmail;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id", nullable = false)
+    private Reservation reservation;
+
     @Column(nullable = false)
     private int rating;
 
@@ -32,6 +36,14 @@ public class Feedback {
 
     public void setGuestEmail(String guestEmail) {
         this.guestEmail = guestEmail;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
     public int getRating() {

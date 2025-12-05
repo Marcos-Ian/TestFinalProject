@@ -9,9 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Feedback;
 import security.AdminUser;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import service.BillingContext;
 import service.FeedbackService;
 import service.LoyaltyService;
@@ -47,6 +53,18 @@ public class AdminDashboardController {
     private Tab guestsTab;
     @FXML
     private Tab reservationsTab;
+    @FXML
+    private TableView<Feedback> feedbackTable;
+    @FXML
+    private TableColumn<Feedback, String> fbDateCol;
+    @FXML
+    private TableColumn<Feedback, String> fbEmailCol;
+    @FXML
+    private TableColumn<Feedback, Long> fbReservationCol;
+    @FXML
+    private TableColumn<Feedback, Integer> fbRatingCol;
+    @FXML
+    private TableColumn<Feedback, String> fbCommentsCol;
 
     public AdminDashboardController() {
         this(new AdminUser());
@@ -68,6 +86,9 @@ public class AdminDashboardController {
         if (mainTabPane != null && guestsTab != null) {
             mainTabPane.getSelectionModel().select(guestsTab);
         }
+
+        initFeedbackTable();
+        loadFeedback();
     }
 
     @FXML
@@ -110,6 +131,45 @@ public class AdminDashboardController {
             return type.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalStateException("Unable to create controller: " + type, e);
+        }
+    }
+
+    private void initFeedbackTable() {
+        if (feedbackTable == null) {
+            return;
+        }
+
+        if (fbDateCol != null) {
+            fbDateCol.setCellValueFactory(cell -> {
+                String date = cell.getValue().getCreatedAt() != null
+                        ? cell.getValue().getCreatedAt().toLocalDate().toString()
+                        : "";
+                return new SimpleStringProperty(date);
+            });
+        }
+
+        if (fbEmailCol != null) {
+            fbEmailCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGuestEmail()));
+        }
+
+        if (fbReservationCol != null) {
+            fbReservationCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(
+                    cell.getValue().getReservation() != null ? cell.getValue().getReservation().getId() : null));
+        }
+
+        if (fbRatingCol != null) {
+            fbRatingCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getRating()));
+        }
+
+        if (fbCommentsCol != null) {
+            fbCommentsCol.setCellValueFactory(cell -> new SimpleStringProperty(
+                    cell.getValue().getComments() != null ? cell.getValue().getComments() : ""));
+        }
+    }
+
+    private void loadFeedback() {
+        if (feedbackTable != null) {
+            feedbackTable.setItems(FXCollections.observableArrayList(feedbackService.getAllFeedback()));
         }
     }
 }

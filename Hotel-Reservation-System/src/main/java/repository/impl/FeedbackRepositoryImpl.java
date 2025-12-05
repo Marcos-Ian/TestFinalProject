@@ -28,7 +28,9 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 
     @Override
     public List<Feedback> findAll() {
-        TypedQuery<Feedback> query = entityManager.createQuery("SELECT f FROM Feedback f", Feedback.class);
+        TypedQuery<Feedback> query = entityManager.createQuery(
+                "SELECT f FROM Feedback f ORDER BY f.createdAt DESC",
+                Feedback.class);
         return query.getResultList();
     }
 
