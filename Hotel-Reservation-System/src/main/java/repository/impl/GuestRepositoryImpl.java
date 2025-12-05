@@ -43,32 +43,30 @@ public class GuestRepositoryImpl implements GuestRepository {
     }
 
     @Override
-    public List<Guest> searchGuests(String name, String phone, String email) {
-        StringBuilder jpql = new StringBuilder("SELECT g FROM Guest g WHERE 1=1");
+    public List<Guest> searchGuests(String name, String phone, String email, String street, String city, String province, String postal) {
+        String jpql = "SELECT g FROM Guest g " +
+                "WHERE (:name IS NULL OR LOWER(g.firstName) LIKE LOWER(CONCAT('%', :name, '%')) " +
+                "OR LOWER(g.lastName) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+                "AND (:phone IS NULL OR g.phone LIKE CONCAT('%', :phone, '%')) " +
+                "AND (:email IS NULL OR LOWER(g.email) LIKE LOWER(CONCAT('%', :email, '%'))) " +
+                "AND (:street IS NULL OR LOWER(g.street) LIKE LOWER(CONCAT('%', :street, '%'))) " +
+                "AND (:city IS NULL OR LOWER(g.city) LIKE LOWER(CONCAT('%', :city, '%'))) " +
+                "AND (:province IS NULL OR LOWER(g.province) LIKE LOWER(CONCAT('%', :province, '%'))) " +
+                "AND (:postal IS NULL OR LOWER(g.postalCode) LIKE LOWER(CONCAT('%', :postal, '%'))) " +
+                "ORDER BY g.lastName, g.firstName";
 
-        if (name != null && !name.isBlank()) {
-            jpql.append(" AND (LOWER(g.firstName) LIKE LOWER(CONCAT('%', :name, '%'))")
-                    .append(" OR LOWER(g.lastName) LIKE LOWER(CONCAT('%', :name, '%')))");
-        }
-        if (phone != null && !phone.isBlank()) {
-            jpql.append(" AND g.phone LIKE CONCAT('%', :phone, '%')");
-        }
-        if (email != null && !email.isBlank()) {
-            jpql.append(" AND LOWER(g.email) LIKE LOWER(CONCAT('%', :email, '%'))");
-        }
-
-        jpql.append(" ORDER BY g.lastName, g.firstName");
-
-        TypedQuery<Guest> query = entityManager.createQuery(jpql.toString(), Guest.class);
-        if (name != null && !name.isBlank()) {
-            query.setParameter("name", name);
-        }
-        if (phone != null && !phone.isBlank()) {
-            query.setParameter("phone", phone);
-        }
-        if (email != null && !email.isBlank()) {
-            query.setParameter("email", email);
-        }
+        TypedQuery<Guest> query = entityManager.createQuery(jpql, Guest.class);
+        query.setParameter("name", normalizeParam(name));
+        query.setParameter("phone", normalizeParam(phone));
+        query.setParameter("email", normalizeParam(email));
+        query.setParameter("street", normalizeParam(street));
+        query.setParameter("city", normalizeParam(city));
+        query.setParameter("province", normalizeParam(province));
+        query.setParameter("postal", normalizeParam(postal));
         return query.getResultList();
+    }
+
+    private String normalizeParam(String value) {
+        return value == null || value.isBlank() ? null : value;
     }
 }
