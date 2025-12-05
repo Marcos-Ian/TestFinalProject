@@ -12,6 +12,7 @@ import repository.impl.GuestRepositoryImpl;
 import repository.impl.RoomRepositoryImpl;
 import repository.impl.ReservationRepositoryImpl;
 import service.BillingContext;
+import service.GuestService;
 import service.LoyaltyService;
 import service.ReservationService;
 import service.RoomService;
@@ -34,6 +35,7 @@ public class Bootstrap {
     private static RoomService roomService;
     private static LoyaltyService loyaltyService;
     private static BillingContext billingContext;
+    private static GuestService guestService;
     private static AuthenticationService authenticationService;
 
     // Configuration instances
@@ -70,6 +72,7 @@ public class Bootstrap {
 
             // Initialize services
             reservationService = new ReservationService(guestRepository, reservationRepository, roomRepository);
+            guestService = new GuestService(guestRepository, reservationRepository);
             roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
             LOGGER.info("Services initialized");
@@ -140,6 +143,13 @@ public class Bootstrap {
             throw new IllegalStateException("Application not initialized. Call main() first.");
         }
         return billingContext;
+    }
+
+    public static GuestService getGuestService() {
+        if (guestService == null) {
+            throw new IllegalStateException("Application not initialized. Call main() first.");
+        }
+        return guestService;
     }
     public static AuthenticationService getAuthenticationService() {
         if (authenticationService == null) {

@@ -206,6 +206,10 @@ public class ReservationService {
         reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
     }
 
+    public List<Reservation> findReservationsForGuest(Guest guest) {
+        return reservationRepository.findByGuest(guest);
+    }
+
     /**
      * Find reservation by ID
      */
