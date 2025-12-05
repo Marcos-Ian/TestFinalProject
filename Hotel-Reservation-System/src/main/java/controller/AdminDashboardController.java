@@ -58,7 +58,7 @@ public class AdminDashboardController {
         this.loyaltyService = Bootstrap.getLoyaltyService();
         this.billingContext = Bootstrap.getBillingContext();
         this.waitlistService = new WaitlistService();
-        this.feedbackService = new FeedbackService();
+        this.feedbackService = Bootstrap.getFeedbackService();
     }
 
     @FXML

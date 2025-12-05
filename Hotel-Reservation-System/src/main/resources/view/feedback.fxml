@@ -10,14 +10,12 @@
     </padding>
     <Label text="Guest Feedback" styleClass="header-label"/>
     <GridPane hgap="8" vgap="8">
-        <Label text="Reservation ID" GridPane.rowIndex="0"/>
-        <TextField fx:id="reservationField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Label text="Guest Name" GridPane.rowIndex="1"/>
-        <TextField fx:id="guestField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        <Label text="Rating" GridPane.rowIndex="2"/>
-        <Slider fx:id="ratingSlider" GridPane.rowIndex="2" GridPane.columnIndex="1" min="1" max="5" value="4" majorTickUnit="1" snapToTicks="true" showTickMarks="true"/>
-        <Label text="Comments" GridPane.rowIndex="3"/>
-        <TextArea fx:id="commentsArea" GridPane.rowIndex="3" GridPane.columnIndex="1" prefRowCount="4" wrapText="true"/>
+        <Label text="Guest Email" GridPane.rowIndex="0"/>
+        <TextField fx:id="emailField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Rating" GridPane.rowIndex="1"/>
+        <Slider fx:id="ratingSlider" GridPane.rowIndex="1" GridPane.columnIndex="1" min="1" max="5" value="4" majorTickUnit="1" snapToTicks="true" showTickMarks="true"/>
+        <Label text="Comments" GridPane.rowIndex="2"/>
+        <TextArea fx:id="commentsArea" GridPane.rowIndex="2" GridPane.columnIndex="1" prefRowCount="4" wrapText="true"/>
     </GridPane>
     <Button fx:id="submitButton" text="Submit" onAction="#submitFeedback" styleClass="primary-button"/>
     <Label fx:id="statusLabel" textFill="green"/>

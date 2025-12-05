@@ -8,10 +8,13 @@ import events.RoomAvailabilitySubject;
 import repository.GuestRepository;
 import repository.RoomRepository;
 import repository.ReservationRepository;
+import repository.FeedbackRepository;
 import repository.impl.GuestRepositoryImpl;
 import repository.impl.RoomRepositoryImpl;
 import repository.impl.ReservationRepositoryImpl;
+import repository.impl.FeedbackRepositoryImpl;
 import service.BillingContext;
+import service.FeedbackService;
 import service.GuestService;
 import service.LoyaltyService;
 import service.ReservationService;
@@ -37,6 +40,7 @@ public class Bootstrap {
     private static BillingContext billingContext;
     private static GuestService guestService;
     private static AuthenticationService authenticationService;
+    private static FeedbackService feedbackService;
 
     // Configuration instances
     private static PricingConfig pricingConfig;
@@ -63,6 +67,7 @@ public class Bootstrap {
             GuestRepository guestRepository = new GuestRepositoryImpl(entityManager);
             RoomRepository roomRepository = new RoomRepositoryImpl(entityManager);
             ReservationRepository reservationRepository = new ReservationRepositoryImpl(entityManager);
+            FeedbackRepository feedbackRepository = new FeedbackRepositoryImpl(entityManager);
             LOGGER.info("Repositories initialized");
 
             initializeRoomTypes(roomRepository);
@@ -78,6 +83,7 @@ public class Bootstrap {
             guestService = new GuestService(guestRepository, reservationRepository);
             roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
+            feedbackService = new FeedbackService(guestRepository, reservationRepository, feedbackRepository);
             LOGGER.info("Services initialized");
 
             // Initialize billing context with default strategy
@@ -137,6 +143,13 @@ public class Bootstrap {
             throw new IllegalStateException("Application not initialized. Call main() first.");
         }
         return loyaltyService;
+    }
+
+    public static FeedbackService getFeedbackService() {
+        if (feedbackService == null) {
+            throw new IllegalStateException("Application not initialized. Call main() first.");
+        }
+        return feedbackService;
     }
 
     public static BillingContext getBillingContext() {

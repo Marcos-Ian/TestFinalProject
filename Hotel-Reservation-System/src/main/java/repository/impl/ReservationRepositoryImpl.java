@@ -133,6 +133,35 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public boolean existsByGuest(Guest guest) {
+        if (guest == null || guest.getId() == null) {
+            return false;
+        }
+
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(r) FROM Reservation r WHERE r.guest.id = :guestId",
+                Long.class);
+        query.setParameter("guestId", guest.getId());
+        Long count = query.getSingleResult();
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean existsByGuestAndStatus(Guest guest, ReservationStatus status) {
+        if (guest == null || guest.getId() == null || status == null) {
+            return false;
+        }
+
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(r) FROM Reservation r WHERE r.guest.id = :guestId AND r.status = :status",
+                Long.class);
+        query.setParameter("guestId", guest.getId());
+        query.setParameter("status", status);
+        Long count = query.getSingleResult();
+        return count != null && count > 0;
+    }
+
+    @Override
     public List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, ReservationStatus status) {
         StringBuilder jpql = new StringBuilder("SELECT r FROM Reservation r WHERE 1=1");
 

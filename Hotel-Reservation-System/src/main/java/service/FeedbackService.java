@@ -1,61 +1,55 @@
 package service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
+import model.Feedback;
+import model.Guest;
+import model.ReservationStatus;
+import repository.FeedbackRepository;
+import repository.GuestRepository;
+import repository.ReservationRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Lightweight in-memory feedback store to support the presentation layer.
- * This keeps feedback handling out of the core business logic while giving
- * controllers a consistent API.
- */
 public class FeedbackService {
-    private final List<FeedbackEntry> entries = new ArrayList<>();
+    private final GuestRepository guestRepository;
+    private final ReservationRepository reservationRepository;
+    private final FeedbackRepository feedbackRepository;
 
-    public FeedbackEntry submitFeedback(Long reservationId, String guestName, int rating, String comments) {
-        FeedbackEntry entry = new FeedbackEntry(reservationId, guestName, rating, comments, LocalDate.now());
-        entries.add(entry);
-        return entry;
+    public FeedbackService(GuestRepository guestRepository,
+                           ReservationRepository reservationRepository,
+                           FeedbackRepository feedbackRepository) {
+        this.guestRepository = guestRepository;
+        this.reservationRepository = reservationRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
-    public List<FeedbackEntry> listFeedback() {
-        return Collections.unmodifiableList(entries);
+    public Feedback submitFeedback(String guestEmail, int rating, String comments) {
+        if (guestEmail == null || guestEmail.isBlank()) {
+            throw new IllegalArgumentException("Guest email is required for feedback");
+        }
+
+        Guest guest = guestRepository.findByEmail(guestEmail)
+                .orElseThrow(() -> new IllegalArgumentException("No guest found with email: " + guestEmail));
+
+        boolean hasReservation = reservationRepository.existsByGuestAndStatus(guest, ReservationStatus.CHECKED_OUT)
+                || reservationRepository.existsByGuestAndStatus(guest, ReservationStatus.COMPLETED)
+                || reservationRepository.existsByGuest(guest);
+
+        if (!hasReservation) {
+            throw new IllegalStateException("Guest with email " + guestEmail +
+                    " has no completed reservation – feedback is only allowed for real stays.");
+        }
+
+        Feedback feedback = new Feedback();
+        feedback.setGuestEmail(guestEmail);
+        feedback.setRating(rating);
+        feedback.setComments(comments);
+        feedback.setCreatedAt(LocalDateTime.now());
+
+        return feedbackRepository.save(feedback);
     }
 
-    public static class FeedbackEntry {
-        private final Long reservationId;
-        private final String guestName;
-        private final int rating;
-        private final String comments;
-        private final LocalDate submittedOn;
-
-        public FeedbackEntry(Long reservationId, String guestName, int rating, String comments, LocalDate submittedOn) {
-            this.reservationId = reservationId;
-            this.guestName = guestName;
-            this.rating = rating;
-            this.comments = comments;
-            this.submittedOn = submittedOn;
-        }
-
-        public Long getReservationId() {
-            return reservationId;
-        }
-
-        public String getGuestName() {
-            return guestName;
-        }
-
-        public int getRating() {
-            return rating;
-        }
-
-        public String getComments() {
-            return comments;
-        }
-
-        public LocalDate getSubmittedOn() {
-            return submittedOn;
-        }
+    public List<Feedback> listFeedback() {
+        return feedbackRepository.findAll();
     }
 }
