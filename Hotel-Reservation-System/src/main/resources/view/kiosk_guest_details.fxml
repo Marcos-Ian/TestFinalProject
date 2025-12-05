@@ -47,17 +47,9 @@
                 <TextField fx:id="phoneField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
                 <Label fx:id="phoneError" textFill="red" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-                <Label text="Street address" GridPane.rowIndex="8"/>
-                <TextField fx:id="streetField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
-
-                <Label text="City" GridPane.rowIndex="9"/>
-                <TextField fx:id="cityField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
-
-                <Label text="Province" GridPane.rowIndex="10"/>
-                <TextField fx:id="provinceField" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
-
-                <Label text="Postal code" GridPane.rowIndex="11"/>
-                <TextField fx:id="postalCodeField" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+                <Label text="Address*" GridPane.rowIndex="8"/>
+                <TextField fx:id="addressField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+                <Label fx:id="addressError" textFill="red" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
             </GridPane>
 
             <TitledPane text="Add-ons" expanded="true">
