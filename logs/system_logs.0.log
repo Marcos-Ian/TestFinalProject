@@ -2148,3 +2148,72 @@
 [2025-12-05 15:09:12] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
 [2025-12-05 15:09:12] [INFO] [util.ActivityLogger] actor=admin | action=APPLY_DISCOUNT | entityType=Reservation | entityId=16 | message=Applied 15.00% discount. Base: 1920.00, Discount: 288.00, New subtotal: 1632.00 
 [2025-12-05 15:09:15] [INFO] [util.ActivityLogger] actor=admin | action=RESERVATION_SEARCH | entityType=Reservation | entityId=- | message=Search: guest='', phone='', email='', start=null, end=null, status=All, results=16 
+[2025-12-05 15:55:09] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-05 15:55:09] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-05 15:55:09] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-05 15:55:09] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-05 15:55:11] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-05 15:55:11] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-05 15:55:11] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-05 15:55:11] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-05 15:55:11] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-05 15:55:12] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-05 15:55:12] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-05 15:55:12] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-05 15:55:12] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-05 15:55:12] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-05 15:55:20] [INFO] [util.ActivityLogger] actor=admin | action=GUEST_SEARCH | entityType=Guest | entityId=- | message=filters: name='', phone='', email='', address='', results=14 
+[2025-12-05 15:55:20] [INFO] [util.ActivityLogger] actor=admin | action=RESERVATION_SEARCH | entityType=Reservation | entityId=- | message=Search: guest='', phone='', email='', start=null, end=null, status=All, results=16 
+[2025-12-05 15:55:32] [INFO] [controller.ReservationSearchController] Opening details for reservation: 13 
+[2025-12-05 15:55:32] [INFO] [controller.ReservationSearchController] Loading FXML from: file:/C:/Users/eoque/IdeaProjects/TestProj/Hotel-Reservation-System/target/classes/view/ReservationDetails.fxml 
+[2025-12-05 15:55:32] [INFO] [controller.ReservationSearchController] Reservation has 1 rooms 
+[2025-12-05 15:55:32] [INFO] [controller.ReservationSearchController] Reservation has 0 add-ons 
+[2025-12-05 15:55:32] [INFO] [controller.ReservationSearchController] Displaying reservation: guests=2, discount=0.0%, paid=$0.0, add-ons=0 
+[2025-12-05 15:56:15] [INFO] [util.ActivityLogger] actor=admin | action=RESERVATION_SEARCH | entityType=Reservation | entityId=- | message=Search: guest='', phone='', email='', start=null, end=null, status=All, results=16 
+[2025-12-05 16:11:55] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-05 16:11:55] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-05 16:11:55] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-05 16:11:55] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-05 16:11:57] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-05 16:11:57] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-05 16:11:57] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-05 16:11:57] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-05 16:11:57] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-05 16:11:58] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-05 16:11:58] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-05 16:11:58] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-05 16:11:58] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-05 16:11:58] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-05 16:12:05] [INFO] [util.ActivityLogger] actor=admin | action=GUEST_SEARCH | entityType=Guest | entityId=- | message=filters: name='', phone='', email='', address='', results=14 
+[2025-12-05 16:12:05] [INFO] [util.ActivityLogger] actor=admin | action=RESERVATION_SEARCH | entityType=Reservation | entityId=- | message=Search: guest='', phone='', email='', start=null, end=null, status=All, results=16 
+[2025-12-05 16:12:07] [INFO] [controller.ReservationSearchController] Opening details for reservation: 3 
+[2025-12-05 16:12:07] [INFO] [controller.ReservationSearchController] Loading FXML from: file:/C:/Users/eoque/IdeaProjects/TestProj/Hotel-Reservation-System/target/classes/view/ReservationDetails.fxml 
+[2025-12-05 16:12:08] [SEVERE] [controller.ReservationSearchController] Failed to open details 
+[2025-12-05 16:12:10] [INFO] [controller.ReservationSearchController] Opening details for reservation: 2 
+[2025-12-05 16:12:10] [INFO] [controller.ReservationSearchController] Loading FXML from: file:/C:/Users/eoque/IdeaProjects/TestProj/Hotel-Reservation-System/target/classes/view/ReservationDetails.fxml 
+[2025-12-05 16:12:10] [SEVERE] [controller.ReservationSearchController] Failed to open details 
+[2025-12-05 16:12:12] [INFO] [controller.ReservationSearchController] Opening details for reservation: 8 
+[2025-12-05 16:12:12] [INFO] [controller.ReservationSearchController] Loading FXML from: file:/C:/Users/eoque/IdeaProjects/TestProj/Hotel-Reservation-System/target/classes/view/ReservationDetails.fxml 
+[2025-12-05 16:12:12] [SEVERE] [controller.ReservationSearchController] Failed to open details 
+[2025-12-05 16:12:15] [INFO] [controller.ReservationSearchController] Opening details for reservation: 9 
+[2025-12-05 16:12:15] [INFO] [controller.ReservationSearchController] Loading FXML from: file:/C:/Users/eoque/IdeaProjects/TestProj/Hotel-Reservation-System/target/classes/view/ReservationDetails.fxml 
+[2025-12-05 16:12:15] [SEVERE] [controller.ReservationSearchController] Failed to open details 
+[2025-12-05 16:12:20] [INFO] [util.LoggingProvider] Logging system configured successfully 
+[2025-12-05 16:12:21] [INFO] [util.LoggingProvider] Log files: logs/system_logs.%g.log 
+[2025-12-05 16:12:21] [INFO] [util.LoggingProvider] Max file size: 1024KB 
+[2025-12-05 16:12:21] [INFO] [util.LoggingProvider] Max file count: 10 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] EntityManager initialized successfully 
+[2025-12-05 16:12:23] [INFO] [config.PricingConfig] Default peak seasons configured: June-August, December 
+[2025-12-05 16:12:23] [INFO] [config.LoyaltyConfig] LoyaltyConfig initialized with default values 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] Configurations initialized 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] Repositories initialized 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] Authentication service initialized 
+[2025-12-05 16:12:23] [INFO] [service.RoomService] Default room availability initialized 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] Services initialized 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] Billing context initialized with standard strategy 
+[2025-12-05 16:12:23] [INFO] [app.Bootstrap] Hotel Reservation System bootstrap initialized successfully. 
+[2025-12-05 16:12:29] [INFO] [util.ActivityLogger] actor=admin | action=GUEST_SEARCH | entityType=Guest | entityId=- | message=filters: name='', phone='', email='', address='', results=14 
+[2025-12-05 16:12:29] [INFO] [util.ActivityLogger] actor=admin | action=RESERVATION_SEARCH | entityType=Reservation | entityId=- | message=Search: guest='', phone='', email='', start=null, end=null, status=All, results=16 
+[2025-12-05 16:12:32] [INFO] [controller.ReservationSearchController] Opening details for reservation: 5 
+[2025-12-05 16:12:32] [INFO] [controller.ReservationSearchController] Loading FXML from: file:/C:/Users/eoque/IdeaProjects/TestProj/Hotel-Reservation-System/target/classes/view/ReservationDetails.fxml 
+[2025-12-05 16:12:32] [SEVERE] [controller.ReservationSearchController] Failed to open details 
