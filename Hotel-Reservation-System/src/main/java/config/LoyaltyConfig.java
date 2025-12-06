@@ -13,7 +13,12 @@ public class LoyaltyConfig {
     private static final Logger LOGGER = Logger.getLogger(LoyaltyConfig.class.getName());
 
     // Points earning rate (points per dollar spent)
-    private double earnRate = 10.0; // 10 points per $1
+    private double earnRate = 0.1; // default: 0.1 point per $1 (1 point per $10)
+
+    // 1 point per $10
+    private final double earnRatePerDollar = 0.1; // points per $1
+    // 100 points => $1
+    private final int pointsPerDollar = 100;
 
     // Points redemption rate (dollars per point)
     private double redeemRate = 0.01; // $0.01 per point (100 points = $1)
@@ -41,6 +46,9 @@ public class LoyaltyConfig {
         this.earnRate = earnRate;
         LOGGER.info("Loyalty earn rate set to: " + earnRate + " points per $1");
     }
+
+    public double getEarnRatePerDollar() { return earnRatePerDollar; }
+    public int getPointsPerDollar() { return pointsPerDollar; }
 
     public double getRedeemRate() {
         return redeemRate;
@@ -85,6 +93,11 @@ public class LoyaltyConfig {
         return (int) (amount * earnRate);
     }
 
+    public int calculateEarnedPoints(double amountPaid) {
+        // floor so we don't over-issue points
+        return (int) Math.floor(amountPaid * earnRatePerDollar);
+    }
+
     /**
      * Calculate discount from points redeemed
      */
@@ -94,6 +107,10 @@ public class LoyaltyConfig {
         }
         int pointsToRedeem = Math.min(points, redeemCap);
         return pointsToRedeem * redeemRate;
+    }
+
+    public double convertPointsToDollars(int points) {
+        return points / (double) pointsPerDollar;
     }
 
     /**

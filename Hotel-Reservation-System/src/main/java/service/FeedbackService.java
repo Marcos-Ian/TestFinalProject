@@ -41,6 +41,17 @@ public class FeedbackService {
             throw new IllegalArgumentException("Email does not match the reservation guest.");
         }
 
+        double subtotal = reservation.getTotalAmount() != null && reservation.getTotalAmount() > 0
+                ? reservation.getTotalAmount()
+                : reservation.calculateBaseSubtotal();
+        double discountPercent = reservation.getDiscountPercent();
+        subtotal -= subtotal * (discountPercent / 100.0);
+        double remaining = subtotal - reservation.getTotalPaid();
+
+        if (remaining > 0.01 || !reservation.isFeedbackEligible()) {
+            throw new IllegalArgumentException("Feedback can only be submitted after checkout with a zero balance.");
+        }
+
         Feedback feedback = new Feedback();
         feedback.setGuestEmail(guestEmail != null ? guestEmail.trim() : null);
         feedback.setReservation(reservation);

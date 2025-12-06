@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import model.Payment;
 
 @Entity
 public class Reservation {
@@ -24,6 +25,9 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    @Column(name = "feedback_eligible")
+    private boolean feedbackEligible;
 
     @Column(name = "discount_percent")
     private Double discountPercent = 0.0;
@@ -91,10 +95,18 @@ public class Reservation {
         this.payments = payments;
     }
 
+    public boolean isFeedbackEligible() {
+        return feedbackEligible;
+    }
+
+    public void setFeedbackEligible(boolean feedbackEligible) {
+        this.feedbackEligible = feedbackEligible;
+    }
+
     /**
-     * Base subtotal before any discounts or loyalty.
+     * Calculate room subtotal without discounts or loyalty.
      */
-    public double calculateBaseSubtotal() {
+    public double calculateRoomSubtotal() {
         if (checkIn == null || checkOut == null || rooms == null || rooms.isEmpty()) {
             return 0.0;
         }
@@ -128,6 +140,33 @@ public class Reservation {
         }
 
         return total;
+    }
+
+    public double calculateAddonSubtotal() {
+        if (addOns == null || addOns.isEmpty() || checkIn == null || checkOut == null) {
+            return 0.0;
+        }
+
+        long nights = Math.max(0, ChronoUnit.DAYS.between(checkIn, checkOut));
+        return addOns.stream().mapToDouble(addOn -> {
+            double base = addOn.getPrice();
+            return addOn.isPerNight() ? base * nights : base;
+        }).sum();
+    }
+
+    /**
+     * Base subtotal before any discounts or loyalty, including add-ons.
+     */
+    public double calculateBaseSubtotal() {
+        return calculateRoomSubtotal() + calculateAddonSubtotal();
+    }
+
+    public double getTotalPaid() {
+        return payments == null ? 0.0 :
+                payments.stream()
+                        .filter(payment -> payment.getAmount() != null)
+                        .mapToDouble(payment -> payment.getAmount().doubleValue())
+                        .sum();
     }
 
     private boolean isWeekend(LocalDate date) {

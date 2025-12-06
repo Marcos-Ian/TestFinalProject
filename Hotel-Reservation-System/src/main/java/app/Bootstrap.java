@@ -93,7 +93,7 @@ public class Bootstrap {
             guestService = new GuestService(guestRepository, reservationRepository);
             roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
-            paymentService = new PaymentService(reservationRepository, paymentRepository, billingContext, loyaltyService);
+            paymentService = new PaymentService(reservationRepository, paymentRepository, guestRepository, loyaltyConfig, billingContext);
             feedbackService = new FeedbackService(reservationRepository, feedbackRepository);
             LOGGER.info("Services initialized");
 
