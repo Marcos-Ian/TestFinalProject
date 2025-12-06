@@ -220,20 +220,21 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             return Optional.empty();
         }
 
-        String jpql = "SELECT r FROM Reservation r " +
-                "WHERE LOWER(r.guest.email) = :email " +
-                "AND r.status IN (:booked, :checkedIn, :completed) " +
-                "ORDER BY r.checkOut DESC";
+        EntityManager em = null;
+        try {
+            em = entityManager.getEntityManagerFactory().createEntityManager();
+            TypedQuery<Reservation> query = em.createQuery(
+                    "SELECT r FROM Reservation r WHERE LOWER(r.guest.email) = :email ORDER BY r.checkOut DESC",
+                    Reservation.class);
+            query.setParameter("email", normalized);
+            query.setMaxResults(1);
 
-        TypedQuery<Reservation> query = entityManager.createQuery(jpql, Reservation.class)
-                .setParameter("email", normalized)
-                .setParameter("booked", ReservationStatus.BOOKED)
-                .setParameter("checkedIn", ReservationStatus.CHECKED_IN)
-                .setParameter("completed", ReservationStatus.COMPLETED)
-                .setMaxResults(1);
-
-        List<Reservation> results = query.getResultList();
-        return results.stream().findFirst();
+            return query.getResultStream().findFirst();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
     }
 
     @Override
