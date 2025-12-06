@@ -1,99 +1,62 @@
-// ============================================================================
-// ReservationRepository - Enhanced with search methods
-// ============================================================================
 package repository;
 
+import model.Guest;
 import model.Reservation;
 import model.ReservationStatus;
 import model.RoomType;
-import model.Guest;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository interface for Reservation persistence operations.
- */
 public interface ReservationRepository {
 
-    /**
-     * Save or update a reservation
-     */
     Reservation save(Reservation reservation);
 
-    /**
-     * Save or update a reservation and its room associations.
-     */
     Reservation saveOrUpdate(Reservation reservation, List<RoomType> rooms);
 
-    /**
-     * Find reservation by ID
-     */
     Optional<Reservation> findById(Long id);
 
-    /**
-     * Find all reservations
-     */
     List<Reservation> findAll();
 
-    /**
-     * Delete a reservation
-     */
     void delete(Long id);
 
-    /**
-     * Count booked rooms for a specific room type in a date range
-     * Used for availability checking
-     */
     int countBookedRooms(String roomType, LocalDate checkIn, LocalDate checkOut);
 
-    /**
-     * Check for overlapping reservations for a room type.
-     */
-    boolean hasConflict(RoomType room, LocalDate checkIn, LocalDate checkOut, Long excludeReservationId);
-
-    /**
-     * Find reservations by guest name (first or last)
-     */
     List<Reservation> findByGuestName(String name);
 
-    /**
-     * Find reservations by date range
-     */
-    List<Reservation> findByDateRange(LocalDate startDate, LocalDate endDate);
+    List<Reservation> findByDateRange(LocalDate from, LocalDate to);
 
-    /**
-     * Find reservations by status
-     */
     List<Reservation> findByStatus(String status);
 
-    /**
-     * Find reservations by guest phone
-     */
     List<Reservation> findByGuestPhone(String phone);
 
-    /**
-     * Find reservations for a specific guest.
-     */
     List<Reservation> findByGuest(Guest guest);
 
-    /**
-     * Check if a guest has any reservations.
-     */
     boolean existsByGuest(Guest guest);
 
-    /**
-     * Check if a guest has a reservation with the given status.
-     */
     boolean existsByGuestAndStatus(Guest guest, ReservationStatus status);
 
     /**
-     * Search reservations with optional filters.
+     * Advanced search used by the Admin reservation search screen.
      */
-    List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, ReservationStatus status);
+    List<Reservation> searchReservations(
+            String guestName,
+            String phone,
+            String email,
+            LocalDate start,
+            LocalDate end,
+            ReservationStatus status
+    );
 
     /**
-     * Find the most recent reservation for a guest email.
+     * Used by FeedbackService: most recent reservation for a guest email,
+     * ordered by check-out date (latest first).
      */
     Optional<Reservation> findMostRecentReservationByGuestEmail(String email);
+
+    /**
+     * Used when creating/updating reservations to check for overlapping bookings.
+     */
+    boolean hasConflict(RoomType room, LocalDate checkIn, LocalDate checkOut, Long excludeReservationId);
 }
