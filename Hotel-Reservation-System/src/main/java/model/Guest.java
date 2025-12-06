@@ -18,7 +18,7 @@ public class Guest {
     private String loyaltyNumber;
 
     @Column(name = "loyalty_points")
-    private int loyaltyPoints;
+    private Integer loyaltyPoints;
 
     @Column
     private String address;
@@ -52,9 +52,9 @@ public class Guest {
 
     public void setLoyaltyNumber(String loyaltyNumber) { this.loyaltyNumber = loyaltyNumber; }
 
-    public int getLoyaltyPoints() { return loyaltyPoints; }
+    public Integer getLoyaltyPoints() { return loyaltyPoints == null ? 0 : loyaltyPoints; }
 
-    public void setLoyaltyPoints(int loyaltyPoints) { this.loyaltyPoints = loyaltyPoints; }
+    public void setLoyaltyPoints(Integer loyaltyPoints) { this.loyaltyPoints = (loyaltyPoints == null ? 0 : loyaltyPoints); }
 
     public String getAddress() {
         return address;
@@ -67,5 +67,9 @@ public class Guest {
     public List<Reservation> getReservations() { return reservations; }
 
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+
+    public Guest() {
+        this.loyaltyPoints = 0;
+    }
 
 }
