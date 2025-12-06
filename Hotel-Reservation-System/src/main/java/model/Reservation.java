@@ -27,7 +27,7 @@ public class Reservation {
     private ReservationStatus status;
 
     @Column(name = "feedback_eligible")
-    private boolean feedbackEligible;
+    private Boolean feedbackEligible;
 
     @Column(name = "discount_percent")
     private Double discountPercent = 0.0;
@@ -95,12 +95,16 @@ public class Reservation {
         this.payments = payments;
     }
 
-    public boolean isFeedbackEligible() {
-        return feedbackEligible;
+    public Reservation() {
+        this.feedbackEligible = false;
     }
 
-    public void setFeedbackEligible(boolean feedbackEligible) {
-        this.feedbackEligible = feedbackEligible;
+    public Boolean getFeedbackEligible() {
+        return feedbackEligible == null ? false : feedbackEligible;
+    }
+
+    public void setFeedbackEligible(Boolean feedbackEligible) {
+        this.feedbackEligible = (feedbackEligible == null ? false : feedbackEligible);
     }
 
     /**
