@@ -91,4 +91,9 @@ public interface ReservationRepository {
      * Search reservations with optional filters.
      */
     List<Reservation> searchReservations(String guestName, String phone, String email, LocalDate start, LocalDate end, ReservationStatus status);
+
+    /**
+     * Find the most recent reservation for a guest email.
+     */
+    Optional<Reservation> findMostRecentReservationByGuestEmail(String email);
 }

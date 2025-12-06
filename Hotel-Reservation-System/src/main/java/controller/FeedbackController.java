@@ -21,7 +21,6 @@ import java.util.Objects;
  */
 public class FeedbackController {
     private final FeedbackService feedbackService;
-    private final Long reservationId;
     private final String defaultEmail;
     private final KioskFlowContext kioskContext;
 
@@ -35,16 +34,13 @@ public class FeedbackController {
     private Button submitButton;
 
     public FeedbackController() {
-        this(Bootstrap.getFeedbackService(), null, null, KioskFlowContext.getInstance());
+        this(Bootstrap.getFeedbackService(), null, KioskFlowContext.getInstance());
     }
 
     public FeedbackController(FeedbackService feedbackService,
-                              Long reservationId,
                               String defaultEmail,
                               KioskFlowContext kioskContext) {
         this.feedbackService = feedbackService;
-        this.reservationId = reservationId != null ? reservationId
-                : kioskContext != null ? kioskContext.getLastReservationId() : null;
         this.defaultEmail = defaultEmail != null ? defaultEmail
                 : kioskContext != null && kioskContext.getGuest() != null ? kioskContext.getGuest().getEmail() : null;
         this.kioskContext = kioskContext;
@@ -64,7 +60,6 @@ public class FeedbackController {
             int rating = ratingSpinner.getValue();
             feedbackService.submitFeedback(
                     emailField.getText(),
-                    reservationId,
                     rating,
                     commentsArea.getText()
             );
