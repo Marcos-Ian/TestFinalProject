@@ -542,9 +542,15 @@ public class ReservationController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/process_payment_dialog.fxml"));
             Parent root = loader.load();
-            ProcessPaymentController controller = loader.getController();
+            ProcessPaymentDialogController controller = loader.getController();
+            controller.setPaymentService(paymentService);
             controller.setReservation(currentReservation);
-            controller.setOnPaymentProcessed(this::refreshPaymentSummary);
+            controller.setOnPaymentProcessed(() -> {
+                if (reservationService != null && currentReservation != null) {
+                    reservationService.findById(currentReservation.getId()).ifPresent(res -> currentReservation = res);
+                }
+                refreshPaymentSummary();
+            });
 
             Stage dialog = new Stage();
             dialog.setTitle("Process Payment");

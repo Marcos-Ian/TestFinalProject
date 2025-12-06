@@ -17,6 +17,9 @@ public class Guest {
     private String email;
     private String loyaltyNumber;
 
+    @Column(name = "loyalty_points")
+    private int loyaltyPoints;
+
     @Column
     private String address;
 
@@ -48,6 +51,10 @@ public class Guest {
     public String getLoyaltyNumber() { return loyaltyNumber; }
 
     public void setLoyaltyNumber(String loyaltyNumber) { this.loyaltyNumber = loyaltyNumber; }
+
+    public int getLoyaltyPoints() { return loyaltyPoints; }
+
+    public void setLoyaltyPoints(int loyaltyPoints) { this.loyaltyPoints = loyaltyPoints; }
 
     public String getAddress() {
         return address;

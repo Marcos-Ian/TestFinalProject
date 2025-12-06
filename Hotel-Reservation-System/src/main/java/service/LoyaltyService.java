@@ -14,7 +14,7 @@ public class LoyaltyService {
     }
 
     public int calculateEarnedPoints(double amountSpent) {
-        return (int) Math.floor(amountSpent * loyaltyConfig.getEarnRate());
+        return loyaltyConfig.calculateEarnedPoints(amountSpent);
     }
 
     public double applyRedemption(double amount, int pointsToRedeem) {
