@@ -3,11 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.ProcessPaymentController"
-      spacing="12">
+<VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.ProcessPaymentController">
     <padding>
-        <Insets topRightBottomLeft="15" />
+        <Insets top="15" right="15" bottom="15" left="15" />
     </padding>
     <children>
         <Label text="Process Payment" style="-fx-font-size: 18; -fx-font-weight: bold;" />
@@ -21,10 +20,10 @@
             </rowConstraints>
 
             <Label text="Current Balance:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-            <Label fx:id="balanceLabel" text="$0.00" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+            <Label fx:id="balanceLabel" text="\$0.00" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
             <Label text="Total Paid:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-            <Label fx:id="totalPaidLabel" text="$0.00" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            <Label fx:id="totalPaidLabel" text="\$0.00" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 
             <Label text="Payment Method:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
             <ComboBox fx:id="paymentMethodCombo" prefWidth="180" GridPane.rowIndex="2" GridPane.columnIndex="1" />
