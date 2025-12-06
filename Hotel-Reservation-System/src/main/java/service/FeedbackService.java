@@ -19,29 +19,30 @@ public class FeedbackService {
         this.feedbackRepository = feedbackRepository;
     }
 
-    public Feedback submitFeedback(String guestEmail, Long reservationId, int rating, String comments) {
+    public Feedback submitFeedback(String guestEmail, int rating, String comments) {
         if (rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 1 and 5.");
         }
 
-        if (reservationId == null) {
-            throw new IllegalArgumentException("Reservation not found.");
+        if (guestEmail == null || guestEmail.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email is required to submit feedback.");
         }
 
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found."));
+        String normalizedEmail = guestEmail.trim().toLowerCase(Locale.ROOT);
+
+        Reservation reservation = reservationRepository.findMostRecentReservationByGuestEmail(normalizedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("No reservation found for this email."));
 
         String reservationEmail = reservation.getGuest() != null ? reservation.getGuest().getEmail() : null;
-        boolean emailsMatch = guestEmail != null
-                && reservationEmail != null
-                && reservationEmail.toLowerCase(Locale.ROOT).equals(guestEmail.toLowerCase(Locale.ROOT));
+        boolean emailsMatch = reservationEmail != null
+                && reservationEmail.trim().toLowerCase(Locale.ROOT).equals(normalizedEmail);
 
         if (!emailsMatch) {
             throw new IllegalArgumentException("Email does not match the reservation guest.");
         }
 
         Feedback feedback = new Feedback();
-        feedback.setGuestEmail(guestEmail);
+        feedback.setGuestEmail(guestEmail != null ? guestEmail.trim() : null);
         feedback.setReservation(reservation);
         feedback.setRating(rating);
         feedback.setComments(comments);

@@ -210,6 +210,33 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public Optional<Reservation> findMostRecentReservationByGuestEmail(String email) {
+        if (email == null) {
+            return Optional.empty();
+        }
+
+        String normalized = email.trim().toLowerCase();
+        if (normalized.isBlank()) {
+            return Optional.empty();
+        }
+
+        String jpql = "SELECT r FROM Reservation r " +
+                "WHERE LOWER(r.guest.email) = :email " +
+                "AND r.status IN (:booked, :checkedIn, :completed) " +
+                "ORDER BY r.checkOut DESC";
+
+        TypedQuery<Reservation> query = entityManager.createQuery(jpql, Reservation.class)
+                .setParameter("email", normalized)
+                .setParameter("booked", ReservationStatus.BOOKED)
+                .setParameter("checkedIn", ReservationStatus.CHECKED_IN)
+                .setParameter("completed", ReservationStatus.COMPLETED)
+                .setMaxResults(1);
+
+        List<Reservation> results = query.getResultList();
+        return results.stream().findFirst();
+    }
+
+    @Override
     public boolean hasConflict(RoomType room, LocalDate checkIn, LocalDate checkOut, Long excludeReservationId) {
         String jpql = "SELECT COUNT(r) FROM Reservation r " +
                 "JOIN r.rooms rr " +
