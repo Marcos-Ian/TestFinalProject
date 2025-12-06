@@ -22,6 +22,9 @@
     <HBox spacing="8">
         <Button fx:id="searchButton" text="Search" onAction="#onSearchClicked" styleClass="primary-button"/>
         <Button text="Edit" onAction="#openEdit"/>
+        <Button fx:id="processPaymentButton"
+                text="Process Payment"
+                onAction="#onProcessPayment"/>
         <Button fx:id="addWaitlistButton" text="Add to Waitlist" onAction="#addToWaitlist"/>
     </HBox>
     <TableView fx:id="reservationTable" prefHeight="300" VBox.vgrow="ALWAYS"

@@ -57,6 +57,7 @@ public class ReservationSearchController {
     @FXML private TableColumn<Reservation, String> statusColumn;
     @FXML private Label resultsLabel;
     @FXML private Button addWaitlistButton;
+    @FXML private Button processPaymentButton;
 
     public ReservationSearchController() {
         this(Bootstrap.getReservationService(), Bootstrap.getLoyaltyService(),
@@ -103,6 +104,11 @@ public class ReservationSearchController {
                 });
                 return row;
             });
+        }
+
+        if (processPaymentButton != null && reservationTable != null) {
+            processPaymentButton.disableProperty().bind(
+                    reservationTable.getSelectionModel().selectedItemProperty().isNull());
         }
 
         handleSearch();
@@ -179,6 +185,22 @@ public class ReservationSearchController {
         }
 
         openReservationDetails(selected);
+    }
+
+    @FXML
+    private void onProcessPayment() {
+        Reservation selected = reservationTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("No reservation selected", "Please select a reservation first.");
+            return;
+        }
+
+        try {
+            openReservationDetails(selected);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to open reservation details", e);
+            showError("Error", "Failed to open reservation details: " + e.getMessage());
+        }
     }
 
     @FXML
