@@ -1,4 +1,3 @@
-
 package app;
 
 import javafx.application.Application;
@@ -14,6 +13,13 @@ import javafx.stage.Stage;
 public class HotelApp extends Application {
 
     @Override
+    public void init() throws Exception {
+        // Initialize backend services BEFORE JavaFX UI loads
+        // This ensures Bootstrap services are ready when controllers are created
+        Bootstrap.main(new String[]{});
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/main.fxml"));
         Parent root = loader.load();
@@ -27,8 +33,7 @@ public class HotelApp extends Application {
     }
 
     public static void main(String[] args) {
-        // Initialize backend services and launch JavaFX
-        Bootstrap.main(args);
+        // Just launch JavaFX - init() will handle Bootstrap initialization
         launch(args);
     }
 }

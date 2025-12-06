@@ -3,6 +3,8 @@
 // ============================================================================
 package service;
 
+import java.util.ArrayList;
+
 import model.Guest;
 import model.Reservation;
 import model.ReservationStatus;
@@ -298,6 +300,68 @@ public class ReservationService {
      */
     public Optional<Reservation> findById(Long id) {
         return reservationRepository.findById(id);
+    }
+
+    public void recalculateAndUpdateTotal(Long reservationId) {
+        Optional<Reservation> reservationOpt = reservationRepository.findById(reservationId);
+        if (reservationOpt.isEmpty()) {
+            throw new IllegalArgumentException("Reservation not found: " + reservationId);
+        }
+
+        Reservation reservation = reservationOpt.get();
+
+        // Calculate total using the same logic as display
+        double total = calculateReservationTotal(reservation);
+
+        // Update the stored total
+        reservation.setTotalAmount(total);
+        reservationRepository.saveOrUpdate(reservation, reservation.getRooms());
+
+        LOGGER.info(String.format("Updated total for reservation %d: $%.2f", reservationId, total));
+    }
+    public double calculateReservationTotal(Reservation reservation) {
+        if (reservation == null || reservation.getCheckIn() == null ||
+                reservation.getCheckOut() == null || reservation.getRooms() == null) {
+            return 0.0;
+        }
+
+        long nights = ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
+        if (nights <= 0) {
+            return 0.0;
+        }
+
+        // 1. Calculate room charges with dynamic pricing
+        double roomTotal = calculateRoomCharges(reservation.getRooms(), reservation.getCheckIn(), nights);
+
+        // 2. Calculate add-on charges
+        List<String> addOnNames = new ArrayList<>();
+        if (reservation.getAddOns() != null) {
+            for (ReservationAddOn addOn : reservation.getAddOns()) {
+                addOnNames.add(addOn.getAddOnName());
+            }
+        }
+        double addOnTotal = calculateAddOnCharges(addOnNames, nights);
+
+        // 3. Subtotal before discount
+        double subtotal = roomTotal + addOnTotal;
+
+        // 4. Apply discount
+        double discountPercent = reservation.getDiscountPercent() != null ? reservation.getDiscountPercent() : 0.0;
+        double discountAmount = subtotal * (discountPercent / 100.0);
+        double afterDiscount = subtotal - discountAmount;
+
+        // 5. Calculate tax on discounted amount
+        PricingConfig pricingConfig = new PricingConfig();
+        double taxRate = pricingConfig.getTaxRate();
+        double tax = afterDiscount * taxRate;
+
+        // 6. Grand total
+        double grandTotal = afterDiscount + tax;
+
+        LOGGER.fine(String.format("Reservation %d calculation: rooms=%.2f, addons=%.2f, subtotal=%.2f, discount=%.2f%%, afterDiscount=%.2f, tax=%.2f, total=%.2f",
+                reservation.getId(), roomTotal, addOnTotal, subtotal, discountPercent, afterDiscount, tax, grandTotal));
+
+        return grandTotal;
     }
 
     public void applyDiscount(Long reservationId, double percent) {

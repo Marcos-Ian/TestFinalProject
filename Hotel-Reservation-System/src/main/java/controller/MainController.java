@@ -31,6 +31,11 @@ public class MainController {
         loadScene("/view/admin_login.fxml");
     }
 
+    @FXML
+    private void openFeedback() throws IOException {
+        loadScene("/view/feedback.fxml");
+    }
+
     private void loadScene(String resource) throws IOException {
         Stage stage = (Stage) kioskButton.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));

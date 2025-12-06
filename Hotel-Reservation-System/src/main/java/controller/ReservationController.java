@@ -286,8 +286,10 @@ public class ReservationController {
             totalGuests = 2;
         }
 
+        // IMPORTANT: Use stored discount or 0
         double discount = reservation.getDiscountPercent() != null ?
                 reservation.getDiscountPercent() : 0.0;
+
         double loyaltyRedemption = 0.0;
         String bookedBy = "Kiosk";
 

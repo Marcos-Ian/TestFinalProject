@@ -25,8 +25,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return saveOrUpdate(reservation, reservation.getRooms());
     }
 
-    // REPLACE the saveOrUpdate method in ReservationRepositoryImpl.java
-
     @Override
     public Reservation saveOrUpdate(Reservation reservation, List<RoomType> rooms) {
         entityManager.getTransaction().begin();
@@ -37,10 +35,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             }
 
             if (reservation.getId() == null) {
-                // For new reservations, persist first
                 entityManager.persist(reservation);
             } else {
-                // For updates, merge
                 reservation = entityManager.merge(reservation);
             }
 
@@ -220,8 +216,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             return Optional.empty();
         }
 
+        // FIXED: Changed r.checkOutDate to r.checkOut
         TypedQuery<Reservation> query = entityManager.createQuery(
-                "SELECT r FROM Reservation r WHERE LOWER(r.guest.email) = :email ORDER BY r.checkOutDate DESC",
+                "SELECT r FROM Reservation r WHERE LOWER(r.guest.email) = :email ORDER BY r.checkOut DESC",
                 Reservation.class);
         query.setParameter("email", normalized);
 

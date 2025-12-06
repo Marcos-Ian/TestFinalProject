@@ -11,4 +11,5 @@
     <Label text="Self-Service Kiosk" styleClass="header-label"/>
     <Label text="Check in, book rooms, and review details without waiting in line." wrapText="true" maxWidth="480"/>
     <Button fx:id="startButton" text="Start Booking" onAction="#startBooking" styleClass="primary-button"/>
+    <Button text="Leave Feedback" onAction="#openFeedback"/>
 </VBox>

@@ -3,22 +3,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="10"
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="12"
       fx:controller="controller.FeedbackController">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="24" right="24" bottom="24" left="24"/>
     </padding>
+
     <Label text="Guest Feedback" styleClass="header-label"/>
-    <GridPane hgap="8" vgap="8">
-        <Label text="Reservation ID" GridPane.rowIndex="0"/>
-        <TextField fx:id="reservationField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Label text="Guest Name" GridPane.rowIndex="1"/>
-        <TextField fx:id="guestField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        <Label text="Rating" GridPane.rowIndex="2"/>
-        <Slider fx:id="ratingSlider" GridPane.rowIndex="2" GridPane.columnIndex="1" min="1" max="5" value="4" majorTickUnit="1" snapToTicks="true" showTickMarks="true"/>
-        <Label text="Comments" GridPane.rowIndex="3"/>
-        <TextArea fx:id="commentsArea" GridPane.rowIndex="3" GridPane.columnIndex="1" prefRowCount="4" wrapText="true"/>
-    </GridPane>
-    <Button fx:id="submitButton" text="Submit" onAction="#submitFeedback" styleClass="primary-button"/>
-    <Label fx:id="statusLabel" textFill="green"/>
+
+    <VBox spacing="8" styleClass="section-box">
+        <padding>
+            <Insets top="12" right="12" bottom="12" left="12"/>
+        </padding>
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="30"/>
+                <ColumnConstraints percentWidth="70"/>
+            </columnConstraints>
+
+            <Label text="Guest Email" GridPane.rowIndex="0"/>
+            <TextField fx:id="emailField" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="name@example.com"/>
+
+            <Label text="Rating (1-5)" GridPane.rowIndex="1"/>
+            <Spinner fx:id="ratingSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Comments" GridPane.rowIndex="2"/>
+            <TextArea fx:id="commentsArea" GridPane.rowIndex="2" GridPane.columnIndex="1" prefRowCount="5" wrapText="true"/>
+        </GridPane>
+    </VBox>
+
+    <HBox alignment="CENTER_RIGHT">
+        <Button fx:id="submitButton" text="Submit Feedback" onAction="#submitFeedback" styleClass="primary-button"/>
+    </HBox>
 </VBox>

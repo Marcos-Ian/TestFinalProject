@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.ReservationController"
-            prefHeight="700.0" prefWidth="900.0">
+            prefHeight="800.0" prefWidth="1000.0">
 
     <top>
         <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
@@ -24,53 +24,164 @@
 
     <center>
         <ScrollPane fitToWidth="true">
-            <!-- Guest Information -->
-            <VBox spacing="10" styleClass="section-box">
-                <Label text="Guest Information" styleClass="header-label"/>
-                <GridPane hgap="15" vgap="8">
-                    <!-- existing rows -->
-                    <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <Label fx:id="guestNameLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <VBox spacing="20">
+                <padding>
+                    <Insets topRightBottomLeft="15.0" />
+                </padding>
+                <!-- Guest Information -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Guest Information" styleClass="header-label"/>
+                    <GridPane hgap="15" vgap="8">
+                        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="guestNameLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                    <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <Label fx:id="guestPhoneLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="guestPhoneLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <Label fx:id="guestEmailLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="guestEmailLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                    <Label text="Loyalty:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                    <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                        <Label fx:id="loyaltyStatusLabel" text="No"/>
-                        <Button fx:id="enrollLoyaltyButton" text="Enroll" visible="false" managed="false"/>
-                    </HBox>
+                        <Label text="Loyalty:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label fx:id="loyaltyStatusLabel" text="No"/>
+                            <Button fx:id="enrollLoyaltyButton" text="Enroll" visible="false" managed="false"/>
+                        </HBox>
 
-                    <!-- FIXED: put sections on their own rows -->
-                    <VBox fx:id="loyaltyNumberSection"
-                          spacing="5"
-                          visible="false"
-                          managed="false"
-                          GridPane.columnIndex="0"
-                          GridPane.rowIndex="4"
-                          GridPane.columnSpan="2">
-                        <Label text="Loyalty Number:" styleClass="section-label"/>
-                        <Label fx:id="loyaltyNumberLabel"/>
-                    </VBox>
+                        <VBox fx:id="loyaltyNumberSection"
+                              spacing="5"
+                              visible="false"
+                              managed="false"
+                              GridPane.columnIndex="0"
+                              GridPane.rowIndex="4"
+                              GridPane.columnSpan="2">
+                            <Label text="Loyalty Number:" styleClass="section-label"/>
+                            <Label fx:id="loyaltyNumberLabel"/>
+                        </VBox>
 
-                    <VBox fx:id="loyaltyPointsSection"
-                          spacing="5"
-                          visible="false"
-                          managed="false"
-                          GridPane.columnIndex="0"
-                          GridPane.rowIndex="5"
-                          GridPane.columnSpan="2">
-                        <Label text="Loyalty Points:" styleClass="section-label"/>
-                        <Label fx:id="loyaltyPointsLabel"/>
-                    </VBox>
+                        <VBox fx:id="loyaltyPointsSection"
+                              spacing="5"
+                              visible="false"
+                              managed="false"
+                              GridPane.columnIndex="0"
+                              GridPane.rowIndex="5"
+                              GridPane.columnSpan="2">
+                            <Label text="Loyalty Points:" styleClass="section-label"/>
+                            <Label fx:id="loyaltyPointsLabel"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
 
-                </GridPane>
+                <!-- Reservation Details -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Reservation Details" styleClass="header-label"/>
+                    <GridPane hgap="15" vgap="8">
+                        <Label text="Check-In:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="checkInLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Check-Out:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="checkOutLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                        <Label text="Nights:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="nightsLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <Label text="Guests:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <Label fx:id="guestsLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                        <Label text="Booking Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <Label fx:id="bookingDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                        <Label text="Booked By:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <Label fx:id="bookedByLabel" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Rooms Table -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Rooms" styleClass="header-label"/>
+                    <TableView fx:id="roomsTable" prefHeight="150">
+                        <columns>
+                            <TableColumn fx:id="roomTypeCol" text="Type" prefWidth="150"/>
+                            <TableColumn fx:id="roomQuantityCol" text="Quantity" prefWidth="100"/>
+                            <TableColumn fx:id="roomCapacityCol" text="Capacity" prefWidth="100"/>
+                            <TableColumn fx:id="roomPriceCol" text="Price" prefWidth="100"/>
+                            <TableColumn fx:id="roomTotalCol" text="Total" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+
+                <!-- Add-ons Table -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Add-ons" styleClass="header-label"/>
+                    <TableView fx:id="addonsTable" prefHeight="150">
+                        <columns>
+                            <TableColumn fx:id="addonNameCol" text="Add-on" prefWidth="150"/>
+                            <TableColumn fx:id="addonPricingCol" text="Pricing" prefWidth="120"/>
+                            <TableColumn fx:id="addonPriceCol" text="Price" prefWidth="100"/>
+                            <TableColumn fx:id="addonTotalCol" text="Total" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+
+                <!-- Financial Summary -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Financial Summary" styleClass="header-label"/>
+                    <GridPane hgap="15" vgap="8">
+                        <Label text="Room Subtotal" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="roomSubtotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Add-ons Total" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="addonsTotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                        <Label text="Subtotal" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="subtotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <Label fx:id="discountRow" text="Discount" GridPane.columnIndex="0" GridPane.rowIndex="3" visible="false" managed="false"/>
+                        <Label fx:id="discountLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false" managed="false"/>
+
+                        <Label text="Tax" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <Label fx:id="taxLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                        <Label fx:id="loyaltyRedemptionRow" text="Loyalty Redemption" GridPane.columnIndex="0" GridPane.rowIndex="5" visible="false" managed="false"/>
+                        <Label fx:id="loyaltyRedemptionLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="5" visible="false" managed="false"/>
+
+                        <Label text="Grand Total" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                        <Label fx:id="grandTotalLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                        <Label text="Paid" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                        <Label fx:id="paidLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                        <Label text="Balance" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                        <Label fx:id="balanceLabel" text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Payments Table -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label text="Payments" styleClass="header-label"/>
+                    <TableView fx:id="paymentsTable" prefHeight="150">
+                        <columns>
+                            <TableColumn fx:id="paymentDateCol" text="Date" prefWidth="140"/>
+                            <TableColumn fx:id="paymentTypeCol" text="Type" prefWidth="120"/>
+                            <TableColumn fx:id="paymentAmountCol" text="Amount" prefWidth="120"/>
+                            <TableColumn fx:id="paymentByCol" text="Processed By" prefWidth="140"/>
+                            <TableColumn fx:id="paymentNotesCol" text="Notes" prefWidth="200"/>
+                        </columns>
+                    </TableView>
+                </VBox>
             </VBox>
-
         </ScrollPane>
     </center>
 
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets topRightBottomLeft="10.0" />
+            </padding>
+            <Button fx:id="modifyButton" text="Modify"/>
+            <Button fx:id="applyDiscountButton" text="Apply Discount"/>
+            <Button fx:id="processPaymentButton" text="Process Payment"/>
+            <Button fx:id="checkoutButton" text="Checkout"/>
+            <Button fx:id="cancelButton" text="Cancel"/>
+        </HBox>
+    </bottom>
 </BorderPane>
