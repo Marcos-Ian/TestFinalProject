@@ -6,10 +6,12 @@ import config.LoyaltyConfig;
 import config.PricingConfig;
 import events.RoomAvailabilitySubject;
 import repository.GuestRepository;
+import repository.PaymentRepository;
 import repository.RoomRepository;
 import repository.ReservationRepository;
 import repository.FeedbackRepository;
 import repository.impl.GuestRepositoryImpl;
+import repository.impl.PaymentRepositoryImpl;
 import repository.impl.RoomRepositoryImpl;
 import repository.impl.ReservationRepositoryImpl;
 import repository.impl.FeedbackRepositoryImpl;
@@ -17,6 +19,7 @@ import service.BillingContext;
 import service.FeedbackService;
 import service.GuestService;
 import service.LoyaltyService;
+import service.PaymentService;
 import service.ReservationService;
 import service.RoomService;
 import service.strategy.StandardBillingStrategy;
@@ -37,6 +40,7 @@ public class Bootstrap {
     private static ReservationService reservationService;
     private static RoomService roomService;
     private static LoyaltyService loyaltyService;
+    private static PaymentService paymentService;
     private static BillingContext billingContext;
     private static GuestService guestService;
     private static AuthenticationService authenticationService;
@@ -67,6 +71,7 @@ public class Bootstrap {
             GuestRepository guestRepository = new GuestRepositoryImpl(entityManager);
             RoomRepository roomRepository = new RoomRepositoryImpl(entityManager);
             ReservationRepository reservationRepository = new ReservationRepositoryImpl(entityManager);
+            PaymentRepository paymentRepository = new PaymentRepositoryImpl(entityManager);
             FeedbackRepository feedbackRepository = new FeedbackRepositoryImpl(entityManager);
             LOGGER.info("Repositories initialized");
 
@@ -78,18 +83,19 @@ public class Bootstrap {
             authenticationService = new AuthenticationService();
             LOGGER.info("Authentication service initialized");
 
+            // Initialize billing context with default strategy
+            billingContext = new BillingContext(pricingConfig);
+            billingContext.setStrategy(new StandardBillingStrategy(pricingConfig));
+            LOGGER.info("Billing context initialized with standard strategy");
+
             // Initialize services
             reservationService = new ReservationService(guestRepository, reservationRepository, roomRepository, authenticationService);
             guestService = new GuestService(guestRepository, reservationRepository);
             roomService = new RoomService(roomAvailabilitySubject, roomRepository, reservationRepository);
             loyaltyService = new LoyaltyService(loyaltyConfig);
+            paymentService = new PaymentService(reservationRepository, paymentRepository, billingContext, loyaltyService);
             feedbackService = new FeedbackService(reservationRepository, feedbackRepository);
             LOGGER.info("Services initialized");
-
-            // Initialize billing context with default strategy
-            billingContext = new BillingContext(pricingConfig);
-            billingContext.setStrategy(new StandardBillingStrategy(pricingConfig));
-            LOGGER.info("Billing context initialized with standard strategy");
 
             // TODO: Launch JavaFX Application once UI controllers are implemented
             // Application.launch(HotelReservationApp.class, args);
@@ -143,6 +149,13 @@ public class Bootstrap {
             throw new IllegalStateException("Application not initialized. Call main() first.");
         }
         return loyaltyService;
+    }
+
+    public static PaymentService getPaymentService() {
+        if (paymentService == null) {
+            throw new IllegalStateException("Application not initialized. Call main() first.");
+        }
+        return paymentService;
     }
 
     public static FeedbackService getFeedbackService() {

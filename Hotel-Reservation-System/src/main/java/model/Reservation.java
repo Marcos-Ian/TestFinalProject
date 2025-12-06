@@ -42,6 +42,9 @@ public class Reservation {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ReservationAddOn> addOns = new ArrayList<>();
 
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
+
     public Long getId() { return id; }
     public Guest getGuest() { return guest; }
     public void setGuest(Guest guest) { this.guest = guest; }
@@ -78,6 +81,14 @@ public class Reservation {
 
     public void setAddOns(List<ReservationAddOn> addOns) {
         this.addOns = addOns;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
     }
 
     /**
