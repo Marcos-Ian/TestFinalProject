@@ -8,10 +8,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Guest;
+import model.Payment;
 import model.Reservation;
 import model.ReservationAddOn;
 import model.RoomType;
@@ -19,6 +24,7 @@ import security.AdminUser;
 import security.AuthenticationService;
 import service.BillingContext;
 import service.LoyaltyService;
+import service.PaymentService;
 import service.ReservationService;
 
 import java.time.LocalDate;
@@ -30,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ReservationController {
     private static final Logger LOGGER = Logger.getLogger(ReservationController.class.getName());
@@ -37,6 +44,7 @@ public class ReservationController {
 
     private final BillingContext billingContext;
     private final LoyaltyService loyaltyService;
+    private final PaymentService paymentService;
     private final ReservationService reservationService;
     private final AuthenticationService authService;
 
@@ -131,24 +139,28 @@ public class ReservationController {
     public ReservationController() {
         BillingContext context;
         LoyaltyService loyalty;
+        PaymentService paymentSvc;
         ReservationService resService;
         AuthenticationService auth;
 
         try {
             context = Bootstrap.getBillingContext();
             loyalty = Bootstrap.getLoyaltyService();
+            paymentSvc = Bootstrap.getPaymentService();
             resService = Bootstrap.getReservationService();
             auth = Bootstrap.getAuthenticationService();
         } catch (Exception ex) {
             LOGGER.log(Level.INFO, "Fallback initialization", ex);
             context = new BillingContext();
             loyalty = new LoyaltyService(new LoyaltyConfig());
+            paymentSvc = null;
             resService = null;
             auth = null;
         }
 
         this.billingContext = context;
         this.loyaltyService = loyalty;
+        this.paymentService = paymentSvc;
         this.reservationService = resService;
         this.authService = auth;
     }
@@ -156,6 +168,7 @@ public class ReservationController {
     public ReservationController(BillingContext billingContext, LoyaltyService loyaltyService) {
         this.billingContext = billingContext;
         this.loyaltyService = loyaltyService;
+        this.paymentService = null;
         this.reservationService = null;
         this.authService = null;
     }
@@ -233,7 +246,7 @@ public class ReservationController {
             applyDiscountButton.setOnAction(event -> handleApplyDiscount());
         }
         if (processPaymentButton != null) {
-            processPaymentButton.setOnAction(event -> showInfo("Payment", "Process payment functionality"));
+            processPaymentButton.setOnAction(event -> handleProcessPayment());
         }
         if (checkoutButton != null) {
             checkoutButton.setOnAction(event -> handleCheckout());
@@ -258,6 +271,13 @@ public class ReservationController {
         }
 
         List<PaymentRow> payments = new ArrayList<>();
+        double amountPaid = 0.0;
+        if (paymentService != null && reservation.getId() != null) {
+            amountPaid = paymentService.calculateTotalPaid(reservation).doubleValue();
+            payments = paymentService.getPaymentsForReservation(reservation.getId()).stream()
+                    .map(this::toPaymentRow)
+                    .collect(Collectors.toList());
+        }
 
         int totalGuests = rooms.stream()
                 .mapToInt(RoomType::getCapacity)
@@ -266,7 +286,6 @@ public class ReservationController {
             totalGuests = 2;
         }
 
-        double amountPaid = 0.0;
         double discount = reservation.getDiscountPercent() != null ?
                 reservation.getDiscountPercent() : 0.0;
         double loyaltyRedemption = 0.0;
@@ -514,6 +533,31 @@ public class ReservationController {
         });
     }
 
+    private void handleProcessPayment() {
+        if (currentReservation == null || currentReservation.getId() == null) {
+            showWarning("No Reservation", "No reservation loaded");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/process_payment_dialog.fxml"));
+            Parent root = loader.load();
+            ProcessPaymentController controller = loader.getController();
+            controller.setReservation(currentReservation);
+            controller.setOnPaymentProcessed(this::refreshPaymentSummary);
+
+            Stage dialog = new Stage();
+            dialog.setTitle("Process Payment");
+            dialog.initOwner(processPaymentButton.getScene().getWindow());
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Failed to open payment dialog", e);
+            showError("Payment Dialog Error", e.getMessage());
+        }
+    }
+
     private void handleCheckout() {
         if (currentReservation == null) return;
 
@@ -532,6 +576,53 @@ public class ReservationController {
                 }
             }
         });
+    }
+
+    private void refreshPaymentSummary() {
+        if (currentReservation == null || currentReservation.getId() == null || paymentService == null) {
+            return;
+        }
+
+        if (reservationService != null) {
+            reservationService.findById(currentReservation.getId()).ifPresent(reservation -> {
+                currentReservation = reservation;
+                double totalPaid = paymentService.calculateTotalPaid(reservation).doubleValue();
+                double balance = paymentService.calculateBalance(reservation).doubleValue();
+
+                paidLabel.setText(formatCurrency(totalPaid));
+                balanceLabel.setText(formatCurrency(balance));
+                updatePaymentTable(reservation);
+
+                List<String> addOnNames = reservation.getAddOns() != null
+                        ? reservation.getAddOns().stream()
+                        .map(ReservationAddOn::getAddOnName)
+                        .collect(Collectors.toList())
+                        : new ArrayList<>();
+
+                updateFinancials(reservation.getCheckIn(), reservation.getCheckOut(), reservation.getRooms(), addOnNames,
+                        totalPaid, reservation.getDiscountPercent(), 0.0);
+            });
+        }
+    }
+
+    private void updatePaymentTable(Reservation reservation) {
+        if (paymentService == null || reservation == null || reservation.getId() == null) {
+            return;
+        }
+
+        List<PaymentRow> rows = paymentService.getPaymentsForReservation(reservation.getId()).stream()
+                .map(this::toPaymentRow)
+                .collect(Collectors.toList());
+        paymentRows.setAll(rows);
+    }
+
+    private PaymentRow toPaymentRow(Payment payment) {
+        String date = payment.getCreatedAt() != null ? formatDate(payment.getCreatedAt().toLocalDate()) : "";
+        String type = payment.getType() != null ? payment.getType().name() : "";
+        double amount = payment.getAmount() != null ? payment.getAmount().doubleValue() : 0.0;
+        String processedBy = payment.getCreatedBy() != null ? payment.getCreatedBy() : "System";
+        String notes = payment.getNotes() != null ? payment.getNotes() : "";
+        return new PaymentRow(date, type, amount, processedBy, notes);
     }
 
     private void handleCancel() {
