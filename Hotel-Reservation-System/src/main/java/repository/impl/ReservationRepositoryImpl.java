@@ -220,21 +220,12 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             return Optional.empty();
         }
 
-        EntityManager em = null;
-        try {
-            em = entityManager.getEntityManagerFactory().createEntityManager();
-            TypedQuery<Reservation> query = em.createQuery(
-                    "SELECT r FROM Reservation r WHERE LOWER(r.guest.email) = :email ORDER BY r.checkOut DESC",
-                    Reservation.class);
-            query.setParameter("email", normalized);
-            query.setMaxResults(1);
+        TypedQuery<Reservation> query = entityManager.createQuery(
+                "SELECT r FROM Reservation r WHERE LOWER(r.guest.email) = :email ORDER BY r.checkOutDate DESC",
+                Reservation.class);
+        query.setParameter("email", normalized);
 
-            return query.getResultStream().findFirst();
-        } finally {
-            if (em != null && em.isOpen()) {
-                em.close();
-            }
-        }
+        return query.getResultStream().findFirst();
     }
 
     @Override
